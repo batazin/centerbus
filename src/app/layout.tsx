@@ -15,9 +15,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CenterBus | Peças para ônibus",
+  title: "Center Ônibus | Peças para carrocerias de ônibus",
   description:
-    "One page criativa para uma distribuidora de peças de ônibus, com navegação em snap e animações técnicas.",
+    "Website institucional da Center Ônibus, especialista em peças para carrocerias de ônibus com tradição, qualidade e atendimento nacional.",
 };
 
 export default function RootLayout({

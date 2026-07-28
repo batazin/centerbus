@@ -20,48 +20,48 @@ type Part = {
 
 const chapters: Chapter[] = [
   {
-    eyebrow: "01 / arrefecimento",
-    title: "Radiador na frente.",
-    copy: "Colmeias, reservatórios, mangueiras e sensores para manter a temperatura sob controle.",
-    code: "RAD-340",
+    eyebrow: "01 / carroceria",
+    title: "Estrutura confiável.",
+    copy: "Componentes para carrocerias de ônibus com qualidade, procedência e aplicação correta.",
+    code: "CAR-340",
   },
   {
-    eyebrow: "02 / suspensão",
-    title: "Conforto no eixo.",
-    copy: "Bolsas, buchas, amortecedores e suportes para frota urbana e rodoviária.",
-    code: "SUS-410",
+    eyebrow: "02 / acabamento",
+    title: "Interior em ordem.",
+    copy: "Itens de acabamento, vedação e reposição para manter a frota apresentável e segura.",
+    code: "ACB-410",
   },
   {
-    eyebrow: "03 / freio",
-    title: "Parada precisa.",
-    copy: "Lonas, cuícas, válvulas, reparos e ABS para reduzir risco e tempo parado.",
-    code: "FR-882",
+    eyebrow: "03 / iluminação",
+    title: "Sinal sempre ligado.",
+    copy: "Lanternas, faróis, chicotes e itens elétricos para operação urbana, rodoviária e fretamento.",
+    code: "ILU-882",
   },
   {
-    eyebrow: "04 / elétrica",
-    title: "Sinal ligado.",
-    copy: "Lanternas, faróis, chicotes, relés e sensores para deixar o ônibus pronto para rota.",
-    code: "EL-217",
+    eyebrow: "04 / vidros",
+    title: "Visibilidade na rota.",
+    copy: "Soluções para vidros, borrachas, espelhos e acessórios com suporte consultivo.",
+    code: "VID-217",
   },
 ];
 
 const parts: Part[] = [
-  { code: "RAD", title: "Radiador", detail: "arrefecimento" },
-  { code: "SUS", title: "Suspensão", detail: "bolsas e buchas" },
-  { code: "FR", title: "Freio", detail: "ABS e válvulas" },
-  { code: "EL", title: "Elétrica", detail: "luzes e chicotes" },
+  { code: "CAR", title: "Carroceria", detail: "peças estruturais" },
+  { code: "ACB", title: "Acabamento", detail: "interno e externo" },
+  { code: "ILU", title: "Iluminação", detail: "luzes e chicotes" },
+  { code: "VID", title: "Vidros", detail: "vidros e borrachas" },
 ];
 
 const stockSteps = [
-  { code: "01", title: "Identifica", detail: "Leitura técnica por aplicação, chassi e sistema." },
-  { code: "02", title: "Confere", detail: "Validação de estoque, marca e compatibilidade." },
-  { code: "03", title: "Despacha", detail: "Rota priorizada para reduzir parada de frota." },
+  { code: "01", title: "Identifica", detail: "Leitura técnica por aplicação, carroceria, modelo e necessidade da operação." },
+  { code: "02", title: "Confere", detail: "Validação de estoque, marca, compatibilidade e padrão de qualidade." },
+  { code: "03", title: "Atende", detail: "Contato comercial próximo para agilizar orçamento, retirada ou envio." },
 ];
 
 const mapPoints = [
-  { label: "Recebimento", x: 20, y: 64 },
+  { label: "Fabricantes", x: 20, y: 64 },
   { label: "Estoque", x: 42, y: 38 },
-  { label: "Balcão", x: 62, y: 58 },
+  { label: "Comercial", x: 62, y: 58 },
   { label: "Despacho", x: 78, y: 30 },
 ];
 
@@ -111,7 +111,7 @@ export function CenterbusOnePage() {
       gsap.set(".chapter-card:first-child", { opacity: 1, y: 0 });
       gsap.set(".sequence-canvas", { scale: 0.92, y: 24 });
       gsap.set(".part-pill", { y: 24, opacity: 0 });
-      gsap.set(".motion-section .kicker, .motion-section h2, .motion-section .about-text, .motion-section .stat-card, .motion-section .feature-card, .motion-section .support-card, .motion-section .primary-action, .motion-section .stock-step, .motion-section .stock-metric, .motion-section .map-copy, .motion-section .map-panel, .motion-section .map-card", {
+      gsap.set(".motion-section .kicker, .motion-section h2, .motion-section .about-text, .motion-section .contact-copy, .motion-section .stat-card, .motion-section .feature-card, .motion-section .support-card, .motion-section .primary-action, .motion-section .stock-step, .motion-section .stock-metric, .motion-section .map-copy, .motion-section .map-panel, .motion-section .map-card", {
         y: -54,
         opacity: 0,
       });
@@ -152,7 +152,7 @@ export function CenterbusOnePage() {
 
       const animateSectionIn = (section: HTMLElement) => {
         const items = section.querySelectorAll(
-          ".kicker, h2, .about-text, .stat-card, .feature-card, .support-card, .primary-action, .stock-step, .stock-metric, .map-copy, .map-panel, .map-card"
+          ".kicker, h2, .about-text, .contact-copy, .stat-card, .feature-card, .support-card, .primary-action, .stock-step, .stock-metric, .map-copy, .map-panel, .map-card"
         );
         const trace = section.querySelector(".section-trace");
         const ambientItems = section.querySelectorAll(".about-signal, .about-orbit-item, .about-data-line, .feature-beam, .support-route, .support-dot, .stock-scan, .map-pin");
@@ -447,16 +447,16 @@ export function CenterbusOnePage() {
   return (
     <div ref={rootRef} className="site-shell">
       <header className="topbar" aria-label="Navegação principal">
-        <a className="brand-mark" href="#topo" aria-label="CenterBus inicio">
-          <span aria-hidden="true">CB</span>
-          <strong>CenterBus</strong>
+        <a className="brand-mark" href="#topo" aria-label="Center Ônibus início">
+          <span aria-hidden="true">CO</span>
+          <strong>Center Ônibus</strong>
         </a>
         <nav>
           <a href="#sobre">Empresa</a>
           <a href="#diferenciais">Diferenciais</a>
-          <a href="#linha">Linha</a>
+          <a href="#linha">Produtos</a>
           <a href="#estoque">Estoque</a>
-          <a href="#maps">Mapa</a>
+          <a href="#maps">Qualidade</a>
           <a href="#contato">Contato</a>
         </nav>
       </header>
@@ -465,9 +465,9 @@ export function CenterbusOnePage() {
         <section id="home" className="sequence-section snap-section free-section" data-timecode="1" aria-labelledby="hero-title">
           <div className="sequence-frame">
           <div className="hero-copy">
-            <p className="kicker">peças para ônibus</p>
+            <p className="kicker">peças para carrocerias de ônibus</p>
             <h1 id="hero-title" className="hero-title">
-              {"A rota não pode parar.".split(" ").map((word, i) => (
+              {"Tradição que mantém a frota em movimento.".split(" ").map((word, i) => (
                 <span className="hero-word" key={word + i}>
                   {word}
                 </span>
@@ -537,31 +537,31 @@ export function CenterbusOnePage() {
           </div>
           <div className="about-grid">
             <div className="about-content">
-              <p className="kicker">sobre a centerbus</p>
-              <h2 id="sobre-title">Tradição em movimento.</h2>
+              <p className="kicker">sobre a Center Ônibus</p>
+              <h2 id="sobre-title">Mais de três décadas de confiança.</h2>
               <p className="about-text">
-                Nascemos da necessidade de oferecer uma distribuição ágil, tecnológica e extremamente confiável de peças para frotas urbanas e rodoviárias.
+                A Center Ônibus atua no mercado de peças para carrocerias de ônibus, atendendo empresas de transporte coletivo, oficinas, revendedores e profissionais do setor.
               </p>
               <p className="about-text">
-                Com um centro de distribuição logístico de ponta e parcerias com os maiores fabricantes globais, somos hoje a referência nacional quando o assunto é minimizar o tempo de frota parada, entregando qualidade diretamente na garagem.
+                A trajetória da empresa combina atendimento especializado, relacionamento sólido com parceiros e compromisso com a qualidade para apoiar operações de diferentes portes em todo o Brasil.
               </p>
             </div>
             <div className="about-stats">
               <div className="stat-card">
-                <strong>+15k</strong>
-                <span>Itens a pronta-entrega</span>
+                <strong>30+</strong>
+                <span>Anos de atuação no mercado</span>
               </div>
               <div className="stat-card">
-                <strong>24/7</strong>
-                <span>Suporte especializado</span>
+                <strong>ISO</strong>
+                <span>Certificação ISO 9001:2015</span>
               </div>
               <div className="stat-card">
-                <strong>98%</strong>
-                <span>Entregas dentro do prazo</span>
+                <strong>BR</strong>
+                <span>Atendimento em todo o Brasil</span>
               </div>
               <div className="stat-card">
-                <strong>20+</strong>
-                <span>Anos de autoridade no mercado</span>
+                <strong>360º</strong>
+                <span>Suporte próximo e consultivo</span>
               </div>
             </div>
           </div>
@@ -580,23 +580,23 @@ export function CenterbusOnePage() {
           </div>
           <div className="section-heading">
             <p className="kicker">nosso diferencial</p>
-            <h2 id="diferencial-title">A engrenagem perfeita para a sua frota.</h2>
+            <h2 id="diferencial-title">Especialização para comprar com segurança.</h2>
           </div>
           <div className="features-grid">
             <article className="feature-card">
               <span className="feature-number">01</span>
-              <h3>Qualidade OEM</h3>
-              <p>Trabalhamos exclusivamente com peças originais e de reposição de primeira linha para garantir máxima durabilidade no asfalto.</p>
+              <h3>Portfólio amplo</h3>
+              <p>Produtos organizados por categoria para facilitar a identificação das peças certas para cada carroceria e aplicação.</p>
             </article>
             <article className="feature-card">
               <span className="feature-number">02</span>
-              <h3>Logística Expressa</h3>
-              <p>Roteirização inteligente e frota própria de entrega garantem que a peça certa chegue no momento mais crítico da sua operação.</p>
+              <h3>Atendimento especializado</h3>
+              <p>Equipe preparada para orientar compras técnicas, validar compatibilidade e apoiar empresas, oficinas e revendedores.</p>
             </article>
             <article className="feature-card">
               <span className="feature-number">03</span>
-              <h3>Especialistas de Balcão</h3>
-              <p>Nosso time não apenas vende peças, mas entende de ônibus. Um suporte técnico treinado pelas próprias montadoras.</p>
+              <h3>Qualidade reconhecida</h3>
+              <p>Processos certificados, relacionamento com grandes fabricantes e compromisso contínuo com a satisfação dos clientes.</p>
             </article>
           </div>
         </section>
@@ -615,8 +615,8 @@ export function CenterbusOnePage() {
             <span />
           </div>
           <div className="section-heading">
-            <p className="kicker">linha CenterBus</p>
-            <h2 id="linha-title">Pedido por sistema.</h2>
+            <p className="kicker">linha Center Ônibus</p>
+            <h2 id="linha-title">Categorias claras para orçar melhor.</h2>
           </div>
           <div className="support-grid">
             {parts.map((part) => (
@@ -642,10 +642,10 @@ export function CenterbusOnePage() {
           </div>
           <div className="stock-layout">
             <div>
-              <p className="kicker">estoque e despacho</p>
-              <h2 id="estoque-title">Identifica. Confere. Entrega.</h2>
+              <p className="kicker">organização comercial</p>
+              <h2 id="estoque-title">Identifica. Confere. Atende.</h2>
             </div>
-            <div className="stock-board" aria-label="Fluxo de separação">
+            <div className="stock-board" aria-label="Fluxo de atendimento">
               {stockSteps.map((step) => (
                 <article className="stock-step" key={step.code}>
                   <span>{step.code}</span>
@@ -656,12 +656,12 @@ export function CenterbusOnePage() {
             </div>
             <div className="stock-metrics" aria-label="Indicadores de despacho">
               <div className="stock-metric">
-                <strong>18min</strong>
-                <span>tempo médio de triagem</span>
+                <strong>30+</strong>
+                <span>anos de relacionamento no setor</span>
               </div>
               <div className="stock-metric">
-                <strong>4 rotas</strong>
-                <span>prioridade por urgência</span>
+                <strong>ISO</strong>
+                <span>padrão de qualidade certificado</span>
               </div>
             </div>
           </div>
@@ -675,18 +675,16 @@ export function CenterbusOnePage() {
           </div>
           <div className="maps-grid">
             <div className="map-copy">
-              <p className="kicker">localização</p>
-              <h2 id="maps-title">Centro logístico no caminho da sua frota.</h2>
+              <p className="kicker">qualidade e presença</p>
+              <h2 id="maps-title">Uma parceira sólida para o transporte coletivo.</h2>
               <p>
-                Um ponto de atendimento pensado para compra técnica, retirada ágil e despacho orientado por urgência operacional.
+                A Center Ônibus une tradição, organização e atendimento nacional para entregar segurança em cada orçamento, pedido e relacionamento comercial.
               </p>
               <a
                 className="primary-action map-action"
-                href="https://www.google.com/maps/search/?api=1&query=CenterBus"
-                target="_blank"
-                rel="noreferrer"
+                href="mailto:comercial@centerbus.com.br?subject=Solicitação%20de%20orçamento%20-%20Center%20Ônibus"
               >
-                Abrir no Maps
+                Solicitar orçamento
               </a>
             </div>
             <div className="map-panel" aria-label="Mapa estilizado de operação">
@@ -706,7 +704,7 @@ export function CenterbusOnePage() {
               ))}
               <div className="map-card">
                 <span>raio de atendimento</span>
-                <strong>rota expressa</strong>
+                <strong>Brasil</strong>
               </div>
             </div>
           </div>
@@ -719,9 +717,12 @@ export function CenterbusOnePage() {
             <span />
           </div>
           <p className="kicker">comercial</p>
-          <h2 id="contato-title">Vamos colocar a frota em movimento.</h2>
-          <a href="mailto:comercial@centerbus.com.br" className="primary-action">
-            Chamar CenterBus
+          <h2 id="contato-title">Fale com a Center Ônibus.</h2>
+          <p className="contact-copy">
+            Atendimento para empresas de transporte urbano, rodoviário, fretamento, oficinas, compradores, revendedores e parceiros comerciais.
+          </p>
+          <a href="mailto:comercial@centerbus.com.br?subject=Contato%20comercial%20-%20Center%20Ônibus" className="primary-action">
+            Solicitar contato comercial
           </a>
         </section>
       </main>
