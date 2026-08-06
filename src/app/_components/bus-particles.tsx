@@ -81,7 +81,7 @@ void main() {
 
   vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
   
-  gl_PointSize = (2.8 * aRandom + 2.2) * uPointScale * mix(1.0, 0.78, travel) * (5.0 / -mvPosition.z);
+  gl_PointSize = (3.4 * aRandom + 2.8) * uPointScale * mix(1.0, 0.82, travel) * (5.0 / -mvPosition.z);
   gl_Position = projectionMatrix * mvPosition;
 
   vProgress = aRandom;
@@ -104,8 +104,9 @@ void main() {
     discard;
   }
 
-  float alpha = smoothstep(0.48, 0.08, dist) * uOpacity;
+  float alpha = smoothstep(0.5, 0.04, dist) * uOpacity;
   vec3 color = mix(uColorA, uColorB, vProgress);
+  color = mix(color, vec3(1.0), 0.16);
   
   gl_FragColor = vec4(color, alpha);
 }
@@ -150,9 +151,9 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       uDeltaTime: { value: 0 },
       uMouse: { value: new THREE.Vector3(999, 999, 999) },
       uRepulsion: { value: 0 },
-      uColorA: { value: new THREE.Color("#f4c430") },
-      uColorB: { value: new THREE.Color("#2aa7c9") },
-      uOpacity: { value: 0.98 },
+      uColorA: { value: new THREE.Color("#e04756") },
+      uColorB: { value: new THREE.Color("#79c4ec") },
+      uOpacity: { value: 1 },
       uPointScale: { value: width < 768 ? 0.98 : 0.86 },
       uScrollProgress: { value: 0 },
       uTransition: { value: 0 }
@@ -271,7 +272,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
         fragmentShader,
         transparent: true,
         depthWrite: false,
-        blending: THREE.NormalBlending
+        blending: THREE.AdditiveBlending
       });
 
       particles = new THREE.Points(geometry, material);

@@ -1,9 +1,12 @@
 "use client";
 
 import gsap from "gsap";
+import Image from "next/image";
+import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import { BusParticles } from "./bus-particles";
+import { aboutLinks, mainLinks } from "./institutional-nav";
 
 type Chapter = {
   eyebrow: string;
@@ -448,16 +451,28 @@ export function CenterbusOnePage() {
     <div ref={rootRef} className="site-shell">
       <header className="topbar" aria-label="Navegação principal">
         <a className="brand-mark" href="#topo" aria-label="Center Ônibus início">
-          <span aria-hidden="true">CO</span>
-          <strong>Center Ônibus</strong>
+          <Image src="/logo.png" alt="Center Ônibus" width={350} height={82} priority />
         </a>
-        <nav>
-          <a href="#sobre">Empresa</a>
-          <a href="#diferenciais">Diferenciais</a>
-          <a href="#linha">Produtos</a>
-          <a href="#estoque">Estoque</a>
-          <a href="#maps">Qualidade</a>
-          <a href="#contato">Contato</a>
+        <nav aria-label="Navegação institucional">
+          <Link href={mainLinks[0].href}>{mainLinks[0].label}</Link>
+          <div className="nav-dropdown">
+            <Link className="nav-dropdown-trigger" href="/sobre/a-center-onibus">
+              Sobre Nós
+              <span aria-hidden="true" />
+            </Link>
+            <div className="nav-dropdown-menu">
+              {aboutLinks.map((link) => (
+                <Link href={link.href} key={link.href}>
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+          {mainLinks.slice(1).map((link) => (
+            <Link href={link.href} key={link.href}>
+              {link.label}
+            </Link>
+          ))}
         </nav>
       </header>
 
