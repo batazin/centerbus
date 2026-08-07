@@ -284,7 +284,7 @@ export const productPage = {
       ],
     },
   ],
-};
+} as const;
 
 export const sellersPage = {
   eyebrow: "vendedores",
