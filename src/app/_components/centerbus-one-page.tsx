@@ -74,6 +74,8 @@ export function CenterbusOnePage() {
   const [selectedChapter, setSelectedChapter] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [particleTransition, setParticleTransition] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const closeMenu = () => setIsMenuOpen(false);
   const activeChapterProgress = (selectedChapter + 0.5) / chapters.length;
 
   useEffect(() => {
@@ -449,27 +451,41 @@ export function CenterbusOnePage() {
 
   return (
     <div ref={rootRef} className="site-shell">
-      <header className="topbar" aria-label="Navegação principal">
-        <a className="brand-mark" href="#topo" aria-label="Center Ônibus início">
+      <header className={`topbar${isMenuOpen ? " is-menu-open" : ""}`} aria-label="Navegação principal">
+        <a className="brand-mark" href="#topo" aria-label="Center Ônibus início" onClick={closeMenu}>
           <Image src="/logo.png" alt="Center Ônibus" width={350} height={82} priority />
         </a>
-        <nav aria-label="Navegação institucional">
-          <Link href={mainLinks[0].href}>{mainLinks[0].label}</Link>
+        <button
+          className="mobile-menu-toggle"
+          type="button"
+          aria-expanded={isMenuOpen}
+          aria-controls="home-mobile-nav"
+          aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+          onClick={() => setIsMenuOpen((open) => !open)}
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
+        <nav id="home-mobile-nav" aria-label="Navegação institucional">
+          <Link href={mainLinks[0].href} onClick={closeMenu}>
+            {mainLinks[0].label}
+          </Link>
           <div className="nav-dropdown">
-            <Link className="nav-dropdown-trigger" href="/sobre/a-center-onibus">
+            <Link className="nav-dropdown-trigger" href="/sobre/a-center-onibus" onClick={closeMenu}>
               Sobre Nós
               <span aria-hidden="true" />
             </Link>
             <div className="nav-dropdown-menu">
               {aboutLinks.map((link) => (
-                <Link href={link.href} key={link.href}>
+                <Link href={link.href} key={link.href} onClick={closeMenu}>
                   {link.label}
                 </Link>
               ))}
             </div>
           </div>
           {mainLinks.slice(1).map((link) => (
-            <Link href={link.href} key={link.href}>
+            <Link href={link.href} key={link.href} onClick={closeMenu}>
               {link.label}
             </Link>
           ))}
