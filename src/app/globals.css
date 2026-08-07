@@ -111,41 +111,63 @@ a:focus-visible {
 
 .mobile-menu-toggle {
   display: none;
-  width: 42px;
-  height: 42px;
-  flex: 0 0 42px;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
   place-items: center;
-  border: 1px solid currentColor;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
   padding: 0;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.08);
   color: inherit;
   cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.mobile-menu-toggle:hover,
+.mobile-menu-toggle:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
 }
 
 .mobile-menu-toggle span {
-  display: block;
+  position: absolute;
+  left: 12px;
   width: 18px;
   height: 2px;
   border-radius: 999px;
   background: currentColor;
-  transition: transform 180ms ease, opacity 180ms ease;
+  transform-origin: center;
+  transition: top 180ms ease, transform 180ms ease, opacity 140ms ease;
 }
 
-.mobile-menu-toggle span + span {
-  margin-top: 4px;
+.mobile-menu-toggle span:first-child {
+  top: 14px;
+}
+
+.mobile-menu-toggle span:nth-child(2) {
+  top: 21px;
+}
+
+.mobile-menu-toggle span:last-child {
+  top: 28px;
 }
 
 .is-menu-open .mobile-menu-toggle span:first-child {
-  transform: translateY(6px) rotate(45deg);
+  top: 21px;
+  transform: rotate(45deg);
 }
 
 .is-menu-open .mobile-menu-toggle span:nth-child(2) {
   opacity: 0;
+  transform: scaleX(0.4);
 }
 
 .is-menu-open .mobile-menu-toggle span:last-child {
-  transform: translateY(-6px) rotate(-45deg);
+  top: 21px;
+  transform: rotate(-45deg);
 }
 
 .nav-dropdown {
@@ -2689,13 +2711,15 @@ h2 {
   .topbar {
     top: 10px;
     width: calc(100% - 20px);
-    flex-wrap: wrap;
+    min-height: 62px;
     align-items: center;
-    padding: 8px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    background: rgba(11, 24, 40, 0.96);
   }
 
   .brand-mark img {
-    width: clamp(128px, 38vw, 168px);
+    width: clamp(136px, 42vw, 174px);
   }
 
   .mobile-menu-toggle {
@@ -2703,29 +2727,55 @@ h2 {
   }
 
   .topbar nav {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    left: 0;
     display: grid;
-    width: 100%;
+    width: auto;
     max-height: 0;
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 8px;
     overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0 8px;
+    background: rgba(11, 24, 40, 0.98);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.34);
+    visibility: hidden;
     opacity: 0;
-    transition: max-height 220ms ease, opacity 160ms ease, padding 220ms ease;
+    pointer-events: none;
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top center;
+    transition: max-height 240ms ease, opacity 160ms ease, padding 220ms ease, transform 200ms ease, visibility 0s linear 240ms;
   }
 
   .topbar.is-menu-open nav {
     max-height: 70vh;
     overflow-y: auto;
     padding-top: 8px;
+    padding-bottom: 8px;
+    visibility: visible;
     opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+    transition-delay: 0s;
   }
 
   .topbar nav a {
     width: 100%;
-    min-height: 40px;
+    min-height: 44px;
     justify-content: space-between;
-    padding: 8px 10px;
-    font-size: 0.86rem;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 0.92rem;
+    color: rgba(248, 251, 255, 0.92);
+  }
+
+  .topbar nav a:hover,
+  .topbar nav a:focus-visible {
+    background: rgba(184, 41, 54, 0.16);
+    color: #ffffff;
   }
 
   .nav-dropdown {
@@ -2736,13 +2786,23 @@ h2 {
     position: static;
     width: 100%;
     min-width: 0;
-    margin-top: 4px;
-    border-color: rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.04);
+    margin: 3px 0 2px;
+    border: 0;
+    border-left: 2px solid rgba(184, 41, 54, 0.5);
+    border-radius: 0;
+    padding: 2px 0 2px 8px;
+    background: transparent;
     box-shadow: none;
     opacity: 1;
     pointer-events: auto;
     transform: none;
+  }
+
+  .topbar nav .nav-dropdown-menu a {
+    min-height: 38px;
+    padding-left: 12px;
+    color: rgba(248, 251, 255, 0.78);
+    font-size: 0.84rem;
   }
 
   .nav-dropdown-menu::before {
@@ -2943,41 +3003,77 @@ h2 {
   }
 
   .institutional-header {
+    position: sticky;
     min-height: auto;
     justify-content: space-between;
     gap: 10px;
-    flex-wrap: wrap;
-    padding: 12px 16px;
+    padding: 10px 14px;
   }
 
   .institutional-header .mobile-menu-toggle {
+    border-color: rgba(7, 20, 33, 0.16);
+    background: rgba(31, 79, 129, 0.06);
     color: #071421;
   }
 
+  .institutional-header .mobile-menu-toggle:hover,
+  .institutional-header .mobile-menu-toggle:focus-visible {
+    background: rgba(90, 161, 200, 0.14);
+    border-color: rgba(31, 79, 129, 0.26);
+  }
+
+  .institutional-logo img {
+    width: clamp(142px, 42vw, 184px);
+  }
+
   .institutional-nav {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 10px;
+    left: 10px;
     display: grid;
-    width: 100%;
+    width: auto;
     max-height: 0;
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 8px;
     overflow: hidden;
+    border: 1px solid rgba(7, 20, 33, 0.1);
+    border-radius: 10px;
+    padding: 0 8px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 24px 50px rgba(7, 20, 33, 0.16);
+    visibility: hidden;
     opacity: 0;
-    transition: max-height 220ms ease, opacity 160ms ease, padding 220ms ease;
+    pointer-events: none;
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top center;
+    transition: max-height 240ms ease, opacity 160ms ease, padding 220ms ease, transform 200ms ease, visibility 0s linear 240ms;
   }
 
   .institutional-header.is-menu-open .institutional-nav {
     max-height: 72vh;
     overflow-y: auto;
-    padding-top: 6px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    visibility: visible;
     opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+    transition-delay: 0s;
   }
 
   .institutional-nav a {
     width: 100%;
-    min-height: 40px;
+    min-height: 44px;
     justify-content: space-between;
-    padding: 0 12px;
-    font-size: 0.9rem;
+    border-radius: 8px;
+    padding: 0 13px;
+    font-size: 0.92rem;
+  }
+
+  .institutional-nav a:hover,
+  .institutional-nav a:focus-visible {
+    background: rgba(90, 161, 200, 0.14);
   }
 
   .institutional-dropdown {
@@ -2988,13 +3084,23 @@ h2 {
     position: static;
     width: 100%;
     min-width: 0;
-    margin-top: 4px;
-    border-color: rgba(7, 20, 33, 0.1);
-    background: rgba(90, 161, 200, 0.08);
+    margin: 3px 0 2px;
+    border: 0;
+    border-left: 2px solid rgba(184, 41, 54, 0.45);
+    border-radius: 0;
+    padding: 2px 0 2px 8px;
+    background: transparent;
     box-shadow: none;
     opacity: 1;
     pointer-events: auto;
     transform: none;
+  }
+
+  .institutional-dropdown-menu a {
+    min-height: 38px;
+    padding-left: 12px;
+    color: rgba(7, 20, 33, 0.72);
+    font-size: 0.84rem;
   }
 
   .institutional-dropdown-menu::before {
