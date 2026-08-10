@@ -117,9 +117,10 @@ type BusParticlesProps = {
   activeChapterProgress: number;
   scrollProgress: number;
   transitionProgress: number;
+  variant?: "hero" | "journey";
 };
 
-export function BusParticles({ activeChapterIndex, activeChapterProgress, scrollProgress, transitionProgress }: BusParticlesProps) {
+export function BusParticles({ activeChapterIndex, activeChapterProgress, scrollProgress, transitionProgress, variant = "journey" }: BusParticlesProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const modelGroupRef = useRef<THREE.Group | null>(null);
   const baseRotationRef = useRef(modelViewRotations[0]);
@@ -133,8 +134,8 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
     const height = mountElement.clientHeight;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 0, 15);
+    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
+    camera.position.set(0, 0, variant === "hero" ? 13.2 : 14.2);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(width, height);
@@ -151,10 +152,10 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       uDeltaTime: { value: 0 },
       uMouse: { value: new THREE.Vector3(999, 999, 999) },
       uRepulsion: { value: 0 },
-      uColorA: { value: new THREE.Color("#e04756") },
-      uColorB: { value: new THREE.Color("#79c4ec") },
-      uOpacity: { value: 1 },
-      uPointScale: { value: width < 768 ? 0.98 : 0.86 },
+      uColorA: { value: new THREE.Color(variant === "hero" ? "#ff4a5f" : "#f14d65") },
+      uColorB: { value: new THREE.Color(variant === "hero" ? "#9dd8ff" : "#8fd1ff") },
+      uOpacity: { value: variant === "hero" ? 1.28 : 1.42 },
+      uPointScale: { value: width < 768 ? 1.12 : variant === "hero" ? 1.16 : 1.04 },
       uScrollProgress: { value: 0 },
       uTransition: { value: 0 }
     };
@@ -165,7 +166,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
     modelGroupRef.current = modelGroup;
     scene.add(modelGroup);
 
-    const particleCount = typeof window !== "undefined" && window.innerWidth < 768 ? 6000 : 22000;
+    const particleCount = typeof window !== "undefined" && window.innerWidth < 768 ? 7600 : 30000;
 
     const loadModelPositions = (path: string) =>
       new Promise<Float32Array>((resolve, reject) => {
@@ -212,7 +213,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
           const bounds = sourceMesh.geometry.boundingBox!;
           const center = bounds.getCenter(new THREE.Vector3());
           const size = bounds.getSize(new THREE.Vector3());
-          const scale = 14.8 / Math.max(size.x, size.y, size.z);
+          const scale = (variant === "hero" ? 15.8 : 15.2) / Math.max(size.x, size.y, size.z);
 
           sourceMesh.geometry.translate(-center.x, -center.y, -center.z);
           sourceMesh.geometry.scale(scale, scale, scale);
@@ -379,7 +380,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       camera.aspect = newWidth / newHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(newWidth, newHeight);
-      uniforms.uPointScale.value = newWidth < 768 ? 0.98 : 0.86;
+      uniforms.uPointScale.value = newWidth < 768 ? 1.12 : variant === "hero" ? 1.16 : 1.04;
     };
     window.addEventListener("resize", onResize);
 
@@ -426,7 +427,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       uniformsRef.current = null;
       modelGroupRef.current = null;
     };
-  }, []);
+  }, [variant]);
 
   useEffect(() => {
     if (uniformsRef.current?.uScrollProgress) {

@@ -30,11 +30,13 @@
 
 html {
   background: var(--paper);
+  overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
 body {
   min-width: 320px;
+  overflow-x: hidden;
   margin: 0;
   background: var(--paper);
   color: var(--ink);
@@ -1954,10 +1956,19 @@ h2 {
 
 .institutional-shell {
   min-height: 100vh;
+  overscroll-behavior: auto;
   background:
     radial-gradient(circle at 82% 22%, rgba(90, 161, 200, 0.16), transparent 30%),
     linear-gradient(180deg, #f8fbff, #edf4fa 42%, #dfeaf3);
   color: #071421;
+}
+
+html:has(.institutional-shell) {
+  scroll-behavior: auto;
+}
+
+body:has(.institutional-shell) {
+  overscroll-behavior: auto;
 }
 
 .institutional-header {
@@ -2708,6 +2719,17 @@ h2 {
 }
 
 @media (max-width: 720px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .site-shell {
+    width: 100%;
+    overflow-x: clip;
+  }
+
   .topbar {
     top: 10px;
     width: calc(100% - 20px);
@@ -2811,20 +2833,35 @@ h2 {
 
   .sequence-section,
   .sequence-frame {
-    min-height: 100vh;
+    min-height: auto;
     grid-template-columns: 1fr;
     padding-top: 102px;
   }
 
   .sequence-section.free-section {
-    height: 100vh;
-    min-height: 100vh;
+    height: auto;
+    min-height: 100svh;
     padding: 0;
   }
 
   .sequence-frame {
-    min-height: 100vh;
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
     padding-bottom: 32px;
+  }
+
+  .snap-section,
+  .about-section,
+  .features-section,
+  .support-section,
+  .stock-section,
+  .maps-section,
+  .contact-section {
+    height: auto;
+    min-height: auto;
+    overflow-x: clip;
+    overflow-y: visible;
   }
 
   .hero-title {
@@ -2841,7 +2878,8 @@ h2 {
   }
 
   .about-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 
   .about-section {
@@ -2856,16 +2894,19 @@ h2 {
     line-height: 1.55;
   }
 
-  .about-stats {
-    gap: 10px;
-  }
-
   .stat-card {
-    padding: 16px;
+    min-height: 118px;
+    padding: 14px;
   }
 
   .stat-card strong {
-    font-size: 2.3rem;
+    margin-bottom: 10px;
+    font-size: 1.95rem;
+  }
+
+  .stat-card span {
+    font-size: 0.78rem;
+    line-height: 1.35;
   }
 
   .about-signal-a,
@@ -2887,7 +2928,7 @@ h2 {
   .features-grid,
   .support-grid,
   .part-pills {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .features-section,
@@ -2895,27 +2936,38 @@ h2 {
   .stock-section,
   .maps-section {
     align-content: start;
-    padding-top: 118px;
-    padding-bottom: 28px;
+    padding-top: 92px;
+    padding-bottom: 30px;
+  }
+
+  .features-grid,
+  .support-grid {
+    gap: 12px;
   }
 
   .feature-card,
   .support-card {
-    padding: 18px;
+    min-height: auto;
+    padding: 14px;
+  }
+
+  .feature-number,
+  .support-card span {
+    margin-bottom: 14px;
   }
 
   .feature-card h3,
   .support-card h3,
   .stock-step h3 {
-    font-size: 1.08rem;
+    font-size: 0.98rem;
   }
 
   .feature-card p,
   .support-card p,
   .stock-step p,
   .map-copy p:not(.kicker) {
-    font-size: 0.88rem;
-    line-height: 1.45;
+    font-size: 0.78rem;
+    line-height: 1.38;
   }
 
   .stock-board {

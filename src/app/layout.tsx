@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo_Narrow, Inter, JetBrains_Mono } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
+import "./home-rebrand.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,10 +16,17 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const archivoNarrow = Archivo_Narrow({
+  subsets: ["latin"],
+  variable: "--font-archivo-condensed",
+  display: "swap",
+  weight: ["500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Center Ônibus | Peças para carrocerias de ônibus",
   description:
-    "Website institucional da Center Ônibus, especialista em peças para carrocerias de ônibus com tradição, qualidade e atendimento nacional.",
+    "Center Ônibus: peças para carrocerias de ônibus, atendimento técnico e estoque para manter a frota em operação.",
 };
 
 export default function RootLayout({
@@ -28,7 +37,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`h-full antialiased ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`h-full antialiased ${inter.variable} ${jetbrainsMono.variable} ${archivoNarrow.variable}`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
