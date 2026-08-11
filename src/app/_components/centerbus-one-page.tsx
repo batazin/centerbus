@@ -81,24 +81,30 @@ export function CenterbusOnePage() {
     if (!root) return;
 
     gsap.registerPlugin(ScrollTrigger);
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const lenis = prefersReducedMotion
-      ? null
-      : new Lenis({
-          duration: 1,
-          smoothWheel: true,
-          syncTouch: false,
-          anchors: { offset: -90, duration: 0.9 },
-          overscroll: true,
-          stopInertiaOnNavigate: true,
-        });
+    const lenis = new Lenis({
+      duration: 1.45,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      syncTouch: false,
+      wheelMultiplier: 0.72,
+      touchMultiplier: 1,
+      anchors: { offset: -90, duration: 1.25 },
+      overscroll: true,
+      stopInertiaOnNavigate: true,
+      respectReducedMotion: false,
+    });
 
     const syncScrollTrigger = () => ScrollTrigger.update();
-    const updateLenis = (time: number) => lenis?.raf(time * 1000);
+    const updateLenis = (time: number) => lenis.raf(time * 1000);
 
-    lenis?.on("scroll", syncScrollTrigger);
-    if (lenis) gsap.ticker.add(updateLenis);
+    lenis.on("scroll", syncScrollTrigger);
+    gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
+
+    const refreshScroll = () => {
+      lenis.resize();
+      ScrollTrigger.refresh();
+    };
 
     const context = gsap.context(() => {
       const revealGroups = gsap.utils.toArray<HTMLElement>("[data-reveal-group]");
@@ -154,7 +160,7 @@ export function CenterbusOnePage() {
           start: "top top",
           end: "bottom bottom",
           pin: ".home-journey-sticky",
-          pinSpacing: false,
+          pinSpacing: true,
           anticipatePin: 1,
           scrub: 0.75,
           onUpdate: (self) => {
@@ -250,14 +256,17 @@ export function CenterbusOnePage() {
 
     }, root);
 
-    ScrollTrigger.refresh();
+    const refreshTimeout = window.setTimeout(refreshScroll, 250);
+    window.addEventListener("load", refreshScroll);
+    document.fonts?.ready.then(refreshScroll).catch(() => undefined);
+    refreshScroll();
 
     return () => {
-      if (lenis) {
-        gsap.ticker.remove(updateLenis);
-        lenis.off("scroll", syncScrollTrigger);
-        lenis.destroy();
-      }
+      window.clearTimeout(refreshTimeout);
+      window.removeEventListener("load", refreshScroll);
+      gsap.ticker.remove(updateLenis);
+      lenis.off("scroll", syncScrollTrigger);
+      lenis.destroy();
       context.revert();
     };
   }, []);

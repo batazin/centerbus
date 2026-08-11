@@ -24,6 +24,11 @@ html.lenis:has(.home-shell) {
   scroll-behavior: auto !important;
 }
 
+html.lenis.lenis-smooth:has(.home-shell),
+html.lenis.lenis-smooth:has(.home-shell) body {
+  scroll-behavior: auto !important;
+}
+
 body:has(.home-shell) {
   display: block;
 }
