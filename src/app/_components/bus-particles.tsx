@@ -168,7 +168,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
 
     const particleCount = typeof window !== "undefined" && window.innerWidth < 768 ? 7600 : 30000;
 
-    const loadModelPositions = (path: string) =>
+    const loadModelPositions = (path: string, attempt = 0) =>
       new Promise<Float32Array>((resolve, reject) => {
         const loader = new GLTFLoader();
 
@@ -231,17 +231,30 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
           }
 
           resolve(positions);
-        }, undefined, reject);
+        }, undefined, (error) => {
+          if (attempt < 1) {
+            window.setTimeout(() => {
+              loadModelPositions(path, attempt + 1).then(resolve).catch(reject);
+            }, 300);
+            return;
+          }
+
+          reject(error);
+        });
       });
 
     loadModelPositions(fallbackModel).then((fallbackPositions) => {
       Promise.all(
-        particleModels.map((model) =>
-          loadModelPositions(model).catch((error: unknown) => {
-            console.error(`Could not load ${model}; using fallback particles`, error);
+        particleModels.map((model) => {
+          if (model === fallbackModel) {
+            return Promise.resolve(fallbackPositions.slice());
+          }
+
+          return loadModelPositions(model).catch((error: unknown) => {
+            console.warn(`Could not load ${model}; using fallback particles`, error);
             return fallbackPositions.slice();
-          })
-        )
+          });
+        })
       ).then((modelPositions) => {
       const targetPositions = new Float32Array(particleCount * 3);
       const randoms = new Float32Array(particleCount);
