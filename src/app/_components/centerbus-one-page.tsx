@@ -89,12 +89,6 @@ const operationSteps = [
   },
 ] as const;
 
-const serviceSignals = [
-  { label: "Entrada", value: "Código, foto ou modelo" },
-  { label: "Conferência", value: "Aplicação antes do preço" },
-  { label: "Saída", value: "Retirada ou despacho" },
-] as const;
-
 const units = [
   { state: "SP", city: "São Paulo", label: "Matriz", role: "Atendimento, estoque e suporte técnico para operações de grande giro." },
   { state: "BA", city: "Lauro de Freitas", label: "Filial", role: "Base regional para reduzir distância e acelerar reposição no Nordeste." },
@@ -120,7 +114,7 @@ export function CenterbusOnePage() {
       anchors: { offset: -90, duration: 1.25 },
       overscroll: true,
       stopInertiaOnNavigate: true,
-      respectReducedMotion: false,
+      respectReducedMotion: true,
     });
 
     const syncScrollTrigger = () => ScrollTrigger.update();
@@ -136,8 +130,6 @@ export function CenterbusOnePage() {
     };
 
     const context = gsap.context(() => {
-      const revealGroups = gsap.utils.toArray<HTMLElement>("[data-reveal-group]");
-
       gsap.from(".home-header", {
         y: -22,
         duration: 0.7,
@@ -171,105 +163,16 @@ export function CenterbusOnePage() {
         },
       });
 
-      revealGroups.forEach((group) => {
-        const items = Array.from(group.querySelectorAll<HTMLElement>("[data-reveal]")).filter((item) =>
-          !item.matches(".home-action-card, .home-service-strip article, .home-process article, .home-category-grid article, .home-unit-list article")
-        );
-        if (items.length === 0) return;
-
-        gsap.from(items, {
-          y: 24,
-          opacity: 0,
-          duration: 0.78,
-          stagger: 0.07,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: group,
-            start: "top 78%",
-            once: true,
-          },
-        });
-      });
-
       gsap.fromTo(".home-action-diagonal", { xPercent: 18 }, {
         xPercent: -10,
         ease: "none",
         scrollTrigger: { trigger: ".home-action-panel", start: "top bottom", end: "bottom top", scrub: true },
       });
 
-      gsap.fromTo(".home-action-card", {
-        clipPath: "inset(0 0 100% 0)",
-        y: 42,
-      }, {
-        clipPath: "inset(0 0 0% 0)",
-        y: 0,
-        duration: 0.9,
-        stagger: 0.11,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".home-action-cards", start: "top 78%", once: true },
-      });
-
-      gsap.fromTo(".home-service-strip-signal", { scaleX: 0 }, {
-        scaleX: 1,
-        duration: 0.85,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".home-service-strip", start: "top 84%", once: true },
-      });
-
-      gsap.fromTo(".home-service-strip article", {
-        x: -28,
-        opacity: 0,
-      }, {
-        x: 0,
-        opacity: 1,
-        duration: 0.74,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".home-service-strip", start: "top 82%", once: true },
-      });
-
       gsap.fromTo(".home-process-progress", { scaleX: 0 }, {
         scaleX: 1,
         ease: "none",
         scrollTrigger: { trigger: ".home-operation", start: "top 72%", end: "center center", scrub: true },
-      });
-
-      gsap.fromTo(".home-process article", {
-        y: 44,
-        opacity: 0,
-      }, {
-        y: 0,
-        opacity: 1,
-        duration: 0.78,
-        stagger: 0.09,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".home-process", start: "top 78%", once: true },
-      });
-
-      gsap.fromTo(".home-category-grid article", {
-        y: 48,
-        opacity: 0,
-        clipPath: "inset(12% 0 0 0)",
-      }, {
-        y: 0,
-        opacity: 1,
-        clipPath: "inset(0% 0 0 0)",
-        duration: 0.86,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".home-category-grid", start: "top 80%", once: true },
-      });
-
-      gsap.fromTo(".home-unit-list article", {
-        x: -34,
-        opacity: 0,
-      }, {
-        x: 0,
-        opacity: 1,
-        duration: 0.78,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".home-unit-list", start: "top 82%", once: true },
       });
 
       gsap.fromTo(".home-proof-signal", { scaleX: 0 }, {
@@ -368,7 +271,7 @@ export function CenterbusOnePage() {
           <div className="home-container home-action-layout" data-reveal-group>
             <div className="home-action-intro" data-reveal>
               <p className="home-kicker">Atendimento técnico</p>
-              <h1 id="action-title">Precisa identificar uma peça?</h1>
+              <h2 id="action-title">Precisa identificar uma peça?</h2>
               <p>
                 Envie foto, código ou modelo do ônibus. A resposta começa pela aplicação correta, antes do preço e antes da promessa de prazo.
               </p>
@@ -376,30 +279,25 @@ export function CenterbusOnePage() {
                 <Link className="home-button home-button-primary" href="/fale-conosco">Falar com especialista</Link>
                 <Link className="home-button home-button-quiet-dark" href="/produtos">Consultar catálogo</Link>
               </div>
+              <dl className="home-action-proof" aria-label="Dados do atendimento">
+                <div><dt>Entrada</dt><dd>foto, código ou modelo</dd></div>
+                <div><dt>Resposta</dt><dd>aplicação conferida</dd></div>
+              </dl>
             </div>
 
             <div className="home-action-cards" aria-label="Caminhos rápidos">
               {quickActions.map((action, index) => (
                 <Link href={action.href} className="home-action-card" key={action.label} data-reveal>
                   <span>0{index + 1}</span>
-                  <small>{action.label}</small>
-                  <strong>{action.title}</strong>
-                  <p>{action.copy}</p>
+                  <div>
+                    <small>{action.label}</small>
+                    <strong>{action.title}</strong>
+                    <p>{action.copy}</p>
+                  </div>
+                  <b aria-hidden="true">→</b>
                 </Link>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section className="home-service-strip" aria-label="Fluxo rápido de atendimento">
-          <span className="home-service-strip-signal" aria-hidden="true" />
-          <div className="home-container home-service-strip-grid" data-reveal-group>
-            {serviceSignals.map((signal) => (
-              <article key={signal.label} data-reveal>
-                <span>{signal.label}</span>
-                <strong>{signal.value}</strong>
-              </article>
-            ))}
           </div>
         </section>
 
@@ -408,8 +306,8 @@ export function CenterbusOnePage() {
             <div className="home-operation-intro">
               <div className="home-section-heading" data-reveal>
                 <p className="home-kicker">Conhecimento antes do catálogo</p>
-                <h2 id="operation-title">Comprar certo começa pela aplicação.</h2>
-                <p>Da identificação ao despacho, cada etapa reduz dúvida e mantém a manutenção avançando.</p>
+                <h2 id="operation-title">Da foto ao despacho, sem adivinhação.</h2>
+                <p>Um fluxo curto para confirmar a aplicação, alinhar o prazo e fazer a peça certa seguir viagem.</p>
               </div>
               <aside className="home-operation-note" data-reveal aria-label="Resumo operacional">
                 <span>Fluxo de atendimento</span>
@@ -435,22 +333,30 @@ export function CenterbusOnePage() {
             <div className="home-container home-catalog-layout" data-reveal-group>
               <div className="home-section-heading" data-reveal>
                 <p className="home-kicker">Linha Center Ônibus</p>
-                <h2 id="catalog-title">Catálogo pensado para operação, não para vitrine.</h2>
-                <p>Categoria, código, aplicação, exemplo de peça e disponibilidade precisam aparecer rápido. É assim que a peça certa sai primeiro.</p>
+                <h2 id="catalog-title">Encontre pelo que você já tem em mãos.</h2>
+                <p>Comece pela categoria. Depois, confirme por código, foto, carroceria ou aplicação com a equipe.</p>
                 <Link className="home-text-link" href="/produtos">Consultar catálogo <span aria-hidden="true">→</span></Link>
+                <div className="home-catalog-note" aria-label="Critérios de consulta">
+                  <span>Consulta por</span>
+                  <strong>código, foto, carroceria ou aplicação</strong>
+                </div>
               </div>
               <div className="home-category-grid">
                 {categories.map((category, index) => (
                   <article key={category.code} data-reveal>
-                    <div><span>{category.code}</span><small>0{index + 1}</small></div>
-                    <h3>{category.title}</h3>
-                    <p>{category.detail}</p>
-                    <dl>
-                      <div><dt>Aplicação</dt><dd>{category.application}</dd></div>
-                      <div><dt>Exemplos</dt><dd>{category.examples}</dd></div>
-                      <div><dt>Status</dt><dd>{category.availability}</dd></div>
-                    </dl>
-                    <Link href="/produtos" aria-label={`Ver produtos de ${category.title}`}>→</Link>
+                    <Link href="/produtos" aria-label={`Ver produtos de ${category.title}`}>
+                      <div className="home-category-id"><span>{category.code}</span><small>0{index + 1}</small></div>
+                      <div className="home-category-summary">
+                        <h3>{category.title}</h3>
+                        <p>{category.detail}</p>
+                      </div>
+                      <dl>
+                        <div><dt>Aplicação</dt><dd>{category.application}</dd></div>
+                        <div><dt>Exemplos</dt><dd>{category.examples}</dd></div>
+                        <div><dt>Conferência</dt><dd>{category.availability}</dd></div>
+                      </dl>
+                      <b aria-hidden="true">→</b>
+                    </Link>
                   </article>
                 ))}
               </div>
@@ -463,7 +369,7 @@ export function CenterbusOnePage() {
           <div className="home-container home-proof-layout" data-reveal-group>
             <div className="home-proof-statement" data-reveal>
               <p className="home-kicker">Palavra que se cumpre</p>
-              <h2 id="proof-title">Estrutura para responder. Experiência para resolver.</h2>
+              <h2 id="proof-title">Estrutura para responder. Experiência para conferir.</h2>
               <p>Mais de quatro décadas acompanhando a evolução das carrocerias e as urgências de quem mantém o transporte em operação.</p>
             </div>
             <div className="home-proof-numbers">
@@ -480,6 +386,7 @@ export function CenterbusOnePage() {
             <div className="home-section-heading" data-reveal>
               <p className="home-kicker">Presença que encurta distâncias</p>
               <h2 id="units-title">Três unidades. Uma equipe pronta para atender.</h2>
+              <p>Atendimento próximo para consulta, separação, retirada e despacho conforme a urgência da operação.</p>
             </div>
             <div className="home-unit-list">
               {units.map((unit) => (
