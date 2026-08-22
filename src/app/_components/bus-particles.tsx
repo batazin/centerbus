@@ -8,19 +8,25 @@ import { MeshSurfaceSampler } from "three/examples/jsm/math/MeshSurfaceSampler.j
 import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 const particleModels = [
-  "/particles/engine_radiator.glb",
   "/particles/onibus.glb",
+  "/particles/engine_radiator.glb",
   "/particles/disk_brake.glb",
   "/particles/battery.glb",
 ];
 
 const fallbackModel = "/particles/onibus.glb";
 const modelViewRotations = [
-  { x: -0.06, y: 0 },
   { x: 0, y: Math.PI / 2.15 },
+  { x: -0.06, y: 0 },
   { x: 0.18, y: 0.12 },
   { x: 0.02, y: -0.18 },
 ];
+
+const getModelOffsetX = (width: number, variant: BusParticlesProps["variant"], activeChapterIndex: number) => {
+  if (variant === "hero" || width < 768) return 0;
+  const direction = activeChapterIndex % 2 === 0 ? 1 : -1;
+  return (width < 1180 ? 4.4 : 6.4) * direction;
+};
 
 const vertexShader = `
 uniform float uTime;
@@ -29,6 +35,7 @@ uniform vec3 uMouse;
 uniform float uRepulsion;
 uniform float uTransition;
 uniform float uScrollProgress;
+uniform float uMorphEnergy;
 uniform float uPointScale;
 
 attribute vec3 shape0Position;
@@ -51,7 +58,7 @@ vec3 fakeNoise(vec3 x) {
 void main() {
   vUv = uv;
   float travel = smoothstep(0.0, 1.0, uTransition);
-  float shapeProgress = clamp(uScrollProgress * 4.0 - 0.5, 0.0, 3.0);
+  float shapeProgress = clamp(uScrollProgress, 0.0, 1.0) * 3.0;
   vec3 shapePosition = shape0Position;
 
   if (shapeProgress < 1.0) {
@@ -67,8 +74,9 @@ void main() {
   vec3 pos = mix(shapePosition, targetPosition, travel);
   
   // Reduced noise to avoid scrambling the bus shape
-  vec3 flow = fakeNoise(pos * 1.5 + vec3(aRandom * 4.0)) * mix(0.004, 0.045, travel);
+  vec3 flow = fakeNoise(pos * 1.5 + vec3(aRandom * 4.0)) * (mix(0.004, 0.045, travel) + uMorphEnergy * 0.34);
   pos += flow;
+  pos += normalize(pos + vec3(0.001)) * sin(uTime * 2.4 + aRandom * 18.0) * uMorphEnergy * 0.22;
   pos.y -= travel * 1.7;
   pos.x += sin(uTime * 1.4 + aRandom * 9.0) * travel * 0.18;
 
@@ -117,14 +125,17 @@ type BusParticlesProps = {
   activeChapterProgress: number;
   scrollProgress: number;
   transitionProgress: number;
+  morphEnergy?: number;
   variant?: "hero" | "journey";
 };
 
-export function BusParticles({ activeChapterIndex, activeChapterProgress, scrollProgress, transitionProgress, variant = "journey" }: BusParticlesProps) {
+export function BusParticles({ activeChapterIndex, activeChapterProgress, scrollProgress, transitionProgress, morphEnergy = 0, variant = "journey" }: BusParticlesProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const modelGroupRef = useRef<THREE.Group | null>(null);
   const baseRotationRef = useRef(modelViewRotations[0]);
-  const uniformsRef = useRef<Partial<{ uScrollProgress: { value: number }; uTransition: { value: number } }> | null>(null);
+  const targetScrollProgressRef = useRef(0);
+  const targetMorphEnergyRef = useRef(0);
+  const uniformsRef = useRef<Partial<{ uScrollProgress: { value: number }; uTransition: { value: number }; uMorphEnergy: { value: number } }> | null>(null);
   
   useEffect(() => {
     if (!mountRef.current) return;
@@ -132,16 +143,18 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
     const mountElement = mountRef.current;
     const width = mountElement.clientWidth;
     const height = mountElement.clientHeight;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
-    camera.position.set(0, 0, variant === "hero" ? 13.2 : 14.2);
+    camera.position.set(0, 0, variant === "hero" ? 14.2 : 15.4);
+    const modelOffset = { x: getModelOffsetX(width, variant, activeChapterIndex) };
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, width < 768 ? 1.15 : 1.5));
     renderer.domElement.style.cursor = "grab";
-    renderer.domElement.style.touchAction = "none";
+    renderer.domElement.style.touchAction = "pan-y";
     mountElement.appendChild(renderer.domElement);
 
     const timer = new THREE.Timer();
@@ -157,6 +170,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       uOpacity: { value: variant === "hero" ? 1.28 : 1.42 },
       uPointScale: { value: width < 768 ? 1.12 : variant === "hero" ? 1.16 : 1.04 },
       uScrollProgress: { value: 0 },
+      uMorphEnergy: { value: 0 },
       uTransition: { value: 0 }
     };
     uniformsRef.current = uniforms;
@@ -166,7 +180,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
     modelGroupRef.current = modelGroup;
     scene.add(modelGroup);
 
-    const particleCount = typeof window !== "undefined" && window.innerWidth < 768 ? 7600 : 30000;
+    const particleCount = typeof window !== "undefined" && window.innerWidth < 768 ? 6500 : 22000;
 
     const loadModelPositions = (path: string, attempt = 0) =>
       new Promise<Float32Array>((resolve, reject) => {
@@ -213,7 +227,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
           const bounds = sourceMesh.geometry.boundingBox!;
           const center = bounds.getCenter(new THREE.Vector3());
           const size = bounds.getSize(new THREE.Vector3());
-          const scale = (variant === "hero" ? 15.8 : 15.2) / Math.max(size.x, size.y, size.z);
+          const scale = (variant === "hero" ? 11.4 : 9.8) / Math.max(size.x, size.y, size.z);
 
           sourceMesh.geometry.translate(-center.x, -center.y, -center.z);
           sourceMesh.geometry.scale(scale, scale, scale);
@@ -310,6 +324,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       lastX: 0,
       lastY: 0,
     };
+    const currentBaseRotation = { ...modelViewRotations[0] };
     
     const planeGeometry = new THREE.PlaneGeometry(50, 50);
     const planeMaterial = new THREE.MeshBasicMaterial({ visible: false });
@@ -392,27 +407,44 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       const newHeight = mountRef.current.clientHeight;
       camera.aspect = newWidth / newHeight;
       camera.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, newWidth < 768 ? 1.15 : 1.5));
       renderer.setSize(newWidth, newHeight);
       uniforms.uPointScale.value = newWidth < 768 ? 1.12 : variant === "hero" ? 1.16 : 1.04;
+      modelOffset.x = getModelOffsetX(newWidth, variant, activeChapterIndex);
     };
     window.addEventListener("resize", onResize);
 
+    let isVisible = true;
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+    }, { rootMargin: "180px 0px" });
+    visibilityObserver.observe(mountElement);
+
     let animationId: number;
     const animate = (timestamp?: number) => {
+      if (!isVisible || document.hidden) {
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
       timer.update(timestamp);
 
       const delta = timer.getDelta();
       const elapsedTime = timer.getElapsed();
       
-      uniforms.uTime.value = elapsedTime;
+      uniforms.uTime.value = reducedMotion ? 0 : elapsedTime;
       uniforms.uDeltaTime.value = delta;
+      uniforms.uScrollProgress.value += (targetScrollProgressRef.current - uniforms.uScrollProgress.value) * (reducedMotion ? 1 : 0.055);
+      uniforms.uMorphEnergy.value += (targetMorphEnergyRef.current - uniforms.uMorphEnergy.value) * (reducedMotion ? 1 : 0.09);
       
       if (modelGroupRef.current) {
-        modelGroupRef.current.position.y = Math.sin(elapsedTime * 1.2) * 0.2;
+        modelGroupRef.current.position.x = modelOffset.x;
+        modelGroupRef.current.position.y = reducedMotion ? 0 : Math.sin(elapsedTime * 1.2) * 0.2;
+        currentBaseRotation.x += (baseRotationRef.current.x - currentBaseRotation.x) * (reducedMotion ? 1 : 0.06);
+        currentBaseRotation.y += (baseRotationRef.current.y - currentBaseRotation.y) * (reducedMotion ? 1 : 0.06);
         pointerRotation.currentX += (pointerRotation.targetX - pointerRotation.currentX) * 0.12;
         pointerRotation.currentY += (pointerRotation.targetY - pointerRotation.currentY) * 0.12;
-        modelGroupRef.current.rotation.y = baseRotationRef.current.y + pointerRotation.currentX;
-        modelGroupRef.current.rotation.x = baseRotationRef.current.x + pointerRotation.currentY;
+        modelGroupRef.current.rotation.y = currentBaseRotation.y + pointerRotation.currentX;
+        modelGroupRef.current.rotation.x = currentBaseRotation.x + pointerRotation.currentY;
       }
 
       if(uniforms.uRepulsion.value > 0.0) {
@@ -427,6 +459,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", onResize);
+      visibilityObserver.disconnect();
       mountElement.removeEventListener("pointermove", onPointerMove);
       mountElement.removeEventListener("pointerdown", onPointerDown);
       mountElement.removeEventListener("pointerup", onPointerUp);
@@ -436,17 +469,25 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
         mountElement.removeChild(renderer.domElement);
       }
       timer.dispose();
+      if (particles) {
+        particles.geometry.dispose();
+        (particles.material as THREE.Material).dispose();
+      }
+      planeGeometry.dispose();
+      planeMaterial.dispose();
       renderer.dispose();
       uniformsRef.current = null;
       modelGroupRef.current = null;
     };
-  }, [variant]);
+  }, [variant, activeChapterIndex]);
 
   useEffect(() => {
-    if (uniformsRef.current?.uScrollProgress) {
-      uniformsRef.current.uScrollProgress.value = activeChapterProgress;
-    }
+    targetScrollProgressRef.current = activeChapterProgress;
   }, [activeChapterProgress]);
+
+  useEffect(() => {
+    targetMorphEnergyRef.current = morphEnergy;
+  }, [morphEnergy]);
 
   useEffect(() => {
     baseRotationRef.current = modelViewRotations[activeChapterIndex] ?? modelViewRotations[0];

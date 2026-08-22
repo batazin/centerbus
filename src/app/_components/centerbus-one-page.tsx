@@ -3,12 +3,31 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { BusScrollSequence } from "./bus-scroll-sequence";
 import { InstitutionalFooter } from "./institutional-footer";
 import { aboutLinks, mainLinks } from "./institutional-nav";
+import { SpatialCategoryExplorer } from "./spatial-category-explorer";
+import { SiteLoader } from "./site-loader";
+
+const PartsIdentificationScene = dynamic(
+  () => import("./parts-identification-scene").then((module) => module.PartsIdentificationScene),
+  {
+    ssr: false,
+    loading: () => <div id="identificacao-3d" className="home-parts-loading" aria-hidden="true" />,
+  },
+);
+
+const ParticleBusShowcase = dynamic(
+  () => import("./particle-bus-showcase").then((module) => module.ParticleBusShowcase),
+  {
+    ssr: false,
+    loading: () => <div className="home-particle-showcase home-particle-loading" aria-hidden="true" />,
+  },
+);
 
 const categories = [
   {
@@ -228,6 +247,7 @@ export function CenterbusOnePage() {
 
   return (
     <div ref={rootRef} className="home-shell">
+      <SiteLoader />
       <span className="home-scroll-progress" aria-hidden="true" />
       <header className={`home-header${isMenuOpen ? " is-menu-open" : ""}`}>
         <a className="home-brand" href="#inicio" aria-label="Center Ônibus, início" onClick={() => setIsMenuOpen(false)}>
@@ -301,34 +321,9 @@ export function CenterbusOnePage() {
           </div>
         </section>
 
-        <section id="operacao" className="home-section home-operation" aria-labelledby="operation-title">
-          <div className="home-container home-operation-layout" data-reveal-group>
-            <div className="home-operation-intro">
-              <div className="home-section-heading" data-reveal>
-                <p className="home-kicker">Conhecimento antes do catálogo</p>
-                <h2 id="operation-title">Da foto ao despacho, sem adivinhação.</h2>
-                <p>Um fluxo curto para confirmar a aplicação, alinhar o prazo e fazer a peça certa seguir viagem.</p>
-              </div>
-              <aside className="home-operation-note" data-reveal aria-label="Resumo operacional">
-                <span>Fluxo de atendimento</span>
-                <strong>Foto, código ou modelo do ônibus.</strong>
-                <p>A equipe confere a aplicação antes de prometer prazo. Menos troca, menos parada.</p>
-              </aside>
-            </div>
-            <div className="home-process">
-              <span className="home-process-progress" aria-hidden="true" />
-              {operationSteps.map((step) => (
-                <article key={step.number} data-reveal>
-                  <span>{step.number}</span>
-                  <h3>{step.title}</h3>
-                  <p>{step.copy}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
+        <PartsIdentificationScene />
 
-        <section className="home-section home-catalog" aria-labelledby="catalog-title">
+        <section id="catalogo-interativo" className="home-section home-catalog" aria-labelledby="catalog-title">
           <div className="home-catalog-sticky">
             <div className="home-container home-catalog-layout" data-reveal-group>
               <div className="home-section-heading" data-reveal>
@@ -341,25 +336,36 @@ export function CenterbusOnePage() {
                   <strong>código, foto, carroceria ou aplicação</strong>
                 </div>
               </div>
-              <div className="home-category-grid">
-                {categories.map((category, index) => (
-                  <article key={category.code} data-reveal>
-                    <Link href="/produtos" aria-label={`Ver produtos de ${category.title}`}>
-                      <div className="home-category-id"><span>{category.code}</span><small>0{index + 1}</small></div>
-                      <div className="home-category-summary">
-                        <h3>{category.title}</h3>
-                        <p>{category.detail}</p>
-                      </div>
-                      <dl>
-                        <div><dt>Aplicação</dt><dd>{category.application}</dd></div>
-                        <div><dt>Exemplos</dt><dd>{category.examples}</dd></div>
-                        <div><dt>Conferência</dt><dd>{category.availability}</dd></div>
-                      </dl>
-                      <b aria-hidden="true">→</b>
-                    </Link>
-                  </article>
-                ))}
+              <SpatialCategoryExplorer categories={categories} />
+            </div>
+          </div>
+        </section>
+
+        <ParticleBusShowcase />
+
+        <section id="operacao" className="home-section home-operation" aria-labelledby="operation-title">
+          <div className="home-container home-operation-layout" data-reveal-group>
+            <div className="home-operation-intro">
+              <div className="home-section-heading" data-reveal>
+                <p className="home-kicker">A peça certa, na primeira vez</p>
+                <h2 id="operation-title">Da identificação ao despacho.</h2>
+                <p>Uma linha operacional contínua para confirmar aplicação, disponibilidade e próxima saída.</p>
               </div>
+              <aside className="home-operation-note" data-reveal aria-label="Resumo operacional">
+                <span>Ordem de atendimento</span>
+                <strong>Conferir antes de separar.</strong>
+                <p>Menos troca, menos parada e uma resposta alinhada com a urgência da frota.</p>
+              </aside>
+            </div>
+            <div className="home-process">
+              <span className="home-process-progress" aria-hidden="true" />
+              {operationSteps.map((step) => (
+                <article key={step.number} data-reveal>
+                  <span>{step.number}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.copy}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
@@ -388,6 +394,10 @@ export function CenterbusOnePage() {
               <h2 id="units-title">Três unidades. Uma equipe pronta para atender.</h2>
               <p>Atendimento próximo para consulta, separação, retirada e despacho conforme a urgência da operação.</p>
             </div>
+            <div className="home-unit-network" aria-hidden="true">
+              <span className="home-unit-route" />
+              <i>SP</i><i>BA</i><i>RJ</i>
+            </div>
             <div className="home-unit-list">
               {units.map((unit) => (
                 <article key={unit.state} data-reveal>
@@ -404,11 +414,12 @@ export function CenterbusOnePage() {
           <div className="home-container home-contact-layout" data-reveal-group>
             <div data-reveal>
               <p className="home-kicker">Resposta no tempo da operação</p>
-              <h2 id="contact-title">Fale com quem entende de carroceria.</h2>
+              <h2 id="contact-title">O ônibus volta pra rua.</h2>
             </div>
             <div data-reveal>
-              <p>Mande foto, código ou modelo do ônibus. A equipe ajuda a identificar, conferir disponibilidade e orientar a próxima saída.</p>
-              <Link className="home-button home-button-light" href="/fale-conosco">Solicitar identificação da peça</Link>
+              <p>Mande foto, código ou modelo. A equipe identifica, confere a aplicação e orienta a próxima saída.</p>
+              <Link className="home-button home-button-light" href="/fale-conosco">Enviar foto da peça</Link>
+              <Link className="home-contact-secondary" href="/produtos">Consultar catálogo <span aria-hidden="true">→</span></Link>
             </div>
           </div>
         </section>
