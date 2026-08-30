@@ -1,10 +1,10 @@
 .home-shell {
-  --home-blue: #122b4a;
-  --home-blue-light: #2e6da4;
-  --home-red: #c8102e;
-  --home-gray: #e4e7eb;
-  --home-white: #f4f4f4;
-  --home-black: #101418;
+  --home-blue: var(--color-center-blue);
+  --home-blue-light: var(--color-road-blue);
+  --home-red: var(--color-signal-red);
+  --home-gray: var(--color-chassis-gray);
+  --home-white: var(--color-center-white);
+  --home-black: var(--color-technical-black);
   min-width: 0;
   overflow-x: clip;
   overflow-y: visible;
@@ -143,7 +143,7 @@ body:has(.home-shell) {
 .home-nav-dropdown > a:hover,
 .home-nav-dropdown > a:focus-visible {
   background: rgba(244, 244, 244, 0.08);
-  color: #fff;
+  color: var(--home-white);
 }
 
 .home-nav-dropdown {
@@ -186,7 +186,7 @@ body:has(.home-shell) {
 .home-nav-submenu a:hover,
 .home-nav-submenu a:focus-visible {
   background: rgba(200, 16, 46, 0.16);
-  color: #fff;
+  color: var(--home-white);
 }
 
 .home-nav-dropdown:hover .home-nav-submenu,
@@ -243,7 +243,7 @@ html.centerbus-is-loading body {
   inset: 0;
   z-index: 1000;
   overflow: hidden;
-  background: #0d1825;
+  background: var(--home-black);
   color: var(--home-white);
   isolation: isolate;
 }
@@ -410,7 +410,7 @@ html.centerbus-is-loading body {
   gap: 20px;
   padding-top: 13px;
   color: rgba(244, 244, 244, 0.52);
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--font-label);
   font-size: 0.62rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -499,8 +499,11 @@ html.centerbus-is-loading body {
 
 .home-button:hover { transform: translateY(-2px); }
 .home-button:active { transform: translateY(1px); }
-.home-button-primary { background: var(--home-red); color: #fff; }
-.home-button-primary:hover { background: #a90e27; }
+.home-button-primary { background: var(--home-red); color: var(--home-white); }
+.home-button-primary:hover {
+  background: var(--home-red);
+  filter: brightness(0.88);
+}
 .home-button-quiet-dark {
   border-color: rgba(16, 20, 24, 0.22);
   color: var(--home-blue);
@@ -616,7 +619,7 @@ html.centerbus-is-loading body {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   border-top: 1px solid rgba(16, 20, 24, 0.16);
   border-left: 1px solid rgba(16, 20, 24, 0.16);
-  background: #fff;
+  background: var(--home-white);
   box-shadow: 0 18px 46px rgba(16, 20, 24, 0.07);
 }
 
@@ -796,7 +799,7 @@ html.centerbus-is-loading body {
   border-bottom: 1px solid rgba(16, 20, 24, 0.14);
   border-left: 1px solid rgba(16, 20, 24, 0.14);
   padding: 24px;
-  background: #fff;
+  background: var(--home-white);
   box-shadow: 0 18px 44px rgba(16, 20, 24, 0.08);
 }
 
@@ -850,7 +853,7 @@ html.centerbus-is-loading body {
   margin-top: 64px;
   border-top: 1px solid rgba(16, 20, 24, 0.18);
   border-bottom: 1px solid rgba(16, 20, 24, 0.18);
-  background: #fff;
+  background: var(--home-white);
   box-shadow: 0 16px 42px rgba(16, 20, 24, 0.06);
 }
 
@@ -872,7 +875,7 @@ html.centerbus-is-loading body {
   color: var(--home-black);
   background:
     linear-gradient(rgba(18, 43, 74, 0.04) 1px, transparent 1px),
-    #fff;
+    var(--home-white);
   background-size: 100% 42px;
 }
 
@@ -954,7 +957,7 @@ html.centerbus-is-loading body {
   border-right: 1px solid rgba(16, 20, 24, 0.16);
   border-bottom: 1px solid rgba(16, 20, 24, 0.16);
   padding: 24px;
-  background: #fff;
+  background: var(--home-white);
   box-shadow: 0 12px 30px rgba(16, 20, 24, 0.04);
   transition: background 180ms ease, transform 180ms ease;
 }
@@ -1039,7 +1042,7 @@ html.centerbus-is-loading body {
   background: var(--home-red);
   transform-origin: left center;
 }
-.home-proof .home-kicker { color: #f14d65; }
+.home-proof .home-kicker { color: var(--home-gray); }
 .home-proof-layout { display: grid; grid-template-columns: minmax(320px, 0.9fr) minmax(470px, 1.1fr); gap: clamp(60px, 9vw, 130px); align-items: center; }
 .home-proof-statement > p:last-child { color: rgba(244, 244, 244, 0.68); }
 .home-proof-numbers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid rgba(244, 244, 244, 0.18); border-left: 1px solid rgba(244, 244, 244, 0.18); }
@@ -1076,13 +1079,13 @@ html.centerbus-is-loading body {
 .home-unit-list p { max-width: 520px; margin: 8px 0 0; color: rgba(16, 20, 24, 0.62); font-size: 0.86rem; line-height: 1.5; }
 .home-unit-list a { border-bottom: 1px solid var(--home-red); padding-bottom: 5px; color: var(--home-blue); font-size: 0.82rem; font-weight: 800; }
 
-.home-contact { position: relative; overflow: hidden; padding: clamp(70px, 9vw, 118px) 0; background: var(--home-red); color: #fff; }
+.home-contact { position: relative; overflow: hidden; padding: clamp(70px, 9vw, 118px) 0; background: var(--home-red); color: var(--home-white); }
 .home-contact::after { position: absolute; top: 0; right: -10%; width: 42%; height: 100%; background: rgba(16, 20, 24, 0.11); clip-path: polygon(46% 0, 100% 0, 100% 100%, 0 100%); content: ""; }
 .home-contact-layout { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(420px, 1.25fr) minmax(280px, 0.75fr); gap: clamp(40px, 8vw, 110px); align-items: end; }
 .home-contact .home-kicker { color: rgba(255, 255, 255, 0.68); }
 .home-contact h2 { max-width: 760px; margin-bottom: 0; }
 .home-contact-layout > div:last-child p { color: rgba(255, 255, 255, 0.78); line-height: 1.65; }
-.home-button-light { margin-top: 16px; background: var(--home-black); color: #fff; }
+.home-button-light { margin-top: 16px; background: var(--home-black); color: var(--home-white); }
 .home-button-light:hover { background: var(--home-blue); }
 
 .home-shell > .institutional-footer { margin-top: 0; }
@@ -1231,7 +1234,7 @@ html.centerbus-is-loading body {
 
 .home-action-panel {
   padding: clamp(82px, 8vw, 112px) 0;
-  background: #fff;
+  background: var(--home-white);
 }
 
 .home-action-panel::before {
@@ -1325,7 +1328,7 @@ html.centerbus-is-loading body {
   position: static;
   align-self: start;
   padding-top: 3px;
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--font-label);
 }
 
 .home-action-card small {
@@ -1362,7 +1365,7 @@ html.centerbus-is-loading body {
 .home-category-grid article:hover > a > b {
   border-color: var(--home-red);
   background: var(--home-red);
-  color: #fff;
+  color: var(--home-white);
 }
 
 .home-operation {
@@ -1406,7 +1409,7 @@ html.centerbus-is-loading body {
 
 .home-operation-note span {
   margin-bottom: 22px;
-  color: #ef6b7f;
+  color: var(--home-gray);
 }
 
 .home-operation-note strong {
@@ -1431,7 +1434,7 @@ html.centerbus-is-loading body {
 }
 
 .home-process article > span {
-  color: #ef6b7f;
+  color: var(--home-gray);
 }
 
 .home-process h3 {
@@ -1523,7 +1526,7 @@ html.centerbus-is-loading body {
 }
 
 .home-category-grid article:hover {
-  background: #fff;
+  background: var(--home-white);
   transform: none;
 }
 
@@ -1548,7 +1551,7 @@ html.centerbus-is-loading body {
 
 .home-category-id span {
   color: var(--home-red);
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--font-label);
   font-size: 0.78rem;
   font-weight: 900;
 }
@@ -1582,7 +1585,7 @@ html.centerbus-is-loading body {
 .home-catalog-note {
   width: 100%;
   max-width: 440px;
-  background: #fff;
+  background: var(--home-white);
 }
 
 .home-proof {
@@ -1602,7 +1605,7 @@ html.centerbus-is-loading body {
 }
 
 .home-units {
-  background: #fff;
+  background: var(--home-white);
 }
 
 .home-units .home-section-heading {
@@ -1810,14 +1813,14 @@ html.centerbus-is-loading body {
   background:
     linear-gradient(90deg, rgba(46, 109, 164, 0.09) 1px, transparent 1px),
     linear-gradient(rgba(46, 109, 164, 0.07) 1px, transparent 1px),
-    #0d2239;
+    var(--home-blue);
   background-size: 80px 80px;
 }
 
 .home-parts-story {
   position: relative;
   min-height: 100svh;
-  background: #0d2239;
+  background: var(--home-blue);
   color: var(--home-white);
 }
 
@@ -1828,7 +1831,7 @@ html.centerbus-is-loading body {
   overflow: hidden;
   background:
     linear-gradient(90deg, rgba(18, 43, 74, 0.08), transparent 35%),
-    #0d2239;
+    var(--home-blue);
 }
 
 .home-parts-stage::before {
@@ -1921,7 +1924,7 @@ html.centerbus-is-loading body {
 
 .home-parts-controls button.is-active {
   background: var(--home-red);
-  color: #fff;
+  color: var(--home-white);
 }
 
 .home-parts-picker {
@@ -1972,8 +1975,8 @@ html.centerbus-is-loading body {
 }
 
 .home-parts-picker span {
-  color: #ef6b7f;
-  font-family: var(--font-jetbrains-mono), monospace;
+  color: var(--home-gray);
+  font-family: var(--font-label);
   font-size: 0.58rem;
   font-weight: 900;
   letter-spacing: 0.1em;
@@ -2006,7 +2009,7 @@ html.centerbus-is-loading body {
 }
 
 .home-parts-copy .home-kicker {
-  color: #ef6b7f;
+  color: var(--home-gray);
 }
 
 .home-parts-copy h2 {
@@ -2042,7 +2045,7 @@ html.centerbus-is-loading body {
 
 .home-parts-status span,
 .home-parts-hotspot span {
-  color: #ef6b7f;
+  color: var(--home-gray);
   font-size: 0.61rem;
   font-weight: 900;
   letter-spacing: 0.13em;
@@ -2087,7 +2090,7 @@ html.centerbus-is-loading body {
   left: -7px;
   width: 7px;
   height: 7px;
-  border: 2px solid #0d2239;
+  border: 2px solid var(--home-blue);
   border-radius: 50%;
   background: var(--home-red);
   content: "";
@@ -2113,7 +2116,7 @@ html.centerbus-is-loading body {
   gap: 14px;
   align-items: center;
   color: rgba(244, 244, 244, 0.5);
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--font-label);
   font-size: 0.62rem;
   pointer-events: auto;
 }
@@ -2192,7 +2195,7 @@ html.centerbus-is-loading body {
   justify-self: center;
   border: 2px solid var(--home-blue);
   border-radius: 50%;
-  background: #fff;
+  background: var(--home-white);
   color: var(--home-red);
   font-family: var(--font-archivo-condensed), "Arial Narrow", sans-serif;
   font-size: 1.15rem;
@@ -2222,7 +2225,7 @@ html.centerbus-is-loading body {
   gap: 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.72);
   padding: 0 5px;
-  color: #fff;
+  color: var(--home-white);
   font-size: 0.82rem;
   font-weight: 800;
 }
@@ -2417,7 +2420,7 @@ html.centerbus-is-loading body {
 
 .home-spatial-toolbar strong {
   color: var(--home-blue);
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--font-label);
   font-size: 0.78rem;
 }
 
@@ -2449,7 +2452,7 @@ html.centerbus-is-loading body {
 .home-spatial-controls button:hover {
   border-color: var(--home-red);
   background: var(--home-red);
-  color: #fff;
+  color: var(--home-white);
   transform: scale(1.06);
 }
 
@@ -2574,7 +2577,7 @@ html.centerbus-is-loading body {
   display: flex;
   grid-column: 1 / -1;
   justify-content: space-between;
-  color: #ef6b7f;
+  color: var(--home-gray);
 }
 
 .home-spatial-card-head small {
@@ -2589,7 +2592,7 @@ html.centerbus-is-loading body {
 
 .home-spatial-card-title > p {
   margin-bottom: 14px;
-  color: #ef6b7f;
+  color: var(--home-gray);
 }
 
 .home-spatial-card-title h3 {
@@ -2623,7 +2626,7 @@ html.centerbus-is-loading body {
 
 .home-spatial-catalog dt {
   margin-bottom: 5px;
-  color: #ef6b7f;
+  color: var(--home-gray);
 }
 
 .home-spatial-catalog dd {
@@ -2643,7 +2646,7 @@ html.centerbus-is-loading body {
   align-items: center;
   gap: 13px;
   border-bottom: 2px solid var(--home-red);
-  color: #fff;
+  color: var(--home-white);
   font-size: 0.78rem;
   font-weight: 800;
 }
@@ -2767,7 +2770,7 @@ html.centerbus-is-loading body {
   position: relative;
   min-height: max(760px, 100svh);
   overflow: hidden;
-  background: #091a2d;
+  background: var(--home-blue);
   color: var(--home-white);
   isolation: isolate;
 }
@@ -2830,7 +2833,7 @@ html.centerbus-is-loading body {
 }
 
 .home-particle-copy .home-kicker {
-  color: #ef6b7f;
+  color: var(--home-gray);
 }
 
 .home-particle-copy h2 {
@@ -2855,7 +2858,7 @@ html.centerbus-is-loading body {
   margin-top: 24px;
   border-bottom: 2px solid var(--home-red);
   padding-bottom: 7px;
-  color: #fff;
+  color: var(--home-white);
   font-size: 0.82rem;
   font-weight: 800;
   pointer-events: auto;
@@ -2907,7 +2910,7 @@ html.centerbus-is-loading body {
 .home-particle-selector button:hover,
 .home-particle-selector button.is-active {
   background: rgba(46, 109, 164, 0.26);
-  color: #fff;
+  color: var(--home-white);
 }
 
 .home-particle-selector button.is-active::after {
@@ -2915,8 +2918,8 @@ html.centerbus-is-loading body {
 }
 
 .home-particle-selector span {
-  color: #ef6b7f;
-  font-family: var(--font-jetbrains-mono), monospace;
+  color: var(--home-gray);
+  font-family: var(--font-label);
   font-size: 0.58rem;
   font-weight: 900;
   letter-spacing: 0.1em;
@@ -2938,7 +2941,7 @@ html.centerbus-is-loading body {
   gap: 14px;
   align-items: center;
   color: rgba(244, 244, 244, 0.46);
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--font-label);
   font-size: 0.6rem;
 }
 
@@ -2966,7 +2969,7 @@ html.centerbus-is-loading body {
   .home-particle-showcase::after {
     width: 100%;
     height: 340px;
-    background: #091a2d;
+    background: var(--home-blue);
     clip-path: polygon(0 0, 100% 0, 100% 78%, 0 100%);
   }
 
@@ -3052,7 +3055,7 @@ html.centerbus-is-loading body {
   height: 100svh;
   min-height: 720px;
   overflow: hidden;
-  background: #091a2d;
+  background: var(--home-blue);
   isolation: isolate;
 }
 
@@ -3140,14 +3143,14 @@ html.centerbus-is-loading body {
   display: flex;
   gap: 12px;
   align-items: center;
-  color: #ef6b7f;
+  color: var(--home-gray);
 }
 
 .home-particle-chapter .home-kicker span {
   border-right: 1px solid rgba(244, 244, 244, 0.28);
   padding-right: 12px;
   color: rgba(244, 244, 244, 0.62);
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--font-label);
   font-size: 0.62rem;
 }
 
@@ -3173,7 +3176,7 @@ html.centerbus-is-loading body {
   margin-top: 24px;
   border-bottom: 2px solid var(--home-red);
   padding-bottom: 7px;
-  color: #fff;
+  color: var(--home-white);
   font-size: 0.82rem;
   font-weight: 800;
   pointer-events: auto;
@@ -3208,8 +3211,8 @@ html.centerbus-is-loading body {
 
 .home-particle-facts dt {
   margin-bottom: 7px;
-  color: #ef6b7f;
-  font-family: var(--font-jetbrains-mono), monospace;
+  color: var(--home-gray);
+  font-family: var(--font-label);
   font-size: 0.56rem;
   font-weight: 800;
   letter-spacing: 0.1em;

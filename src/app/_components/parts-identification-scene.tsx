@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { brandColors } from "../_lib/brand-tokens";
 
 const models = [
-  { path: "/particles/onibus.glb", label: "Carroceria", code: "CAR 01", color: "#e4e7eb", title: "Explore o conjunto.", copy: "Arraste para girar o ônibus. Abra a vista explodida e selecione um componente para inspecionar." },
-  { path: "/particles/engine_radiator.glb", label: "Climatização", code: "CLI 04", color: "#2e6da4", title: "Sistema de climatização.", copy: "Seleção técnica por fabricante, aplicação e configuração do equipamento instalado." },
-  { path: "/particles/disk_brake.glb", label: "Freio", code: "FRE 02", color: "#c8102e", title: "Conjunto de freio.", copy: "A conferência considera medidas, montagem e aplicação antes da separação da peça." },
-  { path: "/particles/battery.glb", label: "Elétrica", code: "ELE 03", color: "#aeb8c3", title: "Sistema elétrico.", copy: "Modelo, capacidade e posição dos terminais orientam a identificação correta do componente." },
+  { path: "/particles/onibus.glb", label: "Carroceria", code: "CAR 01", color: brandColors.chassisGray, title: "Explore o conjunto.", copy: "Arraste para girar o ônibus. Abra a vista explodida e selecione um componente para inspecionar." },
+  { path: "/particles/engine_radiator.glb", label: "Climatização", code: "CLI 04", color: brandColors.roadBlue, title: "Sistema de climatização.", copy: "Seleção técnica por fabricante, aplicação e configuração do equipamento instalado." },
+  { path: "/particles/disk_brake.glb", label: "Freio", code: "FRE 02", color: brandColors.signalRed, title: "Conjunto de freio.", copy: "A conferência considera medidas, montagem e aplicação antes da separação da peça." },
+  { path: "/particles/battery.glb", label: "Elétrica", code: "ELE 03", color: brandColors.chassisGray, title: "Sistema elétrico.", copy: "Modelo, capacidade e posição dos terminais orientam a identificação correta do componente." },
 ] as const;
 
 type ViewMode = "assembled" | "exploded";
@@ -60,7 +61,7 @@ export function PartsIdentificationScene() {
     if (!mount) return;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2("#0d2239", 0.034);
+    scene.fog = new THREE.FogExp2(brandColors.centerBlue, 0.034);
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
     camera.position.set(0, 0.1, 10.6);
 
@@ -73,11 +74,11 @@ export function PartsIdentificationScene() {
     renderer.domElement.style.cursor = "grab";
     mount.appendChild(renderer.domElement);
 
-    scene.add(new THREE.HemisphereLight("#d8ebff", "#07111d", 2.4));
-    const keyLight = new THREE.DirectionalLight("#ffffff", 4.4);
+    scene.add(new THREE.HemisphereLight(brandColors.chassisGray, brandColors.technicalBlack, 2.4));
+    const keyLight = new THREE.DirectionalLight(brandColors.centerWhite, 4.4);
     keyLight.position.set(4, 6, 8);
     scene.add(keyLight);
-    const signalLight = new THREE.PointLight("#c8102e", 22, 16, 2);
+    const signalLight = new THREE.PointLight(brandColors.signalRed, 22, 16, 2);
     signalLight.position.set(-4, 1, 4);
     scene.add(signalLight);
 
@@ -87,13 +88,13 @@ export function PartsIdentificationScene() {
     const edgesByModel: THREE.LineBasicMaterial[][] = models.map(() => []);
     let disposed = false;
 
-    const floor = new THREE.GridHelper(18, 18, "#2e6da4", "#193957");
+    const floor = new THREE.GridHelper(18, 18, brandColors.roadBlue, brandColors.centerBlue);
     floor.position.set(0, -2.85, -1.1);
     floor.material.transparent = true;
     floor.material.opacity = 0.24;
     scene.add(floor);
 
-    const scanMaterial = new THREE.MeshBasicMaterial({ color: "#c8102e", transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending, depthWrite: false });
+    const scanMaterial = new THREE.MeshBasicMaterial({ color: brandColors.signalRed, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending, depthWrite: false });
     const scanBeam = new THREE.Mesh(new THREE.PlaneGeometry(6.2, 0.035), scanMaterial);
     scanBeam.position.set(1.55, 2.8, 2.15);
     scene.add(scanBeam);
@@ -110,8 +111,8 @@ export function PartsIdentificationScene() {
       group.traverse((child) => {
         if (!(child instanceof THREE.Mesh)) return;
         child.geometry = child.geometry.clone();
-        child.material = new THREE.MeshStandardMaterial({ color: models[index].color, metalness: index === 0 ? 0.5 : 0.72, roughness: index === 0 ? 0.42 : 0.3, emissive: new THREE.Color("#000000"), transparent: true });
-        const edgeMaterial = new THREE.LineBasicMaterial({ color: index === 2 ? "#ef6b7f" : "#8fb4d4", transparent: true, opacity: index === 0 ? 0.18 : 0.34, depthWrite: false });
+        child.material = new THREE.MeshStandardMaterial({ color: models[index].color, metalness: index === 0 ? 0.5 : 0.72, roughness: index === 0 ? 0.42 : 0.3, emissive: new THREE.Color(brandColors.technicalBlack), transparent: true });
+        const edgeMaterial = new THREE.LineBasicMaterial({ color: index === 2 ? brandColors.signalRed : brandColors.roadBlue, transparent: true, opacity: index === 0 ? 0.18 : 0.34, depthWrite: false });
         child.add(new THREE.LineSegments(new THREE.EdgesGeometry(child.geometry, 28), edgeMaterial));
         edgesByModel[index].push(edgeMaterial);
       });
@@ -242,7 +243,7 @@ export function PartsIdentificationScene() {
           const isSelected = selected === index;
           const targetOpacity = isSelected ? 1 : selected > 0 ? 0.42 : 0.88;
           child.material.opacity += (targetOpacity - child.material.opacity) * 0.08;
-          child.material.emissive.set(isSelected ? models[index].color : "#000000");
+          child.material.emissive.set(isSelected ? models[index].color : brandColors.technicalBlack);
           child.material.emissiveIntensity += ((isSelected ? 0.1 : 0) - child.material.emissiveIntensity) * 0.08;
         });
         edgesByModel[index].forEach((material) => {

@@ -6,6 +6,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshSurfaceSampler } from "three/examples/jsm/math/MeshSurfaceSampler.js";
 
 import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { brandColors } from "../_lib/brand-tokens";
 
 const particleModels = [
   "/particles/onibus.glb",
@@ -165,8 +166,8 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       uDeltaTime: { value: 0 },
       uMouse: { value: new THREE.Vector3(999, 999, 999) },
       uRepulsion: { value: 0 },
-      uColorA: { value: new THREE.Color(variant === "hero" ? "#ff4a5f" : "#f14d65") },
-      uColorB: { value: new THREE.Color(variant === "hero" ? "#9dd8ff" : "#8fd1ff") },
+      uColorA: { value: new THREE.Color(brandColors.signalRed) },
+      uColorB: { value: new THREE.Color(brandColors.roadBlue) },
       uOpacity: { value: variant === "hero" ? 1.28 : 1.42 },
       uPointScale: { value: width < 768 ? 1.12 : variant === "hero" ? 1.16 : 1.04 },
       uScrollProgress: { value: 0 },
