@@ -83,10 +83,11 @@ export function ParticleBusShowcase() {
   const active = clamp(Math.round(phase), 0, chapters.length - 1);
   const localPhase = phase >= chapters.length - 1 ? 0 : phase - Math.floor(phase);
   const morphEnergy = Math.sin(localPhase * Math.PI);
+  const objectSideClass = active % 2 === 0 ? "is-object-right" : "is-object-left";
 
   return (
     <section ref={sectionRef} id="forma-em-particulas" className="home-particle-showcase" aria-labelledby="particle-showcase-title">
-      <div className="home-particle-stage">
+      <div className={`home-particle-stage ${objectSideClass}`}>
         <div className="home-particle-grid" aria-hidden="true" />
         <div className="home-particle-canvas">
           {shouldRender ? (
@@ -101,7 +102,7 @@ export function ParticleBusShowcase() {
           ) : null}
         </div>
 
-        <div className={`home-container home-particle-content ${active % 2 === 0 ? "is-object-right" : "is-object-left"}`}>
+        <div className={`home-container home-particle-content ${objectSideClass}`}>
           <div className="home-particle-chapters">
             {chapters.map((chapter, index) => {
               const distance = Math.abs(phase - index);

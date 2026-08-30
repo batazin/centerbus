@@ -3065,6 +3065,14 @@ html.centerbus-is-loading body {
   clip-path: polygon(0 0, 78% 0, 100% 100%, 0 100%);
   content: "";
   pointer-events: none;
+  transition: left 420ms cubic-bezier(0.22, 1, 0.36, 1), clip-path 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 761px) {
+  .home-particle-stage.is-object-left::after {
+    left: 42%;
+    clip-path: polygon(22% 0, 100% 0, 100% 100%, 0 100%);
+  }
 }
 
 .home-particle-loading {
