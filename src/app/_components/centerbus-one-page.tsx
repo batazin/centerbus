@@ -124,14 +124,14 @@ export function CenterbusOnePage() {
 
     gsap.registerPlugin(ScrollTrigger);
     const lenis = new Lenis({
-      duration: 0.96,
+      duration: 0.82,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       syncTouch: false,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1,
-      anchors: { offset: -90, duration: 1.25 },
-      overscroll: true,
+      wheelMultiplier: 1.15,
+      touchMultiplier: 1.2,
+      anchors: { offset: -90, duration: 1.1 },
+      overscroll: false,
       stopInertiaOnNavigate: true,
       respectReducedMotion: true,
     });

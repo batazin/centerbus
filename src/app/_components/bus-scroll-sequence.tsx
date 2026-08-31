@@ -102,8 +102,12 @@ export function BusScrollSequence() {
       }
     };
 
+    let cachedContext: CanvasRenderingContext2D | null = null;
+    let cachedWidth = 0;
+    let cachedHeight = 0;
+
     const resizeCanvas = () => {
-      const context = canvas.getContext("2d");
+      const context = canvas.getContext("2d", { alpha: false });
       if (!context) return null;
 
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -122,6 +126,9 @@ export function BusScrollSequence() {
       }
 
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      cachedContext = context;
+      cachedWidth = width;
+      cachedHeight = height;
       return { context, width, height };
     };
 
@@ -139,8 +146,8 @@ export function BusScrollSequence() {
     };
 
     const drawFrame = (frame: number) => {
-      const canvasInfo = resizeCanvas();
-      if (!canvasInfo) return;
+      const context = cachedContext || resizeCanvas()?.context;
+      if (!context) return;
 
       const loadedFrame = nearestLoadedFrame(frame);
       if (!loadedFrame) return;
@@ -148,12 +155,12 @@ export function BusScrollSequence() {
       const image = images.get(loadedFrame);
       if (!image?.naturalWidth || !image.naturalHeight) return;
 
-      const { context, width, height } = canvasInfo;
+      const width = cachedWidth || window.innerWidth;
+      const height = cachedHeight || window.innerHeight;
       const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
       const drawWidth = image.naturalWidth * scale;
       const drawHeight = image.naturalHeight * scale;
 
-      context.clearRect(0, 0, width, height);
       context.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
       currentFrame = frame;
     };
@@ -273,13 +280,15 @@ export function BusScrollSequence() {
     const handleResize = () => {
       canvasWidth = 0;
       canvasHeight = 0;
+      cachedContext = null;
+      resizeCanvas();
       scheduleUpdate();
     };
 
     const scrollTrigger = ScrollTrigger.create({
       trigger: section,
       start: "top top",
-      end: () => `+=${Math.max(window.innerHeight * 4, 1800)}`,
+      end: () => `+=${Math.max(window.innerHeight * 2.2, 1400)}`,
       pin: stage,
       scrub: true,
       anticipatePin: 1,

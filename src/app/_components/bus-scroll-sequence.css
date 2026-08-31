@@ -26,7 +26,6 @@
 .bus-scroll-sequence-canvas {
   background: var(--color-technical-black);
   transform: translate3d(calc(var(--bus-pointer-x) * -8px), calc(var(--bus-pointer-y) * -5px), 0) scale(1.018);
-  transition: transform .45s ease;
 }
 
 .bus-scroll-sequence-shade {

@@ -21,12 +21,12 @@ body:has(.home-shell) {
   overscroll-behavior-y: auto;
 }
 
-html.lenis:has(.home-shell) {
+html.lenis {
   scroll-behavior: auto !important;
 }
 
-html.lenis.lenis-smooth:has(.home-shell),
-html.lenis.lenis-smooth:has(.home-shell) body {
+html.lenis.lenis-smooth,
+html.lenis.lenis-smooth body {
   scroll-behavior: auto !important;
 }
 
