@@ -1,7 +1,8 @@
 "use client";
 
+import gsap from "gsap";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Category = {
   code: string;
@@ -16,75 +17,78 @@ type SpatialCategoryExplorerProps = {
   categories: readonly Category[];
 };
 
-const wrapOffset = (index: number, active: number, length: number) => {
-  let offset = index - active;
-  if (offset > length / 2) offset -= length;
-  if (offset < -length / 2) offset += length;
-  return offset;
+// Continuous circular offset calculation supporting any real position
+const wrapOffset = (index: number, position: number, length: number) => {
+  let diff = (index - position) % length;
+  if (diff > length / 2) diff -= length;
+  if (diff < -length / 2) diff += length;
+  return diff;
 };
 
 export function SpatialCategoryExplorer({ categories }: SpatialCategoryExplorerProps) {
   const [active, setActive] = useState(0);
   const [position, setPosition] = useState(0);
+  const positionRef = useRef(0);
+  const activeRef = useRef(0);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
+  const isInteractingRef = useRef(false);
   const dragStartRef = useRef<number | null>(null);
   const dragPositionStartRef = useRef(0);
   const dragDeltaRef = useRef(0);
-  const currentPositionRef = useRef(0);
-  const targetPositionRef = useRef(0);
-  const velocityRef = useRef(0);
 
+  activeRef.current = active;
+
+  const select = useCallback(
+    (next: number, duration = 0.7) => {
+      const normalized = ((next % categories.length) + categories.length) % categories.length;
+      const offset = wrapOffset(normalized, positionRef.current, categories.length);
+      const target = positionRef.current + offset;
+
+      setActive(normalized);
+
+      if (tweenRef.current) tweenRef.current.kill();
+      const proxy = { val: positionRef.current };
+      tweenRef.current = gsap.to(proxy, {
+        val: target,
+        duration,
+        ease: "power3.out",
+        onUpdate: () => {
+          positionRef.current = proxy.val;
+          setPosition(proxy.val);
+        },
+      });
+    },
+    [categories.length],
+  );
+
+  // Auto-play infinite loop timer (pauses when user hovers or interacts)
   useEffect(() => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let frame = 0;
-
-    const animate = () => {
-      if (dragStartRef.current === null) {
-        const distance = targetPositionRef.current - currentPositionRef.current;
-        if (reducedMotion) {
-          currentPositionRef.current = targetPositionRef.current;
-          velocityRef.current = 0;
-        } else {
-          velocityRef.current = (velocityRef.current + distance * 0.075) * 0.78;
-          currentPositionRef.current += velocityRef.current;
-          if (Math.abs(distance) < 0.0008 && Math.abs(velocityRef.current) < 0.0008) {
-            currentPositionRef.current = targetPositionRef.current;
-            velocityRef.current = 0;
-          }
-        }
-
-        if (Math.abs(distance) > 0.0001 || Math.abs(velocityRef.current) > 0.0001) {
-          setPosition(currentPositionRef.current);
-        }
+    const timer = setInterval(() => {
+      if (!isInteractingRef.current && typeof document !== "undefined" && document.visibilityState === "visible") {
+        select(activeRef.current + 1);
       }
-      frame = requestAnimationFrame(animate);
+    }, 4500);
+
+    return () => {
+      clearInterval(timer);
+      if (tweenRef.current) tweenRef.current.kill();
     };
-
-    frame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
-  const select = (next: number) => {
-    const normalized = (next + categories.length) % categories.length;
-    const offset = wrapOffset(normalized, currentPositionRef.current, categories.length);
-    targetPositionRef.current = currentPositionRef.current + offset;
-    setActive(normalized);
-  };
+  }, [select]);
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (tweenRef.current) tweenRef.current.kill();
+    isInteractingRef.current = true;
     dragStartRef.current = event.clientX;
-    dragPositionStartRef.current = currentPositionRef.current;
+    dragPositionStartRef.current = positionRef.current;
     dragDeltaRef.current = 0;
-    velocityRef.current = 0;
     event.currentTarget.setPointerCapture(event.pointerId);
-    event.currentTarget.classList.add("is-dragging");
   };
 
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (dragStartRef.current === null) return;
     dragDeltaRef.current = event.clientX - dragStartRef.current;
-    const nextPosition = dragPositionStartRef.current - dragDeltaRef.current / 240;
-    currentPositionRef.current = nextPosition;
-    targetPositionRef.current = nextPosition;
+    const nextPosition = dragPositionStartRef.current - dragDeltaRef.current / 260;
+    positionRef.current = nextPosition;
     setPosition(nextPosition);
   };
 
@@ -93,18 +97,44 @@ export function SpatialCategoryExplorer({ categories }: SpatialCategoryExplorerP
     const delta = dragDeltaRef.current;
     dragStartRef.current = null;
     dragDeltaRef.current = 0;
-    event.currentTarget.classList.remove("is-dragging");
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
-    const directionalBias = Math.abs(delta) > 58 ? (delta < 0 ? 0.34 : -0.34) : 0;
-    const target = Math.round(currentPositionRef.current + directionalBias);
-    targetPositionRef.current = target;
-    setActive(((target % categories.length) + categories.length) % categories.length);
+    const directionalBias = Math.abs(delta) > 40 ? (delta < 0 ? 0.35 : -0.35) : 0;
+    const target = Math.round(positionRef.current + directionalBias);
+    const normalized = ((target % categories.length) + categories.length) % categories.length;
+
+    setActive(normalized);
+
+    if (tweenRef.current) tweenRef.current.kill();
+    const proxy = { val: positionRef.current };
+    tweenRef.current = gsap.to(proxy, {
+      val: target,
+      duration: 0.55,
+      ease: "power3.out",
+      onUpdate: () => {
+        positionRef.current = proxy.val;
+        setPosition(proxy.val);
+      },
+      onComplete: () => {
+        isInteractingRef.current = false;
+      },
+    });
   };
 
   return (
-    <div className="home-spatial-catalog" aria-label="Explorador de categorias">
+    <div
+      className="home-spatial-catalog"
+      aria-label="Explorador de categorias"
+      onMouseEnter={() => {
+        isInteractingRef.current = true;
+      }}
+      onMouseLeave={() => {
+        if (dragStartRef.current === null) {
+          isInteractingRef.current = false;
+        }
+      }}
+    >
       <div className="home-spatial-toolbar">
         <div>
           <span>Categoria ativa</span>
@@ -112,8 +142,26 @@ export function SpatialCategoryExplorer({ categories }: SpatialCategoryExplorerP
         </div>
         <p>Arraste pelo túnel</p>
         <div className="home-spatial-controls">
-          <button type="button" onClick={() => select(active - 1)} aria-label="Categoria anterior">←</button>
-          <button type="button" onClick={() => select(active + 1)} aria-label="Próxima categoria">→</button>
+          <button
+            type="button"
+            onClick={() => {
+              isInteractingRef.current = true;
+              select(active - 1);
+            }}
+            aria-label="Categoria anterior"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              isInteractingRef.current = true;
+              select(active + 1);
+            }}
+            aria-label="Próxima categoria"
+          >
+            →
+          </button>
         </div>
       </div>
 
@@ -131,8 +179,14 @@ export function SpatialCategoryExplorer({ categories }: SpatialCategoryExplorerP
           if (dragStartRef.current !== null && event.currentTarget.hasPointerCapture(event.pointerId)) finishDrag(event);
         }}
         onKeyDown={(event) => {
-          if (event.key === "ArrowLeft") select(active - 1);
-          if (event.key === "ArrowRight") select(active + 1);
+          if (event.key === "ArrowLeft") {
+            isInteractingRef.current = true;
+            select(active - 1);
+          }
+          if (event.key === "ArrowRight") {
+            isInteractingRef.current = true;
+            select(active + 1);
+          }
         }}
       >
         <span className="home-spatial-axis" aria-hidden="true" />
@@ -160,7 +214,12 @@ export function SpatialCategoryExplorer({ categories }: SpatialCategoryExplorerP
                 style={style}
                 key={category.code}
                 aria-hidden={logicalOffset !== 0}
-                onClick={() => logicalOffset !== 0 && select(index)}
+                onClick={() => {
+                  if (logicalOffset !== 0) {
+                    isInteractingRef.current = true;
+                    select(index);
+                  }
+                }}
               >
                 <div className="home-spatial-card-head">
                   <span>{category.code}</span>
@@ -188,7 +247,10 @@ export function SpatialCategoryExplorer({ categories }: SpatialCategoryExplorerP
       <div
         className="home-spatial-dots"
         aria-label="Selecionar categoria"
-        style={{ "--rail-position": `${((active + 0.5) / categories.length) * 100}%` } as React.CSSProperties}
+        style={{
+          "--dot-count": categories.length,
+          "--rail-position": `${(active / categories.length) * 100}%`,
+        } as React.CSSProperties}
       >
         {categories.map((category, index) => (
           <button
@@ -196,9 +258,14 @@ export function SpatialCategoryExplorer({ categories }: SpatialCategoryExplorerP
             className={index === active ? "is-active" : ""}
             aria-label={`Selecionar ${category.title}`}
             aria-current={index === active ? "true" : undefined}
-            onClick={() => select(index)}
+            onClick={() => {
+              isInteractingRef.current = true;
+              select(index);
+            }}
             key={category.code}
-          />
+          >
+            <span>{category.code}</span>
+          </button>
         ))}
       </div>
     </div>

@@ -11,9 +11,10 @@ type InstitutionalPageProps = {
     copy: string;
     items?: readonly string[];
   }[];
+  children?: React.ReactNode;
 };
 
-export function InstitutionalPage({ eyebrow, title, intro, layout = "sections", sections }: InstitutionalPageProps) {
+export function InstitutionalPage({ eyebrow, title, intro, layout = "sections", sections, children }: InstitutionalPageProps) {
   const renderList = (items?: readonly string[]) =>
     items ? (
       <ul>
@@ -174,6 +175,7 @@ export function InstitutionalPage({ eyebrow, title, intro, layout = "sections", 
         {layout === "marcopolo" ? renderMarcopolo() : null}
         {layout === "products" ? renderProducts() : null}
         {["sections", "document"].includes(layout) ? renderSections() : null}
+        {children}
       </main>
       <InstitutionalFooter />
     </div>
