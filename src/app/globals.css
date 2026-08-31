@@ -29,7 +29,7 @@
   --brand-sky: var(--color-road-blue);
   --brand-red-2: var(--color-signal-red);
   --muted: var(--color-chassis-gray);
-  --line: rgba(255, 255, 255, 0.14);
+  --line: rgba(244, 244, 244, 0.14);
   --line-highlight: rgba(200, 16, 46, 0.36);
   --radius: 4px;
   --radius-control: 3px;
@@ -111,7 +111,7 @@ a:focus-visible {
   border-radius: var(--radius);
   background: rgba(18, 43, 74, 0.94);
   border: 1px solid var(--line);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 60px rgba(16, 20, 24, 0.4);
   color: var(--ink);
   transform: translateX(-50%);
   transition: all 0.3s ease;
@@ -152,10 +152,10 @@ a:focus-visible {
   height: 44px;
   flex: 0 0 44px;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(244, 244, 244, 0.16);
   border-radius: 8px;
   padding: 0;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(244, 244, 244, 0.08);
   color: inherit;
   cursor: pointer;
   transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
@@ -163,9 +163,9 @@ a:focus-visible {
 
 .mobile-menu-toggle:hover,
 .mobile-menu-toggle:focus-visible {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.34);
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+  background: rgba(244, 244, 244, 0.14);
+  border-color: rgba(244, 244, 244, 0.34);
+  box-shadow: 0 12px 26px rgba(16, 20, 24, 0.18);
 }
 
 .mobile-menu-toggle span {
@@ -246,7 +246,7 @@ a:focus-visible {
   border-radius: var(--radius);
   padding: 6px;
   background: rgba(18, 43, 74, 0.98);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
+  box-shadow: 0 24px 60px rgba(16, 20, 24, 0.36);
   opacity: 0;
   pointer-events: none;
   transform: translateY(-6px);
@@ -406,7 +406,7 @@ h2 {
   border-radius: var(--radius);
   padding: 10px 12px;
   background: rgba(18, 43, 74, 0.78);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 16px 40px rgba(16, 20, 24, 0.2);
   color: var(--muted);
   font-size: 0.78rem;
   transition: all 0.3s ease;
@@ -459,7 +459,7 @@ h2 {
   border-radius: var(--radius);
   padding: 10px 12px;
   background: rgba(18, 43, 74, 0.84);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 18px 44px rgba(16, 20, 24, 0.3);
   color: inherit;
   cursor: pointer;
   font: inherit;
@@ -520,7 +520,7 @@ h2 {
   inset: 0;
   background:
     linear-gradient(115deg, transparent 0 52%, rgba(200, 16, 46, 0.08) 52.2%, transparent 68%),
-    repeating-linear-gradient(90deg, transparent 0 74px, rgba(255, 255, 255, 0.025) 75px 76px);
+    repeating-linear-gradient(90deg, transparent 0 74px, rgba(244, 244, 244, 0.025) 75px 76px);
   content: "";
   opacity: 0.78;
   pointer-events: none;
@@ -557,7 +557,7 @@ h2 {
   background:
     linear-gradient(135deg, rgba(200, 16, 46, 0.1), transparent 48%),
     rgba(18, 43, 74, 0.32);
-  box-shadow: inset 0 0 34px rgba(200, 16, 46, 0.06), 0 22px 70px rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 0 34px rgba(200, 16, 46, 0.06), 0 22px 70px rgba(16, 20, 24, 0.28);
   animation: about-float 6.8s ease-in-out infinite;
   transform-style: preserve-3d;
 }
@@ -571,7 +571,7 @@ h2 {
 
 .about-signal::before {
   inset: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(244, 244, 244, 0.06);
   border-radius: 18px;
 }
 
@@ -634,11 +634,11 @@ h2 {
   display: grid;
   min-width: 128px;
   gap: 3px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(244, 244, 244, 0.08);
   border-radius: var(--radius);
   padding: 10px 12px;
   background: rgba(18, 43, 74, 0.74);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 18px 44px rgba(16, 20, 24, 0.28);
   color: var(--muted);
   font-size: 0.7rem;
   text-transform: lowercase;
@@ -711,7 +711,7 @@ h2 {
   background: rgba(18, 43, 74, 0.56);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(16, 20, 24, 0.2);
   transition:
     transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
@@ -758,7 +758,7 @@ h2 {
   inset: -1px;
   background:
     radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(200, 16, 46, 0.22), transparent 38%),
-    linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+    linear-gradient(120deg, transparent, rgba(244, 244, 244, 0.06), transparent);
   content: "";
   opacity: 0;
   transform: translate3d(-10%, 8%, 20px) scale(0.92);
@@ -788,7 +788,7 @@ h2 {
 .stat-card:hover {
   border-color: var(--brand-red);
   background: rgba(200, 16, 46, 0.05);
-  box-shadow: 0 30px 80px rgba(200, 16, 46, 0.14), 0 20px 60px rgba(0, 0, 0, 0.34);
+  box-shadow: 0 30px 80px rgba(200, 16, 46, 0.14), 0 20px 60px rgba(16, 20, 24, 0.34);
 }
 
 .stat-card:hover::after,
@@ -1069,11 +1069,11 @@ h2 {
 @keyframes button-breathe {
   0%,
   100% {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px rgba(16, 20, 24, 0.2);
   }
 
   50% {
-    box-shadow: 0 16px 46px rgba(0, 0, 0, 0.28), 0 0 26px rgba(200, 16, 46, 0.16);
+    box-shadow: 0 16px 46px rgba(16, 20, 24, 0.28), 0 0 26px rgba(200, 16, 46, 0.16);
   }
 }
 
@@ -1098,7 +1098,7 @@ h2 {
   inset: 0;
   background:
     linear-gradient(120deg, transparent 0 46%, rgba(200, 16, 46, 0.06) 46.2%, transparent 64%),
-    repeating-linear-gradient(0deg, transparent 0 92px, rgba(255, 255, 255, 0.022) 93px 94px);
+    repeating-linear-gradient(0deg, transparent 0 92px, rgba(244, 244, 244, 0.022) 93px 94px);
   content: "";
   opacity: 0.7;
   pointer-events: none;
@@ -1206,7 +1206,7 @@ h2 {
 .feature-card:hover {
   border-color: rgba(200, 16, 46, 0.42);
   background: rgba(46, 109, 164, 0.94);
-  box-shadow: 0 34px 90px rgba(46, 109, 164, 0.14), 0 22px 70px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 34px 90px rgba(46, 109, 164, 0.14), 0 22px 70px rgba(16, 20, 24, 0.42);
 }
 
 .feature-card:hover::before {
@@ -1388,11 +1388,11 @@ h2 {
 }
 
 .contact-section .section-trace {
-  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.42), transparent);
+  background: linear-gradient(180deg, transparent, rgba(16, 20, 24, 0.42), transparent);
 }
 
 .contact-section .section-trace span {
-  background: rgba(0, 0, 0, 0.58);
+  background: rgba(16, 20, 24, 0.58);
   box-shadow: none;
 }
 
@@ -1416,7 +1416,7 @@ h2 {
   border-radius: var(--radius);
   padding: 20px 18px;
   background: linear-gradient(135deg, rgba(46, 109, 164, 0.94), rgba(18, 43, 74, 0.86));
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 18px 50px rgba(16, 20, 24, 0.3);
   transition:
     transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.7s cubic-bezier(0.16, 1, 0.3, 1),
@@ -1442,8 +1442,8 @@ h2 {
 
 .support-card:hover {
   border-color: var(--brand-red);
-  background: linear-gradient(135deg, rgba(45, 99, 153, 0.96), rgba(18, 43, 74, 0.92));
-  box-shadow: 0 34px 90px rgba(46, 109, 164, 0.15), 0 22px 70px rgba(0, 0, 0, 0.38);
+  background: linear-gradient(135deg, rgba(46, 109, 164, 0.96), rgba(18, 43, 74, 0.92));
+  box-shadow: 0 34px 90px rgba(46, 109, 164, 0.15), 0 22px 70px rgba(16, 20, 24, 0.38);
 }
 
 .support-card span {
@@ -1528,7 +1528,7 @@ h2 {
   border-radius: var(--radius);
   padding: 22px 24px 22px 76px;
   background: rgba(18, 43, 74, 0.78);
-  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 20px 55px rgba(16, 20, 24, 0.28);
   transition:
     transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.75s cubic-bezier(0.16, 1, 0.3, 1),
@@ -1572,7 +1572,7 @@ h2 {
 .stock-step:hover {
   border-color: rgba(200, 16, 46, 0.4);
   background: rgba(46, 109, 164, 0.92);
-  box-shadow: 0 34px 90px rgba(46, 109, 164, 0.15), 0 22px 70px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 34px 90px rgba(46, 109, 164, 0.15), 0 22px 70px rgba(16, 20, 24, 0.4);
 }
 
 .stock-step span {
@@ -1739,12 +1739,12 @@ h2 {
   position: relative;
   overflow: hidden;
   min-height: min(58vh, 560px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(244, 244, 244, 0.09);
   border-radius: 18px;
   background:
     linear-gradient(135deg, rgba(18, 43, 74, 0.94), rgba(18, 43, 74, 0.86)),
     radial-gradient(circle at 68% 30%, rgba(200, 16, 46, 0.18), transparent 35%);
-  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.34);
+  box-shadow: 0 32px 90px rgba(16, 20, 24, 0.34);
   transform: rotateY(-9deg) rotateX(6deg);
   transform-style: preserve-3d;
   will-change: transform;
@@ -1758,13 +1758,13 @@ h2 {
 
 .map-panel:hover {
   border-color: rgba(200, 16, 46, 0.38);
-  box-shadow: 0 44px 110px rgba(46, 109, 164, 0.16), 0 30px 90px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 44px 110px rgba(46, 109, 164, 0.16), 0 30px 90px rgba(16, 20, 24, 0.42);
 }
 
 .map-panel::before {
   position: absolute;
   inset: 0;
-  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.08), transparent 52%);
+  background: linear-gradient(110deg, transparent 30%, rgba(244, 244, 244, 0.08), transparent 52%);
   content: "";
   opacity: 0.72;
   transform: translateX(-110%);
@@ -1775,8 +1775,8 @@ h2 {
   position: absolute;
   inset: 0;
   background:
-    repeating-linear-gradient(90deg, transparent 0 58px, rgba(255, 255, 255, 0.045) 59px 60px),
-    repeating-linear-gradient(0deg, transparent 0 58px, rgba(255, 255, 255, 0.035) 59px 60px);
+    repeating-linear-gradient(90deg, transparent 0 58px, rgba(244, 244, 244, 0.045) 59px 60px),
+    repeating-linear-gradient(0deg, transparent 0 58px, rgba(244, 244, 244, 0.035) 59px 60px);
   mask-image: radial-gradient(circle at 50% 50%, var(--color-technical-black), transparent 78%);
   transform: translateZ(18px) rotateX(12deg);
   animation: map-grid-drift 9s ease-in-out infinite;
@@ -1789,7 +1789,7 @@ h2 {
   height: 84%;
   overflow: visible;
   transform: translateZ(54px);
-  filter: drop-shadow(0 24px 28px rgba(0, 0, 0, 0.34));
+  filter: drop-shadow(0 24px 28px rgba(16, 20, 24, 0.34));
 }
 
 .map-route-path {
@@ -1852,11 +1852,11 @@ h2 {
 
 .map-pin strong {
   transform: translateZ(58px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(244, 244, 244, 0.08);
   border-radius: 8px;
   padding: 7px 9px;
   background: rgba(18, 43, 74, 0.78);
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 16px 34px rgba(16, 20, 24, 0.24);
   color: var(--ink);
   text-align: center;
 }
@@ -1868,11 +1868,11 @@ h2 {
   bottom: 22px;
   display: grid;
   gap: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(244, 244, 244, 0.09);
   border-radius: var(--radius);
   padding: 14px 16px;
   background: rgba(18, 43, 74, 0.82);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 18px 44px rgba(16, 20, 24, 0.28);
   transform-style: preserve-3d;
   will-change: transform;
   transition:
@@ -1886,7 +1886,7 @@ h2 {
 .map-card:hover {
   border-color: rgba(200, 16, 46, 0.38);
   background: rgba(18, 43, 74, 0.92);
-  box-shadow: 0 30px 80px rgba(46, 109, 164, 0.16), 0 18px 54px rgba(0, 0, 0, 0.36);
+  box-shadow: 0 30px 80px rgba(46, 109, 164, 0.16), 0 18px 54px rgba(16, 20, 24, 0.36);
 }
 
 .is-tilting {
@@ -1927,7 +1927,7 @@ h2 {
   height: 100vh;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 74% 18%, rgba(255, 255, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 74% 18%, rgba(244, 244, 244, 0.18), transparent 28%),
     linear-gradient(135deg, var(--color-signal-red), var(--color-signal-red));
   color: var(--color-technical-black);
 }
@@ -1938,7 +1938,7 @@ h2 {
 
 .contact-copy {
   max-width: 720px;
-  color: rgba(0, 0, 0, 0.72);
+  color: rgba(16, 20, 24, 0.72);
   font-size: clamp(1rem, 1.5vw, 1.25rem);
   line-height: 1.7;
 }
@@ -1956,7 +1956,7 @@ h2 {
   color: var(--brand-red);
   font-weight: 700;
   font-size: 1.05rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(16, 20, 24, 0.2);
   transition:
     transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1),
@@ -1974,14 +1974,14 @@ h2 {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(244, 244, 244,0.1), transparent);
   transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .primary-action:hover {
   transform: translate3d(0, -5px, 0) scale(1.035);
   filter: brightness(1.08);
-  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.34), 0 0 34px rgba(200, 16, 46, 0.22);
+  box-shadow: 0 22px 58px rgba(16, 20, 24, 0.34), 0 0 34px rgba(200, 16, 46, 0.22);
 }
 
 .primary-action:hover::before {
@@ -2324,7 +2324,7 @@ body:has(.institutional-shell) {
   border: 1px solid rgba(46, 109, 164, 0.18);
   border-radius: 999px;
   padding: 7px 11px;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(244, 244, 244, 0.72);
   color: rgba(16, 20, 24, 0.72);
   font-size: 0.92rem;
 }
@@ -2503,9 +2503,9 @@ body:has(.institutional-shell) {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 72px;
   height: 3px;
-  background: linear-gradient(90deg, var(--brand-red), rgba(46, 109, 164, 0.45), transparent);
+  background: var(--brand-red);
   content: "";
 }
 
@@ -2520,9 +2520,8 @@ body:has(.institutional-shell) {
 
 .institutional-footer {
   margin-top: clamp(70px, 9vw, 116px);
-  background:
-    linear-gradient(135deg, rgba(200, 16, 46, 0.96), rgba(200, 16, 46, 0.88) 0 4px, transparent 4px),
-    linear-gradient(135deg, var(--color-center-blue), var(--color-center-blue) 62%, var(--color-road-blue));
+  border-top: 4px solid var(--color-signal-red);
+  background: var(--color-center-blue);
   color: var(--ink);
 }
 
@@ -2549,7 +2548,6 @@ body:has(.institutional-shell) {
   width: min(260px, 78vw);
   height: auto;
   margin-bottom: 22px;
-  filter: brightness(0) invert(1);
 }
 
 .footer-brand p,
@@ -2558,7 +2556,7 @@ body:has(.institutional-shell) {
 .footer-nav a,
 .footer-privacy,
 .footer-copy {
-  color: rgba(248, 251, 255, 0.76);
+  color: rgba(244, 244, 244, 0.76);
   font-size: 0.94rem;
   line-height: 1.65;
 }
@@ -2576,10 +2574,10 @@ body:has(.institutional-shell) {
 }
 
 .footer-badges span {
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(244, 244, 244, 0.16);
   border-radius: 999px;
   padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(244, 244, 244, 0.08);
   color: var(--color-center-white);
   font-size: 0.82rem;
   font-weight: 700;
@@ -2630,7 +2628,7 @@ body:has(.institutional-shell) {
 }
 
 .footer-privacy span {
-  color: rgba(248, 251, 255, 0.58);
+  color: rgba(244, 244, 244, 0.58);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -2648,10 +2646,10 @@ body:has(.institutional-shell) {
 .footer-office {
   display: grid;
   gap: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(244, 244, 244, 0.12);
   border-radius: 8px;
   padding: 18px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(244, 244, 244, 0.06);
   font-style: normal;
 }
 
@@ -2661,7 +2659,7 @@ body:has(.institutional-shell) {
 }
 
 .footer-office span:first-of-type {
-  color: rgba(248, 251, 255, 0.94);
+  color: rgba(244, 244, 244, 0.94);
   font-weight: 700;
 }
 
@@ -2672,7 +2670,7 @@ body:has(.institutional-shell) {
   justify-content: space-between;
   gap: 14px;
   margin-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(244, 244, 244, 0.12);
   padding-top: 22px;
   font-size: 0.84rem;
 }
@@ -2790,11 +2788,11 @@ body:has(.institutional-shell) {
     grid-template-columns: 1fr;
     gap: 8px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(244, 244, 244, 0.1);
     border-radius: 10px;
     padding: 0 8px;
     background: rgba(18, 43, 74, 0.98);
-    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.34);
+    box-shadow: 0 22px 48px rgba(16, 20, 24, 0.34);
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
@@ -2822,7 +2820,7 @@ body:has(.institutional-shell) {
     border-radius: 8px;
     padding: 0 12px;
     font-size: 0.92rem;
-    color: rgba(248, 251, 255, 0.92);
+    color: rgba(244, 244, 244, 0.92);
   }
 
   .topbar nav a:hover,
@@ -2854,7 +2852,7 @@ body:has(.institutional-shell) {
   .topbar nav .nav-dropdown-menu a {
     min-height: 38px;
     padding-left: 12px;
-    color: rgba(248, 251, 255, 0.78);
+    color: rgba(244, 244, 244, 0.78);
     font-size: 0.84rem;
   }
 
@@ -3124,7 +3122,7 @@ body:has(.institutional-shell) {
     border: 1px solid rgba(16, 20, 24, 0.1);
     border-radius: var(--radius-card);
     padding: 0 8px;
-    background: rgba(255, 255, 255, 0.98);
+    background: rgba(244, 244, 244, 0.98);
     box-shadow: 0 24px 50px rgba(16, 20, 24, 0.16);
     visibility: hidden;
     opacity: 0;

@@ -9,6 +9,7 @@ export const aboutLinks = [
 export const mainLinks = [
   { href: "/", label: "Home" },
   { href: "/produtos", label: "Produtos" },
+  { href: "/blog", label: "Blog" },
   { href: "/vendedores", label: "Vendedores" },
   { href: "/fale-conosco", label: "Fale Conosco" },
 ];

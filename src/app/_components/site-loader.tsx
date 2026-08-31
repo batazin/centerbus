@@ -95,7 +95,7 @@ export function SiteLoader() {
       <span className="site-loader-grid" aria-hidden="true" />
       <span className="site-loader-diagonal" aria-hidden="true" />
       <div className="site-loader-inner">
-        <Image src="/logo.png" alt="Center Ônibus" width={350} height={82} priority />
+        <Image src="/logo.png" alt="Center Ônibus" width={1123} height={293} priority />
         <div className="site-loader-copy">
           <p>{status}</p>
           <strong>{String(percentage).padStart(2, "0")}%</strong>

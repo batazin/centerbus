@@ -28,6 +28,7 @@ const offices = [
 const footerLinks = [
   { href: "/sobre/a-center-onibus", label: "A Center Ônibus" },
   { href: "/produtos", label: "Produtos" },
+  { href: "/blog", label: "Blog" },
   { href: "/vendedores", label: "Vendedores" },
   { href: "/fale-conosco", label: "Fale Conosco" },
   { href: "/sobre/politica-de-privacidade", label: "Privacidade" },
@@ -38,7 +39,12 @@ export function InstitutionalFooter() {
     <footer className="institutional-footer">
       <div className="institutional-footer-inner">
         <section className="footer-brand" aria-label="Center Ônibus">
-          <Image src="/logo.png" alt="Center Ônibus" width={350} height={82} />
+          <Image
+            src="/brand/center-onibus-logo-negative.png"
+            alt="Center Ônibus"
+            width={1143}
+            height={299}
+          />
           <p>Peças e acessórios para carrocerias de ônibus urbanos, rodoviários e micro-ônibus.</p>
           <div className="footer-badges" aria-label="Diferenciais">
             <span>ISO 9001:2015</span>

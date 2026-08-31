@@ -251,7 +251,7 @@ export function CenterbusOnePage() {
       <span className="home-scroll-progress" aria-hidden="true" />
       <header className={`home-header${isMenuOpen ? " is-menu-open" : ""}`}>
         <a className="home-brand" href="#inicio" aria-label="Center Ônibus, início" onClick={() => setIsMenuOpen(false)}>
-          <Image src="/logo.png" alt="Center Ônibus" width={350} height={82} priority />
+          <Image src="/logo.png" alt="Center Ônibus" width={1123} height={293} priority />
         </a>
 
         <button

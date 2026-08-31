@@ -42,7 +42,7 @@
     linear-gradient(rgba(244, 244, 244, .05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(244, 244, 244, .05) 1px, transparent 1px);
   background-size: 72px 72px;
-  mask-image: linear-gradient(90deg, #000, rgba(0, 0, 0, .64) 42%, transparent 86%);
+  mask-image: linear-gradient(90deg, #101418, rgba(16, 20, 24, .64) 42%, transparent 86%);
   opacity: .34;
   pointer-events: none;
   transform: translate3d(calc(var(--bus-pointer-x) * 10px), calc(var(--bus-pointer-y) * 6px), 0);

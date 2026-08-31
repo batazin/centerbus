@@ -3,6 +3,8 @@ import { Archivo_Narrow, Inter } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import "./home-rebrand.css";
+import "./product-catalog.css";
+import "./blog.css";
 
 const inter = Inter({
   subsets: ["latin"],

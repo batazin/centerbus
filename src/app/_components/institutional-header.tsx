@@ -12,7 +12,7 @@ export function InstitutionalHeader() {
   return (
     <header className={`institutional-header${isMenuOpen ? " is-menu-open" : ""}`}>
       <Link className="institutional-logo" href="/" aria-label="Center Ônibus início" onClick={closeMenu}>
-        <Image src="/logo.png" alt="Center Ônibus" width={350} height={82} priority />
+        <Image src="/logo.png" alt="Center Ônibus" width={1123} height={293} loading="eager" />
       </Link>
       <button
         className="mobile-menu-toggle"
