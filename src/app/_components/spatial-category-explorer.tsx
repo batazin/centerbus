@@ -36,7 +36,9 @@ export function SpatialCategoryExplorer({ categories }: SpatialCategoryExplorerP
   const dragPositionStartRef = useRef(0);
   const dragDeltaRef = useRef(0);
 
-  activeRef.current = active;
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
   const select = useCallback(
     (next: number, duration = 0.7) => {

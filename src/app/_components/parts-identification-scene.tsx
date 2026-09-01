@@ -214,9 +214,13 @@ export function PartsIdentificationScene() {
     const explodedPositions = [new THREE.Vector3(0.1, 0.95, -0.8), new THREE.Vector3(2.75, 1.35, 0.15), new THREE.Vector3(2.9, -1.2, 0.75), new THREE.Vector3(0.65, -1.8, -0.15)];
     const assembledPosition = new THREE.Vector3(0.65, 0, -1.4);
     const focusPosition = new THREE.Vector3(0.45, -0.08, 1.45);
-    let frame = 0;
+    let frame: number | null = null;
+    let isVisible = false;
 
     const render = (time: number) => {
+      frame = null;
+      if (disposed || !isVisible || document.hidden) return;
+
       const mobile = window.innerWidth < 760;
       const selected = selectedRef.current;
       explodeAmount += ((viewModeRef.current === "exploded" ? 1 : 0) - explodeAmount) * 0.075;
@@ -264,18 +268,45 @@ export function PartsIdentificationScene() {
       frame = requestAnimationFrame(render);
     };
 
+    const startRendering = () => {
+      if (frame !== null || disposed || !isVisible || document.hidden) return;
+      frame = requestAnimationFrame(render);
+    };
+
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (isVisible) {
+        startRendering();
+      } else if (frame !== null) {
+        cancelAnimationFrame(frame);
+        frame = null;
+      }
+    }, { rootMargin: "180px 0px" });
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (frame !== null) cancelAnimationFrame(frame);
+        frame = null;
+      } else {
+        startRendering();
+      }
+    };
+
     resize();
     window.addEventListener("resize", resize);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     renderer.domElement.addEventListener("pointerdown", onPointerDown);
     renderer.domElement.addEventListener("pointermove", onPointerMove);
     renderer.domElement.addEventListener("pointerup", onPointerUp);
     renderer.domElement.addEventListener("pointercancel", onPointerUp);
-    frame = requestAnimationFrame(render);
+    visibilityObserver.observe(mount);
 
     return () => {
       disposed = true;
-      cancelAnimationFrame(frame);
+      if (frame !== null) cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      visibilityObserver.disconnect();
       renderer.domElement.removeEventListener("pointerdown", onPointerDown);
       renderer.domElement.removeEventListener("pointermove", onPointerMove);
       renderer.domElement.removeEventListener("pointerup", onPointerUp);

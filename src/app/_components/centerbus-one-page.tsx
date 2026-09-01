@@ -2,7 +2,6 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -123,28 +122,8 @@ export function CenterbusOnePage() {
     if (!root) return;
 
     gsap.registerPlugin(ScrollTrigger);
-    const lenis = new Lenis({
-      duration: 0.82,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      syncTouch: false,
-      wheelMultiplier: 1.15,
-      touchMultiplier: 1.2,
-      anchors: { offset: -90, duration: 1.1 },
-      overscroll: false,
-      stopInertiaOnNavigate: true,
-      respectReducedMotion: true,
-    });
-
-    const syncScrollTrigger = () => ScrollTrigger.update();
-    const updateLenis = (time: number) => lenis.raf(time * 1000);
-
-    lenis.on("scroll", syncScrollTrigger);
-    gsap.ticker.add(updateLenis);
-    gsap.ticker.lagSmoothing(0);
 
     const refreshScroll = () => {
-      lenis.resize();
       ScrollTrigger.refresh();
     };
 
@@ -227,9 +206,6 @@ export function CenterbusOnePage() {
     return () => {
       window.clearTimeout(refreshTimeout);
       window.removeEventListener("load", refreshScroll);
-      gsap.ticker.remove(updateLenis);
-      lenis.off("scroll", syncScrollTrigger);
-      lenis.destroy();
       context.revert();
     };
   }, []);

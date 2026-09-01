@@ -2414,7 +2414,7 @@ body:has(.institutional-shell) {
   align-items: center;
   margin-top: 46px;
   padding: 22px 28px;
-  background: var(--color-road-blue);
+  background: var(--color-center-blue);
   color: var(--color-center-white);
 }
 

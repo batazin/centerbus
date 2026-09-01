@@ -124,16 +124,17 @@ void main() {
 type BusParticlesProps = {
   activeChapterIndex: number;
   activeChapterProgress: number;
-  scrollProgress: number;
   transitionProgress: number;
   morphEnergy?: number;
   variant?: "hero" | "journey";
 };
 
-export function BusParticles({ activeChapterIndex, activeChapterProgress, scrollProgress, transitionProgress, morphEnergy = 0, variant = "journey" }: BusParticlesProps) {
+export function BusParticles({ activeChapterIndex, activeChapterProgress, transitionProgress, morphEnergy = 0, variant = "journey" }: BusParticlesProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const modelGroupRef = useRef<THREE.Group | null>(null);
   const baseRotationRef = useRef(modelViewRotations[0]);
+  const activeChapterIndexRef = useRef(activeChapterIndex);
+  const modelOffsetXRef = useRef(0);
   const targetScrollProgressRef = useRef(0);
   const targetMorphEnergyRef = useRef(0);
   const uniformsRef = useRef<Partial<{ uScrollProgress: { value: number }; uTransition: { value: number }; uMorphEnergy: { value: number } }> | null>(null);
@@ -149,9 +150,9 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
     camera.position.set(0, 0, variant === "hero" ? 14.2 : 15.4);
-    const modelOffset = { x: getModelOffsetX(width, variant, activeChapterIndex) };
+    modelOffsetXRef.current = getModelOffsetX(width, variant, activeChapterIndexRef.current);
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true });
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, width < 768 ? 1.15 : 1.5));
     renderer.domElement.style.cursor = "grab";
@@ -411,22 +412,17 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, newWidth < 768 ? 1.15 : 1.5));
       renderer.setSize(newWidth, newHeight);
       uniforms.uPointScale.value = newWidth < 768 ? 1.12 : variant === "hero" ? 1.16 : 1.04;
-      modelOffset.x = getModelOffsetX(newWidth, variant, activeChapterIndex);
+      modelOffsetXRef.current = getModelOffsetX(newWidth, variant, activeChapterIndexRef.current);
     };
     window.addEventListener("resize", onResize);
 
-    let isVisible = true;
-    const visibilityObserver = new IntersectionObserver(([entry]) => {
-      isVisible = entry.isIntersecting;
-    }, { rootMargin: "180px 0px" });
-    visibilityObserver.observe(mountElement);
+    let isVisible = false;
+    let animationId: number | null = null;
 
-    let animationId: number;
     const animate = (timestamp?: number) => {
-      if (!isVisible || document.hidden) {
-        animationId = requestAnimationFrame(animate);
-        return;
-      }
+      animationId = null;
+      if (!isVisible || document.hidden) return;
+
       timer.update(timestamp);
 
       const delta = timer.getDelta();
@@ -438,7 +434,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       uniforms.uMorphEnergy.value += (targetMorphEnergyRef.current - uniforms.uMorphEnergy.value) * (reducedMotion ? 1 : 0.09);
       
       if (modelGroupRef.current) {
-        modelGroupRef.current.position.x = modelOffset.x;
+        modelGroupRef.current.position.x = modelOffsetXRef.current;
         modelGroupRef.current.position.y = reducedMotion ? 0 : Math.sin(elapsedTime * 1.2) * 0.2;
         currentBaseRotation.x += (baseRotationRef.current.x - currentBaseRotation.x) * (reducedMotion ? 1 : 0.06);
         currentBaseRotation.y += (baseRotationRef.current.y - currentBaseRotation.y) * (reducedMotion ? 1 : 0.06);
@@ -455,11 +451,37 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       renderer.render(scene, camera);
       animationId = requestAnimationFrame(animate);
     };
-    animate();
+
+    const startAnimation = () => {
+      if (animationId !== null || !isVisible || document.hidden) return;
+      animationId = requestAnimationFrame(animate);
+    };
+
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (isVisible) {
+        startAnimation();
+      } else if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+    }, { rootMargin: "180px 0px" });
+    visibilityObserver.observe(mountElement);
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (animationId !== null) cancelAnimationFrame(animationId);
+        animationId = null;
+      } else {
+        startAnimation();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      cancelAnimationFrame(animationId);
+      if (animationId !== null) cancelAnimationFrame(animationId);
       window.removeEventListener("resize", onResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       visibilityObserver.disconnect();
       mountElement.removeEventListener("pointermove", onPointerMove);
       mountElement.removeEventListener("pointerdown", onPointerDown);
@@ -480,7 +502,7 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
       uniformsRef.current = null;
       modelGroupRef.current = null;
     };
-  }, [variant, activeChapterIndex]);
+  }, [variant]);
 
   useEffect(() => {
     targetScrollProgressRef.current = activeChapterProgress;
@@ -491,8 +513,12 @@ export function BusParticles({ activeChapterIndex, activeChapterProgress, scroll
   }, [morphEnergy]);
 
   useEffect(() => {
+    activeChapterIndexRef.current = activeChapterIndex;
+    if (mountRef.current) {
+      modelOffsetXRef.current = getModelOffsetX(mountRef.current.clientWidth, variant, activeChapterIndex);
+    }
     baseRotationRef.current = modelViewRotations[activeChapterIndex] ?? modelViewRotations[0];
-  }, [activeChapterIndex, scrollProgress]);
+  }, [activeChapterIndex, variant]);
 
   useEffect(() => {
     if (uniformsRef.current?.uTransition) {

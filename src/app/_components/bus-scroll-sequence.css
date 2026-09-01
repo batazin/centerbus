@@ -12,6 +12,8 @@
   height: 100dvh;
   overflow: hidden;
   background: var(--color-technical-black);
+  contain: paint;
+  isolation: isolate;
 }
 
 .bus-scroll-sequence-canvas,
@@ -26,6 +28,8 @@
 .bus-scroll-sequence-canvas {
   background: var(--color-technical-black);
   transform: translate3d(calc(var(--bus-pointer-x) * -8px), calc(var(--bus-pointer-y) * -5px), 0) scale(1.018);
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .bus-scroll-sequence-shade {

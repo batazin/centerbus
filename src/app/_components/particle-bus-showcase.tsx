@@ -94,7 +94,6 @@ export function ParticleBusShowcase() {
             <BusParticles
               activeChapterIndex={active}
               activeChapterProgress={progress}
-              scrollProgress={progress}
               transitionProgress={0}
               morphEnergy={morphEnergy}
               variant="journey"

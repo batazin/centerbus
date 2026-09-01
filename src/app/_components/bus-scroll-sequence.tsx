@@ -6,7 +6,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import "./bus-scroll-sequence.css";
 
 const frameCount = 241;
-const criticalFrameCount = 14;
+const criticalFrameCount = 28;
 const framePath = (frame: number) => `/sequences/bus/frame_${String(frame).padStart(4, "0")}.webp`;
 
 const scenes = [
@@ -73,10 +73,16 @@ export function BusScrollSequence() {
     let idleStartedAt = 0;
     let hasUserControl = false;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobile = window.innerWidth < 760;
+    const maxDecodedFrames = isMobile ? 36 : 54;
+    const maxConcurrentLoads = isMobile ? 4 : 6;
     const images = new Map<number, HTMLImageElement>();
     const loading = new Set<number>();
+    const queued = new Set<number>();
+    const loadQueue: number[] = [];
     const settledCriticalFrames = new Set<number>();
-    let backgroundPreloadStarted = false;
+    let activeLoads = 0;
+    let lastRequestedFrame = sceneFrames[0];
 
     const announceBootProgress = (frame: number) => {
       if (frame > criticalFrameCount) return;
@@ -93,13 +99,6 @@ export function BusScrollSequence() {
         },
       }));
 
-      if (images.has(sceneFrames[0]) && loaded >= 8 && !backgroundPreloadStarted) {
-        backgroundPreloadStarted = true;
-        window.setTimeout(() => {
-          preloadSceneFrames();
-          window.setTimeout(preloadAllFrames, 420);
-        }, 240);
-      }
     };
 
     let cachedContext: CanvasRenderingContext2D | null = null;
@@ -110,11 +109,15 @@ export function BusScrollSequence() {
       const context = canvas.getContext("2d", { alpha: false });
       if (!context) return null;
 
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
       const width = window.innerWidth;
       const height = window.innerHeight;
-      const nextCanvasWidth = Math.round(width * ratio);
-      const nextCanvasHeight = Math.round(height * ratio);
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.25);
+      const maxRenderPixels = width < 760 ? 720_000 : 1_200_000;
+      const desiredPixels = width * ratio * height * ratio;
+      const renderScale = Math.min(1, Math.sqrt(maxRenderPixels / Math.max(1, desiredPixels)));
+      const renderRatio = ratio * renderScale;
+      const nextCanvasWidth = Math.round(width * renderRatio);
+      const nextCanvasHeight = Math.round(height * renderRatio);
 
       if (canvasWidth !== nextCanvasWidth || canvasHeight !== nextCanvasHeight) {
         canvasWidth = nextCanvasWidth;
@@ -125,11 +128,25 @@ export function BusScrollSequence() {
         canvas.style.height = `${height}px`;
       }
 
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      context.setTransform(renderRatio, 0, 0, renderRatio, 0, 0);
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = "medium";
       cachedContext = context;
       cachedWidth = width;
       cachedHeight = height;
       return { context, width, height };
+    };
+
+    const trimImageCache = (centerFrame: number) => {
+      if (images.size <= maxDecodedFrames) return;
+
+      const removableFrames = Array.from(images.keys())
+        .sort((first, second) => Math.abs(second - centerFrame) - Math.abs(first - centerFrame));
+
+      while (images.size > maxDecodedFrames && removableFrames.length > 0) {
+        const frame = removableFrames.shift();
+        if (frame !== undefined) images.delete(frame);
+      }
     };
 
     const nearestLoadedFrame = (frame: number) => {
@@ -145,24 +162,44 @@ export function BusScrollSequence() {
       return undefined;
     };
 
-    const drawFrame = (frame: number) => {
-      const context = cachedContext || resizeCanvas()?.context;
-      if (!context) return;
-
-      const loadedFrame = nearestLoadedFrame(frame);
-      if (!loadedFrame) return;
-
-      const image = images.get(loadedFrame);
-      if (!image?.naturalWidth || !image.naturalHeight) return;
-
-      const width = cachedWidth || window.innerWidth;
-      const height = cachedHeight || window.innerHeight;
+    const drawImageCover = (
+      context: CanvasRenderingContext2D,
+      image: HTMLImageElement,
+      width: number,
+      height: number,
+      opacity = 1,
+    ) => {
       const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
       const drawWidth = image.naturalWidth * scale;
       const drawHeight = image.naturalHeight * scale;
-
+      context.globalAlpha = opacity;
       context.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
-      currentFrame = frame;
+    };
+
+    const drawFrame = (framePosition: number) => {
+      const context = cachedContext || resizeCanvas()?.context;
+      if (!context) return;
+
+      const width = cachedWidth || window.innerWidth;
+      const height = cachedHeight || window.innerHeight;
+      const previousFrame = Math.max(1, Math.floor(framePosition));
+      const nextFrame = Math.min(frameCount, Math.ceil(framePosition));
+      const previousImage = images.get(previousFrame);
+      const nextImage = images.get(nextFrame);
+      const blend = framePosition - previousFrame;
+
+      if (previousImage?.naturalWidth && nextImage?.naturalWidth && previousFrame !== nextFrame) {
+        drawImageCover(context, previousImage, width, height);
+        drawImageCover(context, nextImage, width, height, blend);
+      } else {
+        const loadedFrame = nearestLoadedFrame(Math.round(framePosition));
+        const image = loadedFrame ? images.get(loadedFrame) : undefined;
+        if (!image?.naturalWidth || !image.naturalHeight) return;
+        drawImageCover(context, image, width, height);
+      }
+
+      context.globalAlpha = 1;
+      currentFrame = framePosition;
     };
 
     const getSceneFromFrame = (frame: number) => {
@@ -178,7 +215,8 @@ export function BusScrollSequence() {
 
     const updateFromProgress = (progressValue: number) => {
       const progress = Math.max(0, Math.min(1, progressValue));
-      const frame = Math.max(1, Math.min(frameCount, Math.round(progress * (frameCount - 1)) + 1));
+      const framePosition = Math.max(1, Math.min(frameCount, progress * (frameCount - 1) + 1));
+      const frame = Math.round(framePosition);
       const nextScene = getSceneFromFrame(frame);
 
       if (progress > 0.008 && !hasUserControl) {
@@ -190,12 +228,9 @@ export function BusScrollSequence() {
         }
       }
 
-      for (let offset = -2; offset <= 2; offset++) {
-        const requestedFrame = frame + offset;
-        if (requestedFrame >= 1 && requestedFrame <= frameCount) loadFrame(requestedFrame);
-      }
+      requestFrameWindow(frame);
 
-      drawFrame(frame);
+      drawFrame(framePosition);
 
       if (progressRef.current) {
         progressRef.current.style.transform = `scaleX(${progress})`;
@@ -213,7 +248,7 @@ export function BusScrollSequence() {
 
       const elapsed = time - idleStartedAt;
       const cycle = (1 - Math.cos(elapsed / 900)) / 2;
-      const frame = Math.round(1 + cycle * 27);
+      const frame = 1 + cycle * (criticalFrameCount - 1);
 
       drawFrame(frame);
       idleFrame = window.requestAnimationFrame(runIdlePreview);
@@ -227,55 +262,104 @@ export function BusScrollSequence() {
       });
     };
 
-    const loadFrame = (frame: number) => {
-      if (images.has(frame) || loading.has(frame)) return;
-
+    function startFrameLoad(frame: number) {
       loading.add(frame);
+      activeLoads += 1;
       const image = new Image();
       image.decoding = "async";
-      image.src = framePath(frame);
-      image.onload = () => {
+      image.fetchPriority = frame <= criticalFrameCount || Math.abs(frame - currentFrame) <= 3 ? "high" : "auto";
+
+      let settled = false;
+      const finishLoad = (loaded: boolean) => {
+        if (settled) return;
+        settled = true;
         loading.delete(frame);
-        if (disposed) return;
-        images.set(frame, image);
-        announceBootProgress(frame);
-        if (frame === sceneFrames[0]) {
-          setIsReady(true);
-          scheduleUpdate();
-          if (!reduceMotion && idleFrame === undefined) {
-            idleFrame = window.requestAnimationFrame(runIdlePreview);
+        activeLoads -= 1;
+
+        if (!disposed && loaded && image.naturalWidth && image.naturalHeight) {
+          images.set(frame, image);
+          trimImageCache(currentFrame);
+        }
+
+        if (!disposed) {
+          announceBootProgress(frame);
+          if (frame === sceneFrames[0] && loaded) {
+            setIsReady(true);
+            scheduleUpdate();
+            if (!reduceMotion && idleFrame === undefined) {
+              idleFrame = window.requestAnimationFrame(runIdlePreview);
+            }
+          } else if (loaded && Math.abs(frame - currentFrame) <= 2) {
+            scheduleUpdate();
           }
-          return;
+
+          pumpLoadQueue();
         }
-
-        if (Math.abs(frame - currentFrame) <= 2) scheduleUpdate();
-      };
-      image.onerror = () => {
-        loading.delete(frame);
-        announceBootProgress(frame);
-      };
-    };
-
-    const preloadAllFrames = () => {
-      let frame = 1;
-      const loadChunk = () => {
-        if (disposed) return;
-        const chunkEnd = Math.min(frameCount, frame + (window.innerWidth < 760 ? 3 : 7));
-        for (; frame <= chunkEnd; frame++) loadFrame(frame);
-        if (frame <= frameCount) window.setTimeout(loadChunk, window.innerWidth < 760 ? 150 : 95);
       };
 
-      loadChunk();
-    };
-
-    const preloadSceneFrames = () => {
-      sceneFrames.forEach((sceneFrame) => {
-        for (let offset = -3; offset <= 3; offset++) {
-          const frame = sceneFrame + offset;
-          if (frame >= 1 && frame <= frameCount) loadFrame(frame);
+      image.onload = async () => {
+        try {
+          await image.decode();
+        } catch {
+          // Some browsers reject decode() even when the loaded image is drawable.
         }
-      });
-    };
+        finishLoad(true);
+      };
+      image.onerror = () => finishLoad(false);
+      image.src = framePath(frame);
+    }
+
+    function pumpLoadQueue() {
+      while (!disposed && activeLoads < maxConcurrentLoads && loadQueue.length > 0) {
+        const frame = loadQueue.shift();
+        if (frame === undefined) return;
+        queued.delete(frame);
+        if (images.has(frame) || loading.has(frame)) continue;
+        startFrameLoad(frame);
+      }
+    }
+
+    function loadFrame(frame: number, urgent = false) {
+      if (frame < 1 || frame > frameCount || images.has(frame) || loading.has(frame)) return;
+
+      if (queued.has(frame)) {
+        if (urgent) {
+          const queuedIndex = loadQueue.indexOf(frame);
+          if (queuedIndex > 0) {
+            loadQueue.splice(queuedIndex, 1);
+            loadQueue.unshift(frame);
+          }
+        }
+        return;
+      }
+
+      queued.add(frame);
+      if (urgent) loadQueue.unshift(frame);
+      else loadQueue.push(frame);
+      pumpLoadQueue();
+    }
+
+    function requestFrameWindow(frame: number) {
+      const direction = Math.sign(frame - lastRequestedFrame) || 1;
+      const ahead = isMobile ? 18 : 30;
+      const behind = isMobile ? 7 : 10;
+      lastRequestedFrame = frame;
+
+      for (let index = loadQueue.length - 1; index >= 0; index--) {
+        const queuedFrame = loadQueue[index];
+        const outsideActiveWindow = Math.abs(queuedFrame - frame) > ahead + behind + 8;
+        if (queuedFrame > criticalFrameCount && outsideActiveWindow) {
+          loadQueue.splice(index, 1);
+          queued.delete(queuedFrame);
+        }
+      }
+
+      loadFrame(frame, true);
+      for (let offset = 1; offset <= Math.max(ahead, behind); offset++) {
+        if (offset <= ahead) loadFrame(frame + offset * direction, offset <= 6);
+        if (offset <= behind) loadFrame(frame - offset * direction);
+      }
+    }
 
     const handleResize = () => {
       canvasWidth = 0;
@@ -288,13 +372,13 @@ export function BusScrollSequence() {
     const scrollTrigger = ScrollTrigger.create({
       trigger: section,
       start: "top top",
-      end: () => `+=${Math.max(window.innerHeight * 2.2, 1400)}`,
+      end: () => `+=${Math.max(window.innerHeight * 3.2, 2200)}`,
       pin: stage,
       scrub: true,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      onUpdate: (self) => updateFromProgress(self.progress),
-      onRefresh: (self) => updateFromProgress(self.progress),
+      onUpdate: scheduleUpdate,
+      onRefresh: scheduleUpdate,
     });
 
     const ambientContext = gsap.context(() => {
@@ -350,7 +434,7 @@ export function BusScrollSequence() {
     stage.addEventListener("pointermove", handlePointerMove);
     stage.addEventListener("pointerdown", markUserControl);
 
-    for (let frame = 1; frame <= criticalFrameCount; frame++) loadFrame(frame);
+    for (let frame = 1; frame <= criticalFrameCount; frame++) loadFrame(frame, frame <= 8);
     scheduleUpdate();
     window.setTimeout(() => ScrollTrigger.refresh(), 80);
 
