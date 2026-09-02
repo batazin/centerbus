@@ -2,7 +2,7 @@
 
 import Lenis from "lenis";
 import { useLayoutEffect } from "react";
-import { ScrollTrigger } from "../_lib/gsap";
+import { gsap, ScrollTrigger } from "../_lib/gsap";
 
 type SmoothScrollProviderProps = {
   children: React.ReactNode;
@@ -19,8 +19,8 @@ type SmoothScrollProviderProps = {
 export function SmoothScrollProvider({
   children,
   anchorOffset = 0,
-  lerp = 0.06,
-  wheelMultiplier = 0.85,
+  lerp = 0.1,
+  wheelMultiplier = 0.78,
 }: SmoothScrollProviderProps) {
   useLayoutEffect(() => {
     const lenis = new Lenis({
@@ -33,26 +33,22 @@ export function SmoothScrollProvider({
       anchors: { offset: anchorOffset, duration: 0.95 },
       overscroll: true,
       stopInertiaOnNavigate: true,
-      respectReducedMotion: true,
+      // The home depends on scrubbed scrolling; decorative motion still
+      // respects reduced-motion in each section.
+      respectReducedMotion: false,
     });
 
     const syncScrollTrigger = () => ScrollTrigger.update();
     lenis.on("scroll", syncScrollTrigger);
 
-    let animationFrame = 0;
-    let previousBrowserTime = performance.now();
-    let lenisTime = 0;
-    const update = (browserTime: number) => {
-      const elapsed = Math.max(0, browserTime - previousBrowserTime);
-      previousBrowserTime = browserTime;
-      lenisTime += Math.min(elapsed, 1000 / 45);
-      lenis.raf(lenisTime);
-      animationFrame = window.requestAnimationFrame(update);
+    const update = (time: number) => {
+      lenis.raf(time * 1000);
     };
-    animationFrame = window.requestAnimationFrame(update);
+    gsap.ticker.add(update);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      window.cancelAnimationFrame(animationFrame);
+      gsap.ticker.remove(update);
       lenis.off("scroll", syncScrollTrigger);
       lenis.destroy();
     };

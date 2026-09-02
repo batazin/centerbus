@@ -125,6 +125,16 @@ The attached animation prompt is a reference for premium interaction quality, no
 - Hero motion may include image fade/scale, subtle blur-to-sharp, headline reveal, staggered text, and CTA reveal.
 - Navbar motion may include load-in, compact-on-scroll, backdrop, and logo sizing changes if it remains readable and sober.
 
+### Home Scroll Performance Memory
+
+- User validated the current home scroll feel as good on 2026-09-02 after the smooth-scroll and Hero sequence fixes. Preserve this direction.
+- Keep Lenis synchronized through `gsap.ticker` in `src/app/_components/smooth-scroll-provider.tsx` so Lenis and ScrollTrigger run on the same clock.
+- Do not rely on `respectReducedMotion: true` for Lenis on the home page, because it makes scrubbed sections feel abrupt. Respect reduced motion inside decorative section effects instead.
+- The Hero bus sequence must preserve all 241 frames on desktop, mobile, and reduced-motion environments. Do not skip, remove, or halve frames.
+- Do not eager-decode all 241 frames at once. Load distributed anchor frames first, prioritize the active scroll window, and let the remaining frames load in idle batches.
+- When a requested Hero frame is not loaded yet, draw the nearest loaded frame instead of leaving the canvas frozen.
+- Do not alter the 3D components when addressing Hero/home scroll smoothness unless the user explicitly asks for 3D changes.
+
 ### Internal Page Motion
 
 - Internal pages must keep native/free browser scrolling.

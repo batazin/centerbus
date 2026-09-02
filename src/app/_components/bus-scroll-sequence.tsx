@@ -6,280 +6,265 @@ import { useLayoutEffect, useRef, useState } from "react";
 import "./bus-scroll-sequence.css";
 
 const frameCount = 241;
-const criticalLeadFrameCount = 16;
+const leadFrameCount = 20;
 const framePath = (frame: number) => `/sequences/bus/frame_${String(frame).padStart(4, "0")}.webp`;
 
 const scenes = [
   {
-    time: 0,
+    frame: 1,
+    enterAt: 0,
+    exitAt: 11.2,
     label: "ENTRADA",
     title: "O ônibus volta pra rua.",
     copy: "A operação começa pela identificação certa: modelo, aplicação e urgência da rota.",
   },
   {
-    time: 2.2,
-    label: "CONFERENCIA",
+    frame: 44,
+    enterAt: 16.7,
+    exitAt: 31.1,
+    label: "CONFERÊNCIA",
     title: "Conhecimento antes do catálogo.",
     copy: "Código, foto e carroceria entram na mesma conversa antes da peça ser separada.",
   },
   {
-    time: 4.6,
+    frame: 104,
+    enterAt: 37.7,
+    exitAt: 54.1,
     label: "CARROCERIA",
     title: "A peça certa, na primeira vez.",
     copy: "Estrutura, acabamento, iluminação e climatização tratados como parte da operação.",
   },
   {
-    time: 7.1,
+    frame: 169,
+    enterAt: 60.7,
+    exitAt: 75.1,
     label: "RESPOSTA",
     title: "Prazo claro para quem precisa rodar.",
     copy: "Orçamento objetivo, disponibilidade conferida e acompanhamento até a retirada ou despacho.",
   },
   {
-    time: 9.25,
-    label: "SAIDA",
+    frame: 218,
+    enterAt: 80.7,
+    label: "SAÍDA",
     title: "Operação seguindo.",
     copy: "Peça conferida, ônibus liberado e rota de volta ao movimento.",
   },
 ] as const;
 
-const maxSceneTime = scenes[scenes.length - 1].time;
-const sceneFrames = scenes.map((scene) => Math.max(1, Math.min(frameCount, Math.round((scene.time / maxSceneTime) * (frameCount - 1)) + 1)));
+const frameSegments = [
+  { start: 0, to: 32, duration: 13 },
+  { start: 13, to: 44, duration: 4 },
+  { start: 17, to: 82, duration: 16 },
+  { start: 33, to: 103, duration: 5 },
+  { start: 38, to: 151, duration: 18 },
+  { start: 56, to: 169, duration: 5 },
+  { start: 61, to: 207, duration: 16 },
+  { start: 77, to: 218, duration: 4 },
+  { start: 81, to: 241, duration: 12 },
+] as const;
+
+const timelineDuration = 93;
 
 export function BusScrollSequence() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const shadeRef = useRef<HTMLDivElement>(null);
+  const scanRef = useRef<HTMLSpanElement>(null);
+  const beaconRef = useRef<HTMLSpanElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
-  const activeSceneRef = useRef(0);
-  const [activeScene, setActiveScene] = useState(0);
+  const copyRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const stripItemRefs = useRef<Array<HTMLSpanElement | null>>([]);
   const [isReady, setIsReady] = useState(false);
-  const [hasOperated, setHasOperated] = useState(false);
   const [bootProgress, setBootProgress] = useState(0);
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
     const stage = stageRef.current;
     const canvas = canvasRef.current;
-    if (!section || !stage || !canvas) return;
+    const copies = copyRefs.current.filter((copy): copy is HTMLDivElement => copy !== null);
+    if (!section || !stage || !canvas || copies.length !== scenes.length) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
+    let disposed = false;
+    let renderRequest: number | undefined;
     let canvasWidth = 0;
     let canvasHeight = 0;
-    let disposed = false;
-    let animationFrame: number | undefined;
-    let currentFrame = sceneFrames[0];
-    let idleFrame: number | undefined;
-    let idleStartedAt = 0;
+    let context: CanvasRenderingContext2D | null = null;
+    let cssWidth = window.innerWidth;
+    let cssHeight = window.innerHeight;
+    let requestedFrame = 1;
+    let lastRenderedFrame = 0;
+    let lastRequestedFrame = 1;
+    let lastIndicator = 0;
+    let activeLoads = 0;
     let hasUserControl = false;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isMobile = window.innerWidth < 760;
-    const anchorStep = isMobile ? 7 : 4;
-    const maxTransientFrames = isMobile ? 20 : 34;
     const maxConcurrentLoads = isMobile ? 4 : 6;
-    const anchorFrames = new Set<number>();
-    for (let frame = 1; frame <= frameCount; frame += anchorStep) anchorFrames.add(frame);
-    sceneFrames.forEach((frame) => anchorFrames.add(frame));
-    anchorFrames.add(frameCount);
-    const bootFrames = Array.from(new Set([
-      ...Array.from({ length: criticalLeadFrameCount }, (_, index) => index + 1),
-      ...anchorFrames,
-    ])).sort((first, second) => first - second);
-    const bootFrameSet = new Set(bootFrames);
+    const anchorStep = isMobile ? 5 : 4;
+    const leadFrames = Array.from({ length: leadFrameCount }, (_, index) => index + 1);
+    const anchorFrames = Array.from(
+      new Set([
+        ...leadFrames,
+        ...Array.from({ length: Math.ceil(frameCount / anchorStep) }, (_, index) => index * anchorStep + 1)
+          .filter((frame) => frame <= frameCount),
+        ...scenes.map((scene) => scene.frame),
+        frameCount,
+      ]),
+    ).sort((first, second) => first - second);
+    const bootFrameSet = new Set(anchorFrames);
+    const settledBootFrames = new Set<number>();
     const images = new Map<number, HTMLImageElement>();
     const loading = new Set<number>();
     const queued = new Set<number>();
+    const urgentFrames = new Set<number>();
     const loadQueue: number[] = [];
-    const settledCriticalFrames = new Set<number>();
-    let activeLoads = 0;
-    let lastRequestedFrame = sceneFrames[0];
+    const frameState = { frame: 1 };
+    let masterTimeline: gsap.core.Timeline | undefined;
 
-    const announceBootProgress = (frame: number) => {
-      if (!bootFrameSet.has(frame)) return;
-      settledCriticalFrames.add(frame);
-      const loaded = settledCriticalFrames.size;
-      const progress = loaded / bootFrames.length;
-      setBootProgress(progress);
-      window.dispatchEvent(new CustomEvent("centerbus:boot-progress", {
-        detail: {
-          progress,
-          loaded,
-          total: bootFrames.length,
-          ready: images.has(sceneFrames[0]) && loaded >= bootFrames.length,
-        },
-      }));
-
+    const quantizeFrame = (frame: number) => {
+      return Math.max(1, Math.min(frameCount, Math.round(frame)));
     };
-
-    let cachedContext: CanvasRenderingContext2D | null = null;
-    let cachedWidth = 0;
-    let cachedHeight = 0;
 
     const resizeCanvas = () => {
-      const context = canvas.getContext("2d", { alpha: false });
-      if (!context) return null;
+      const nextContext = canvas.getContext("2d", { alpha: false, desynchronized: true });
+      if (!nextContext) return;
 
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const ratio = Math.min(window.devicePixelRatio || 1, 1.25);
-      const maxRenderPixels = width < 760 ? 720_000 : 1_200_000;
-      const desiredPixels = width * ratio * height * ratio;
-      const renderScale = Math.min(1, Math.sqrt(maxRenderPixels / Math.max(1, desiredPixels)));
-      const renderRatio = ratio * renderScale;
-      const nextCanvasWidth = Math.round(width * renderRatio);
-      const nextCanvasHeight = Math.round(height * renderRatio);
+      cssWidth = window.innerWidth;
+      cssHeight = window.innerHeight;
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.25);
+      const maxPixels = isMobile ? 720_000 : 1_200_000;
+      const desiredPixels = cssWidth * pixelRatio * cssHeight * pixelRatio;
+      const renderScale = Math.min(1, Math.sqrt(maxPixels / Math.max(1, desiredPixels)));
+      const renderRatio = pixelRatio * renderScale;
+      const nextWidth = Math.round(cssWidth * renderRatio);
+      const nextHeight = Math.round(cssHeight * renderRatio);
 
-      if (canvasWidth !== nextCanvasWidth || canvasHeight !== nextCanvasHeight) {
-        canvasWidth = nextCanvasWidth;
-        canvasHeight = nextCanvasHeight;
-        canvas.width = nextCanvasWidth;
-        canvas.height = nextCanvasHeight;
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
+      if (canvasWidth !== nextWidth || canvasHeight !== nextHeight) {
+        canvasWidth = nextWidth;
+        canvasHeight = nextHeight;
+        canvas.width = nextWidth;
+        canvas.height = nextHeight;
+        canvas.style.width = `${cssWidth}px`;
+        canvas.style.height = `${cssHeight}px`;
       }
 
-      context.setTransform(renderRatio, 0, 0, renderRatio, 0, 0);
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = "medium";
-      cachedContext = context;
-      cachedWidth = width;
-      cachedHeight = height;
-      return { context, width, height };
+      nextContext.setTransform(renderRatio, 0, 0, renderRatio, 0, 0);
+      nextContext.imageSmoothingEnabled = true;
+      nextContext.imageSmoothingQuality = "medium";
+      context = nextContext;
     };
 
-    const trimImageCache = (centerFrame: number) => {
-      const transientFrames = Array.from(images.keys()).filter((frame) => !anchorFrames.has(frame));
-      if (transientFrames.length <= maxTransientFrames) return;
+    const resolveDrawableFrame = (frame: number) => {
+      if (images.has(frame)) return frame;
 
-      const removableFrames = transientFrames
-        .sort((first, second) => Math.abs(second - centerFrame) - Math.abs(first - centerFrame));
-
-      while (removableFrames.length > maxTransientFrames) {
-        const frame = removableFrames.shift();
-        if (frame !== undefined) images.delete(frame);
+      for (let offset = 1; offset < frameCount; offset += 1) {
+        const previousFrame = frame - offset;
+        const nextFrame = frame + offset;
+        if (previousFrame >= 1 && images.has(previousFrame)) return previousFrame;
+        if (nextFrame <= frameCount && images.has(nextFrame)) return nextFrame;
       }
-    };
 
-    const loadedFrameBefore = (frame: number) => {
-      for (let candidate = Math.floor(frame); candidate >= 1; candidate -= 1) {
-        if (images.has(candidate)) return candidate;
-      }
       return undefined;
     };
 
-    const loadedFrameAfter = (frame: number) => {
-      for (let candidate = Math.ceil(frame); candidate <= frameCount; candidate += 1) {
-        if (images.has(candidate)) return candidate;
-      }
-      return undefined;
-    };
+    const drawFrame = (frame: number, force = false) => {
+      const drawableFrame = resolveDrawableFrame(frame);
+      if (drawableFrame === undefined) return;
+      const image = images.get(drawableFrame);
+      if (!context || !image?.naturalWidth || !image.naturalHeight) return;
+      if (!force && lastRenderedFrame === drawableFrame) return;
 
-    const drawImageCover = (
-      context: CanvasRenderingContext2D,
-      image: HTMLImageElement,
-      width: number,
-      height: number,
-      opacity = 1,
-    ) => {
-      const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
+      const scale = Math.max(cssWidth / image.naturalWidth, cssHeight / image.naturalHeight);
       const drawWidth = image.naturalWidth * scale;
       const drawHeight = image.naturalHeight * scale;
-      context.globalAlpha = opacity;
-      context.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
-    };
-
-    const drawFrame = (framePosition: number) => {
-      const context = cachedContext || resizeCanvas()?.context;
-      if (!context) return;
-
-      const width = cachedWidth || window.innerWidth;
-      const height = cachedHeight || window.innerHeight;
-      const previousFrame = loadedFrameBefore(framePosition);
-      const nextFrame = loadedFrameAfter(framePosition);
-      if (previousFrame === undefined && nextFrame === undefined) return;
-
-      const previousImage = previousFrame !== undefined ? images.get(previousFrame) : undefined;
-      const nextImage = nextFrame !== undefined ? images.get(nextFrame) : undefined;
-
-      if (
-        previousFrame !== undefined
-        && nextFrame !== undefined
-        && previousImage?.naturalWidth
-        && nextImage?.naturalWidth
-        && previousFrame !== nextFrame
-      ) {
-        const blend = (framePosition - previousFrame) / (nextFrame - previousFrame);
-        drawImageCover(context, previousImage, width, height);
-        drawImageCover(context, nextImage, width, height, blend);
-      } else {
-        const loadedFrame = previousFrame ?? nextFrame;
-        const image = loadedFrame !== undefined ? images.get(loadedFrame) : undefined;
-        if (!image?.naturalWidth || !image.naturalHeight) return;
-        drawImageCover(context, image, width, height);
-      }
-
       context.globalAlpha = 1;
-      currentFrame = framePosition;
+      context.drawImage(image, (cssWidth - drawWidth) / 2, (cssHeight - drawHeight) / 2, drawWidth, drawHeight);
+      lastRenderedFrame = drawableFrame;
     };
 
-    const getSceneFromFrame = (frame: number) => {
+    const getIndicatorFromTime = (time: number) => {
       let sceneIndex = 0;
-
-      for (let index = 1; index < sceneFrames.length; index++) {
-        const threshold = (sceneFrames[index - 1] + sceneFrames[index]) / 2;
-        if (frame >= threshold) sceneIndex = index;
+      for (let index = 1; index < scenes.length; index += 1) {
+        if (time >= scenes[index].enterAt) sceneIndex = index;
       }
-
       return sceneIndex;
     };
 
-    const updateFromProgress = (progressValue: number) => {
-      const progress = Math.max(0, Math.min(1, progressValue));
-      const framePosition = Math.max(1, Math.min(frameCount, progress * (frameCount - 1) + 1));
-      const frame = Math.round(framePosition);
-      const nextScene = getSceneFromFrame(frame);
+    const updateIndicator = (sceneIndex: number) => {
+      if (sceneIndex === lastIndicator) return;
+      stripItemRefs.current[lastIndicator]?.classList.remove("is-active");
+      stripItemRefs.current[sceneIndex]?.classList.add("is-active");
+      lastIndicator = sceneIndex;
+    };
 
-      if (progress > 0.008 && !hasUserControl) {
-        hasUserControl = true;
-        setHasOperated(true);
-        if (idleFrame !== undefined) {
-          window.cancelAnimationFrame(idleFrame);
-          idleFrame = undefined;
+    function loadFrame(frame: number, urgent = false) {
+      const normalized = quantizeFrame(frame);
+      if (images.has(normalized) || loading.has(normalized)) return;
+
+      if (queued.has(normalized)) {
+        if (urgent) {
+          urgentFrames.add(normalized);
+          const index = loadQueue.indexOf(normalized);
+          if (index > 0) {
+            loadQueue.splice(index, 1);
+            loadQueue.unshift(normalized);
+          }
         }
+        return;
       }
 
-      requestFrameWindow(frame);
-
-      drawFrame(framePosition);
-
-      if (progressRef.current) {
-        progressRef.current.style.transform = `scaleX(${progress})`;
+      queued.add(normalized);
+      if (urgent) {
+        urgentFrames.add(normalized);
+        loadQueue.unshift(normalized);
+      } else {
+        loadQueue.push(normalized);
       }
+      pumpLoadQueue();
+    }
 
-      if (nextScene !== activeSceneRef.current) {
-        activeSceneRef.current = nextScene;
-        setActiveScene(nextScene);
+    function requestFrameWindow(frame: number) {
+      loadFrame(frame, true);
+      const direction = Math.sign(frame - lastRequestedFrame) || 1;
+      const ahead = isMobile ? 22 : 34;
+      const behind = isMobile ? 8 : 12;
+      lastRequestedFrame = frame;
+
+      for (let offset = 1; offset <= Math.max(ahead, behind); offset += 1) {
+        if (offset <= ahead) loadFrame(frame + offset * direction, offset <= 8);
+        if (offset <= behind) loadFrame(frame - offset * direction);
       }
-    };
+    }
 
-    const runIdlePreview = (time: number) => {
-      if (disposed || reduceMotion || hasUserControl) return;
-      if (!idleStartedAt) idleStartedAt = time;
+    const scheduleRender = () => {
+      if (renderRequest !== undefined) return;
+      renderRequest = window.requestAnimationFrame(() => {
+        renderRequest = undefined;
+        const progress = masterTimeline?.progress() ?? 0;
+        requestedFrame = quantizeFrame(frameState.frame);
+        drawFrame(requestedFrame);
+        requestFrameWindow(requestedFrame);
 
-      const elapsed = time - idleStartedAt;
-      const cycle = (1 - Math.cos(elapsed / 900)) / 2;
-      const frame = 1 + cycle * (criticalLeadFrameCount - 1);
-
-      drawFrame(frame);
-      idleFrame = window.requestAnimationFrame(runIdlePreview);
-    };
-
-    const scheduleUpdate = () => {
-      if (animationFrame !== undefined) return;
-      animationFrame = window.requestAnimationFrame(() => {
-        animationFrame = undefined;
-        updateFromProgress(scrollTrigger?.progress ?? 0);
+        if (progressRef.current) progressRef.current.style.transform = `scaleX(${progress})`;
+        updateIndicator(getIndicatorFromTime(masterTimeline?.time() ?? 0));
       });
+    };
+
+    const announceBootProgress = (frame: number) => {
+      if (!bootFrameSet.has(frame)) return;
+      settledBootFrames.add(frame);
+      const loaded = settledBootFrames.size;
+      const progress = loaded / anchorFrames.length;
+      const ready = images.has(1) && loaded === anchorFrames.length;
+      setBootProgress(progress);
+      if (ready) setIsReady(true);
+      window.dispatchEvent(new CustomEvent("centerbus:boot-progress", {
+        detail: { progress, loaded, total: anchorFrames.length, ready },
+      }));
     };
 
     function startFrameLoad(frame: number) {
@@ -287,32 +272,21 @@ export function BusScrollSequence() {
       activeLoads += 1;
       const image = new Image();
       image.decoding = "async";
-      image.fetchPriority = bootFrameSet.has(frame) || Math.abs(frame - currentFrame) <= anchorStep ? "high" : "auto";
-
+      const isUrgent = urgentFrames.has(frame);
+      urgentFrames.delete(frame);
+      image.fetchPriority = bootFrameSet.has(frame) || isUrgent ? "high" : "low";
       let settled = false;
+
       const finishLoad = (loaded: boolean) => {
         if (settled) return;
         settled = true;
         loading.delete(frame);
         activeLoads -= 1;
 
-        if (!disposed && loaded && image.naturalWidth && image.naturalHeight) {
-          images.set(frame, image);
-          trimImageCache(currentFrame);
-        }
-
+        if (!disposed && loaded && image.naturalWidth && image.naturalHeight) images.set(frame, image);
         if (!disposed) {
           announceBootProgress(frame);
-          if (frame === sceneFrames[0] && loaded) {
-            setIsReady(true);
-            scheduleUpdate();
-            if (!reduceMotion && idleFrame === undefined) {
-              idleFrame = window.requestAnimationFrame(runIdlePreview);
-            }
-          } else if (loaded && Math.abs(frame - currentFrame) <= anchorStep) {
-            scheduleUpdate();
-          }
-
+          if (loaded && (frame === requestedFrame || frame === 1)) scheduleRender();
           pumpLoadQueue();
         }
       };
@@ -321,7 +295,7 @@ export function BusScrollSequence() {
         try {
           await image.decode();
         } catch {
-          // Some browsers reject decode() even when the loaded image is drawable.
+          // A imagem ainda pode ser desenhada quando alguns navegadores rejeitam decode().
         }
         finishLoad(true);
       };
@@ -334,162 +308,201 @@ export function BusScrollSequence() {
         const frame = loadQueue.shift();
         if (frame === undefined) return;
         queued.delete(frame);
-        if (images.has(frame) || loading.has(frame)) continue;
-        startFrameLoad(frame);
-      }
-    }
-
-    function loadFrame(frame: number, urgent = false) {
-      if (frame < 1 || frame > frameCount || images.has(frame) || loading.has(frame)) return;
-
-      if (queued.has(frame)) {
-        if (urgent) {
-          const queuedIndex = loadQueue.indexOf(frame);
-          if (queuedIndex > 0) {
-            loadQueue.splice(queuedIndex, 1);
-            loadQueue.unshift(frame);
-          }
-        }
-        return;
-      }
-
-      queued.add(frame);
-      if (urgent) loadQueue.unshift(frame);
-      else loadQueue.push(frame);
-      pumpLoadQueue();
-    }
-
-    function requestFrameWindow(frame: number) {
-      const direction = Math.sign(frame - lastRequestedFrame) || 1;
-      const ahead = isMobile ? 18 : 30;
-      const behind = isMobile ? 7 : 10;
-      lastRequestedFrame = frame;
-
-      for (let index = loadQueue.length - 1; index >= 0; index--) {
-        const queuedFrame = loadQueue[index];
-        const outsideActiveWindow = Math.abs(queuedFrame - frame) > ahead + behind + 8;
-        if (!bootFrameSet.has(queuedFrame) && outsideActiveWindow) {
-          loadQueue.splice(index, 1);
-          queued.delete(queuedFrame);
-        }
-      }
-
-      loadFrame(frame, true);
-      for (let offset = 1; offset <= Math.max(ahead, behind); offset++) {
-        if (offset <= ahead) loadFrame(frame + offset * direction, offset <= 6);
-        if (offset <= behind) loadFrame(frame - offset * direction);
+        if (!images.has(frame) && !loading.has(frame)) startFrameLoad(frame);
       }
     }
 
     const handleResize = () => {
       canvasWidth = 0;
       canvasHeight = 0;
-      cachedContext = null;
       resizeCanvas();
-      scheduleUpdate();
-    };
-
-    const scrollTrigger = ScrollTrigger.create({
-      trigger: section,
-      start: "top top",
-      end: () => `+=${Math.max(window.innerHeight * 3.2, 2200)}`,
-      pin: stage,
-      scrub: true,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onUpdate: scheduleUpdate,
-      onRefresh: scheduleUpdate,
-    });
-
-    const ambientContext = gsap.context(() => {
-      if (reduceMotion) return;
-
-      gsap.to(".bus-scroll-sequence-grid", {
-        x: -72,
-        y: 36,
-        duration: 10,
-        ease: "none",
-        repeat: -1,
-      });
-
-      gsap.to(".bus-scroll-sequence-scan", {
-        xPercent: 130,
-        duration: 3.8,
-        ease: "power1.inOut",
-        repeat: -1,
-        repeatDelay: 0.65,
-      });
-
-      gsap.to(".bus-scroll-sequence-beacon", {
-        opacity: 1,
-        scale: 1.08,
-        duration: 1.25,
-        ease: "power1.inOut",
-        yoyo: true,
-        repeat: -1,
-      });
-    }, section);
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (reduceMotion) return;
-      const x = (event.clientX / window.innerWidth - 0.5) * 2;
-      const y = (event.clientY / window.innerHeight - 0.5) * 2;
-      stage.style.setProperty("--bus-pointer-x", x.toFixed(3));
-      stage.style.setProperty("--bus-pointer-y", y.toFixed(3));
+      if (lastRenderedFrame) drawFrame(lastRenderedFrame, true);
+      ScrollTrigger.refresh();
     };
 
     const markUserControl = () => {
       if (hasUserControl) return;
       hasUserControl = true;
-      setHasOperated(true);
-      if (idleFrame !== undefined) {
-        window.cancelAnimationFrame(idleFrame);
-        idleFrame = undefined;
+      stage.classList.add("is-operated");
+    };
+
+    resizeCanvas();
+    gsap.set(copies, { autoAlpha: 0 });
+    gsap.set(copies[0], { autoAlpha: 1 });
+    gsap.set(copies[0].querySelectorAll("[data-copy-line]"), { yPercent: 0, opacity: 1 });
+
+    {
+      masterTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${Math.max(window.innerHeight * (isMobile ? 4.2 : 5.2), isMobile ? 3200 : 4200)}`,
+          pin: stage,
+          scrub: isMobile ? 0.22 : 0.32,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+        onUpdate: scheduleRender,
+      });
+
+      frameSegments.forEach((segment) => {
+        masterTimeline?.to(frameState, {
+          frame: segment.to,
+          duration: segment.duration,
+          ease: "none",
+        }, segment.start);
+      });
+
+      scenes.forEach((scene, index) => {
+        const copy = copies[index];
+        const lines = copy.querySelectorAll("[data-copy-line]");
+
+        if (index > 0) {
+          masterTimeline?.set(copy, { autoAlpha: 1 }, scene.enterAt);
+          masterTimeline?.fromTo(lines, {
+            yPercent: 108,
+            opacity: 0,
+          }, {
+            yPercent: 0,
+            opacity: 1,
+            duration: 1.35,
+            stagger: 0.12,
+            ease: "power3.out",
+          }, scene.enterAt);
+        }
+
+        if ("exitAt" in scene) {
+          masterTimeline?.to(lines, {
+            yPercent: -42,
+            opacity: 0,
+            duration: 1.05,
+            stagger: 0.06,
+            ease: "power2.in",
+          }, scene.exitAt);
+          masterTimeline?.set(copy, { autoAlpha: 0 }, scene.exitAt + 1.2);
+        }
+      });
+
+      if (!reduceMotion && scanRef.current) {
+        masterTimeline.fromTo(scanRef.current, { xPercent: 0 }, {
+          xPercent: 560,
+          duration: timelineDuration,
+          ease: "none",
+        }, 0);
+      }
+      if (!reduceMotion && beaconRef.current) {
+        masterTimeline.to(beaconRef.current, {
+          opacity: 0.9,
+          duration: 1.1,
+          repeat: 1,
+          yoyo: true,
+          ease: "power1.inOut",
+        }, scenes[2].enterAt);
+      }
+      if (shadeRef.current) {
+        masterTimeline.to(shadeRef.current, {
+          opacity: 0.76,
+          duration: 8,
+          ease: "power1.inOut",
+        }, 85);
+      }
+      if (stripRef.current) {
+        masterTimeline.to(stripRef.current, {
+          opacity: 0.42,
+          duration: 4,
+          ease: "power1.in",
+        }, 89);
+      }
+    }
+
+    const plannedFrames = Array.from({ length: frameCount }, (_, index) => index + 1);
+    const backgroundFrames = plannedFrames.filter((frame) => !bootFrameSet.has(frame));
+    let backgroundFrameIndex = 0;
+    let backgroundIdle: number | undefined;
+    let backgroundTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const scheduleBackgroundLoadBatch = () => {
+      if (disposed || backgroundFrameIndex >= backgroundFrames.length) return;
+
+      const runBatch = (deadline?: IdleDeadline) => {
+        backgroundIdle = undefined;
+        backgroundTimer = undefined;
+        let queuedInBatch = 0;
+
+        while (!disposed && backgroundFrameIndex < backgroundFrames.length) {
+          const hasIdleTime = !deadline || deadline.didTimeout || deadline.timeRemaining() > 5;
+          if (queuedInBatch >= 10 || (queuedInBatch > 0 && !hasIdleTime)) break;
+
+          loadFrame(backgroundFrames[backgroundFrameIndex]);
+          backgroundFrameIndex += 1;
+          queuedInBatch += 1;
+        }
+
+        if (!disposed && backgroundFrameIndex < backgroundFrames.length) scheduleBackgroundLoadBatch();
+      };
+
+      if ("requestIdleCallback" in window) {
+        backgroundIdle = window.requestIdleCallback(runBatch, { timeout: 850 });
+      } else {
+        backgroundTimer = setTimeout(() => runBatch(), 90);
       }
     };
+
+    anchorFrames.forEach((frame) => loadFrame(frame, true));
+    scheduleBackgroundLoadBatch();
+    scheduleRender();
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("wheel", markUserControl, { passive: true });
     window.addEventListener("touchstart", markUserControl, { passive: true });
-    stage.addEventListener("pointermove", handlePointerMove);
     stage.addEventListener("pointerdown", markUserControl);
-
-    bootFrames.forEach((frame) => loadFrame(frame));
-    scheduleUpdate();
-    window.setTimeout(() => ScrollTrigger.refresh(), 80);
+    const refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 80);
 
     return () => {
       disposed = true;
-      if (animationFrame !== undefined) window.cancelAnimationFrame(animationFrame);
-      if (idleFrame !== undefined) window.cancelAnimationFrame(idleFrame);
+      window.clearTimeout(refreshTimer);
+      if (backgroundIdle !== undefined) window.cancelIdleCallback(backgroundIdle);
+      if (backgroundTimer !== undefined) clearTimeout(backgroundTimer);
+      if (renderRequest !== undefined) window.cancelAnimationFrame(renderRequest);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("wheel", markUserControl);
       window.removeEventListener("touchstart", markUserControl);
-      stage.removeEventListener("pointermove", handlePointerMove);
       stage.removeEventListener("pointerdown", markUserControl);
-      scrollTrigger.kill();
-      ambientContext.revert();
+      masterTimeline?.scrollTrigger?.kill();
+      masterTimeline?.kill();
     };
   }, []);
 
-  const scene = scenes[activeScene];
-
   return (
-    <section id="inicio" ref={sectionRef} className="bus-scroll-sequence" aria-label="Sequencia por cenas Center Onibus">
-      <div ref={stageRef} className={`bus-scroll-sequence-stage${hasOperated ? " is-operated" : ""}`}>
+    <section id="inicio" ref={sectionRef} className="bus-scroll-sequence" aria-label="Sequência por cenas Center Ônibus">
+      <div ref={stageRef} className="bus-scroll-sequence-stage">
         <canvas ref={canvasRef} className="bus-scroll-sequence-canvas" aria-hidden="true" />
-        <div className="bus-scroll-sequence-shade" aria-hidden="true" />
+        <div ref={shadeRef} className="bus-scroll-sequence-shade" aria-hidden="true" />
         <div className="bus-scroll-sequence-grid" aria-hidden="true" />
-        <span className="bus-scroll-sequence-scan" aria-hidden="true" />
-        <span className="bus-scroll-sequence-beacon" aria-hidden="true" />
-        <div className="bus-scroll-sequence-copy" key={scene.label}>
-          <p>Center Onibus / {scene.label}</p>
-          <h1>{scene.title}</h1>
-          <span>{scene.copy}</span>
+        <span ref={scanRef} className="bus-scroll-sequence-scan" aria-hidden="true" />
+        <span ref={beaconRef} className="bus-scroll-sequence-beacon" aria-hidden="true" />
+        <div className="bus-scroll-sequence-copy-layer">
+          {scenes.map((scene, index) => (
+            <div
+              className="bus-scroll-sequence-copy"
+              key={scene.label}
+              ref={(element) => { copyRefs.current[index] = element; }}
+            >
+              <div className="bus-scroll-sequence-copy-clip is-label"><p data-copy-line>Center Ônibus / {scene.label}</p></div>
+              <div className="bus-scroll-sequence-copy-clip is-title"><h1 data-copy-line>{scene.title}</h1></div>
+              <div className="bus-scroll-sequence-copy-clip is-body"><p data-copy-line>{scene.copy}</p></div>
+            </div>
+          ))}
         </div>
-        <div className="bus-scroll-sequence-strip" aria-hidden="true">
-          {scenes.map((item, index) => (
-            <span className={activeScene === index ? "is-active" : ""} key={item.label}>{item.label}</span>
+        <div ref={stripRef} className="bus-scroll-sequence-strip" aria-hidden="true">
+          {scenes.map((scene, index) => (
+            <span
+              className={index === 0 ? "is-active" : undefined}
+              key={scene.label}
+              ref={(element) => { stripItemRefs.current[index] = element; }}
+            >
+              {scene.label}
+            </span>
           ))}
         </div>
         <i className="bus-scroll-sequence-progress" aria-hidden="true">
