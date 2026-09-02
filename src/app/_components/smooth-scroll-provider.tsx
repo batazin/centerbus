@@ -2,7 +2,7 @@
 
 import Lenis from "lenis";
 import { useLayoutEffect } from "react";
-import { gsap, ScrollTrigger } from "../_lib/gsap";
+import { ScrollTrigger } from "../_lib/gsap";
 
 type SmoothScrollProviderProps = {
   children: React.ReactNode;
@@ -12,19 +12,20 @@ type SmoothScrollProviderProps = {
 };
 
 /**
- * Single source of truth for smooth scroll: Lenis is driven exclusively by
- * gsap.ticker (no competing rAF loop) and reports back into ScrollTrigger.
- * physical scroll -> Lenis -> gsap.ticker -> Lenis.raf -> ScrollTrigger.update -> timelines
+ * Lenis uses a monotonic, frame-clamped browser clock and reports its
+ * interpolated position back to ScrollTrigger. Clamping prevents a delayed
+ * frame from becoming a large visible scroll step.
  */
 export function SmoothScrollProvider({
   children,
   anchorOffset = 0,
-  lerp = 0.075,
-  wheelMultiplier = 0.82,
+  lerp = 0.06,
+  wheelMultiplier = 0.85,
 }: SmoothScrollProviderProps) {
   useLayoutEffect(() => {
     const lenis = new Lenis({
       lerp,
+      autoRaf: false,
       smoothWheel: true,
       syncTouch: false,
       wheelMultiplier,
@@ -38,15 +39,22 @@ export function SmoothScrollProvider({
     const syncScrollTrigger = () => ScrollTrigger.update();
     lenis.on("scroll", syncScrollTrigger);
 
-    const update = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(update);
-    gsap.ticker.lagSmoothing(0);
+    let animationFrame = 0;
+    let previousBrowserTime = performance.now();
+    let lenisTime = 0;
+    const update = (browserTime: number) => {
+      const elapsed = Math.max(0, browserTime - previousBrowserTime);
+      previousBrowserTime = browserTime;
+      lenisTime += Math.min(elapsed, 1000 / 45);
+      lenis.raf(lenisTime);
+      animationFrame = window.requestAnimationFrame(update);
+    };
+    animationFrame = window.requestAnimationFrame(update);
 
     return () => {
-      gsap.ticker.remove(update);
+      window.cancelAnimationFrame(animationFrame);
       lenis.off("scroll", syncScrollTrigger);
       lenis.destroy();
-      gsap.ticker.lagSmoothing(500, 33);
     };
   }, [anchorOffset, lerp, wheelMultiplier]);
 

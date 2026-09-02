@@ -146,18 +146,20 @@ export function CenterbusOnePage() {
       });
 
       const header = root.querySelector<HTMLElement>(".home-header");
+      let isHeaderHidden = false;
+      const moveHeader = header
+        ? gsap.quickTo(header, "yPercent", { duration: 0.32, ease: "power2.out" })
+        : null;
       ScrollTrigger.create({
         trigger: root,
         start: "top top",
         end: "bottom bottom",
         onUpdate: (self) => {
           if (!header || header.classList.contains("is-menu-open")) return;
-          gsap.to(header, {
-            yPercent: self.direction === 1 && self.scroll() > 260 ? -145 : 0,
-            duration: 0.32,
-            overwrite: true,
-            ease: "power2.out",
-          });
+          const shouldHide = self.direction === 1 && self.scroll() > 260;
+          if (shouldHide === isHeaderHidden) return;
+          isHeaderHidden = shouldHide;
+          moveHeader?.(shouldHide ? -145 : 0);
         },
       });
 
