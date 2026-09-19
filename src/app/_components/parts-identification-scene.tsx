@@ -94,10 +94,7 @@ export function PartsIdentificationScene() {
     floor.material.opacity = 0.24;
     scene.add(floor);
 
-    const scanMaterial = new THREE.MeshBasicMaterial({ color: brandColors.signalRed, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending, depthWrite: false });
-    const scanBeam = new THREE.Mesh(new THREE.PlaneGeometry(6.2, 0.035), scanMaterial);
-    scanBeam.position.set(1.55, 2.8, 2.15);
-    scene.add(scanBeam);
+
 
     const normalizeModel = (group: THREE.Group, index: number) => {
       const bounds = new THREE.Box3().setFromObject(group);
@@ -259,8 +256,7 @@ export function PartsIdentificationScene() {
       rig.rotation.y += (targetYaw - rig.rotation.y) * 0.09;
       rig.rotation.x += (targetPitch - rig.rotation.x) * 0.09;
       floor.rotation.y = rig.rotation.y * 0.18;
-      scanBeam.position.y = THREE.MathUtils.lerp(2.55, -2.5, (time * 0.00016) % 1);
-      scanMaterial.opacity = selected > 0 ? 0.72 : 0.28;
+
       camera.position.z += ((selected > 0 ? (mobile ? 11.5 : 9.8) : (mobile ? 12.4 : 10.6)) - camera.position.z) * 0.05;
       camera.lookAt(0.45, -0.2, 0);
       signalLight.position.x = selected > 0 ? 2.8 : -3.5;
@@ -320,8 +316,7 @@ export function PartsIdentificationScene() {
       });
       floor.geometry.dispose();
       floor.material.dispose();
-      scanBeam.geometry.dispose();
-      scanMaterial.dispose();
+
       renderer.dispose();
       if (renderer.domElement.parentElement === mount) mount.removeChild(renderer.domElement);
     };
