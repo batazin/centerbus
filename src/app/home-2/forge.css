@@ -1,0 +1,1377 @@
+/* =========================================================================
+   FORGE AUTOMOTIVE - LANDING PAGE STYLES
+   Exact 1:1 Reproduction of Visual Identity, Typography, and Shaders
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@200;300;400;500;600;700&display=swap');
+
+:root {
+  --brand-bc1: #0C0C0C;
+  --brand-bc2: #161616;
+  --brand-bc3: #410306;
+  --brand-bc4: #C5A064;
+  --brand-bc5: #F2F1ED;
+  --global-white: #ffffff;
+  --global-black: #000000;
+
+  --gap-xxs: 0.2rem;
+  --gap-xs: 0.4rem;
+  --gap-s: 0.8rem;
+  --gap-sm: 1.6rem;
+  --gap-m: 2.4rem;
+  --gap-l: 3.2rem;
+  --gap-xl: 4rem;
+  --gap-xxl: 6.4rem;
+  --gap-huge: 8rem;
+  --gap-uber: 9.6rem;
+  --gap-col: calc(8.333vw + 1.6rem);
+
+  --font-heading: 'Cinzel', 'Times New Roman', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --easing-bezzy: cubic-bezier(0.8, 0, 0, 1);
+  --easing-bezzy2: cubic-bezier(0.430, 0.195, 0.020, 1);
+  --easing-bezzy3: cubic-bezier(0.5, 0, 0, 1);
+}
+
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes gradient-angle {
+  to {
+    --gradient-angle: 360deg;
+  }
+}
+
+/* Base Wrapper & HTML/Body Reset to Ensure Native & Smooth Scrolling and enable position: sticky */
+html:has(.forge-body),
+body:has(.forge-body) {
+  height: auto !important;
+  min-height: 100% !important;
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  overscroll-behavior-y: auto !important;
+  background-color: var(--global-black) !important;
+}
+
+html.lenis:has(.forge-body),
+html.lenis:has(.forge-body) body {
+  height: auto !important;
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+.forge-body {
+  background-color: var(--global-black);
+  color: var(--global-white);
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: visible !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================================================
+   PRELOADER
+   ========================================================================= */
+.forge-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--global-black);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
+  pointer-events: none;
+}
+
+.forge-preloader.loaded {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  display: none;
+}
+
+.forge-preloader-text {
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+  font-weight: 600;
+  line-height: 2;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  max-width: 46rem;
+  margin: 0 auto;
+  text-align: center;
+  color: var(--brand-bc5);
+  padding: 0 2rem;
+  opacity: 0.9;
+}
+
+.forge-preloader-progress-wrap {
+  position: fixed;
+  inset: auto auto var(--gap-l) 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .forge-preloader-progress-wrap {
+    inset: auto auto var(--gap-xl) 50%;
+  }
+}
+
+.forge-preloader-track {
+  width: 16rem;
+  height: 2px;
+  border-radius: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.forge-preloader-bar {
+  width: 100%;
+  height: 100%;
+  background: var(--brand-bc5);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.forge-preloader-bar.active {
+  transform: scaleX(1);
+}
+
+/* =========================================================================
+   HEADER
+   ========================================================================= */
+.forge-header {
+  position: fixed;
+  z-index: 1000;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--gap-m) var(--gap-m);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .forge-header {
+    padding: var(--gap-l) var(--gap-xl);
+  }
+}
+
+.forge-header > * {
+  pointer-events: auto;
+}
+
+.forge-header-socials {
+  display: none;
+  gap: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .forge-header-socials {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.forge-social-link {
+  display: grid;
+  place-items: center;
+  padding: var(--gap-s);
+  color: var(--global-white);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0.8;
+}
+
+.forge-social-link:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.forge-social-link svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: currentColor;
+}
+
+.forge-header-phone {
+  display: grid;
+  place-items: center;
+  padding: var(--gap-s);
+  color: var(--brand-bc5);
+}
+
+@media (min-width: 1024px) {
+  .forge-header-phone {
+    display: none;
+  }
+}
+
+.forge-header-logo-wrap {
+  position: absolute;
+  top: var(--gap-m);
+  left: 50%;
+  transform: translateX(-50%);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .forge-header-logo-wrap {
+    top: var(--gap-l);
+  }
+}
+
+.forge-header-logo {
+  fill: var(--global-white);
+  width: auto;
+  height: 2.8rem;
+  transition: opacity 0.3s ease;
+}
+
+.forge-header-logo:hover {
+  opacity: 0.85;
+}
+
+.forge-menu-trigger {
+  background: transparent;
+  border: none;
+  color: var(--global-white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-s);
+  padding: var(--gap-xs) 0;
+  font-family: var(--font-body);
+}
+
+.forge-menu-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.25rem;
+  text-transform: uppercase;
+  display: none;
+  transition: opacity 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+  .forge-menu-label {
+    display: block;
+  }
+}
+
+.forge-menu-trigger:hover .forge-menu-label {
+  opacity: 0.5;
+}
+
+.forge-menu-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.5rem;
+}
+
+.forge-menu-icon span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: var(--global-white);
+  transition: transform 0.35s var(--easing-bezzy2), opacity 0.35s ease;
+}
+
+.forge-menu-icon span:nth-child(1) {
+  top: 2px;
+}
+
+.forge-menu-icon span:nth-child(2) {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.forge-menu-icon span:nth-child(3) {
+  bottom: 2px;
+}
+
+.forge-menu-icon.open span:nth-child(1) {
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.forge-menu-icon.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.forge-menu-icon.open span:nth-child(3) {
+  bottom: 50%;
+  transform: translateY(50%) rotate(-45deg);
+}
+
+/* Fullscreen Menu Overlay */
+.forge-nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background: rgba(12, 12, 12, 0.98);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s;
+  pointer-events: none;
+}
+
+.forge-nav-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.forge-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.forge-nav-link {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  color: var(--brand-bc5);
+  text-decoration: none;
+  text-transform: capitalize;
+  letter-spacing: -0.05rem;
+  font-weight: 300;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.forge-nav-link:hover {
+  opacity: 0.6;
+  transform: translateX(8px);
+}
+
+.forge-nav-contacts {
+  margin-top: 3.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  color: rgba(242, 241, 237, 0.6);
+}
+
+.forge-nav-contacts a {
+  color: var(--brand-bc5);
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.forge-nav-contacts a:hover {
+  opacity: 0.6;
+}
+
+/* Header Navigation & Social Hovers matching Forge original */
+.forge-header-socials:has(.forge-social-link:hover) .forge-social-link:not(:hover) {
+  opacity: 0.35;
+}
+
+.forge-menu-trigger:hover .forge-menu-label {
+  opacity: 0.4;
+}
+
+.forge-menu-trigger:hover .forge-menu-icon span:nth-child(2) {
+  transform: translateY(-50%) scaleX(0.5);
+}
+
+/* =========================================================================
+   SIGNATURE BUTTON WITH CONIC GRADIENT SHINE & CHARACTER ROLL EFFECT
+   Exact 1:1 Forge Automotive Button
+   ========================================================================= */
+.forge-btn {
+  --ease: cubic-bezier(0.430, 0.195, 0.020, 1);
+  --dur: 0.5s;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  white-space: nowrap;
+  width: max-content;
+  padding: 1.1rem 2.8rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(242, 241, 237, 0.18);
+  text-decoration: none;
+  color: var(--global-white);
+  cursor: pointer;
+  overflow: clip;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.5s ease;
+}
+
+.forge-btn:hover {
+  border-color: rgba(242, 241, 237, 0.45);
+}
+
+.forge-btn-shine {
+  position: absolute;
+  inset: -1px;
+  z-index: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--gradient-angle) at center,
+    transparent 0deg,
+    transparent 45deg,
+    rgba(242, 241, 237, 0.75) 90deg,
+    transparent 135deg,
+    transparent 225deg,
+    rgba(242, 241, 237, 0.75) 270deg,
+    transparent 315deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  padding: 1px;
+  animation: gradient-angle 5s linear infinite;
+}
+
+.forge-btn-label {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 2;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+  display: block;
+  overflow: clip;
+  transition: opacity 0.5s ease;
+}
+
+.forge-btn:hover .forge-btn-label {
+  opacity: 0.75;
+}
+
+.forge-btn-char {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  text-shadow: rgba(242, 241, 237, 0.7) 0px -4em 0px;
+  transition: transform 0.5s cubic-bezier(0.430, 0.195, 0.020, 1);
+}
+
+.forge-btn:hover .forge-btn-char {
+  transform: translateY(4em);
+}
+
+/* =========================================================================
+   SECTION 1: HERO & MOUSE TRAIL
+   ========================================================================= */
+.forge-hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  background: var(--brand-bc1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: calc(var(--gap-huge) + 1rem) 2rem var(--gap-huge) 2rem;
+  box-sizing: border-box;
+}
+
+.forge-hero-bg-texture {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(200, 16, 46, 0.04) 0%, transparent 65%),
+              linear-gradient(to bottom, var(--global-black) 0%, rgba(12, 12, 12, 0.6) 40%, var(--global-black) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Mouse Trail Container */
+.forge-trail-container {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.forge-trail-item {
+  position: absolute;
+  width: 14rem;
+  height: 17.5rem;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+}
+
+.forge-trail-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.forge-hero-top {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  max-width: 90vw;
+  margin-top: 1rem;
+}
+
+.forge-hero-title {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(2.4rem, 6vw, 6rem);
+  line-height: 1.1;
+  letter-spacing: -0.05rem;
+  color: var(--brand-bc5);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.forge-hero-center-reveal {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+}
+
+.forge-hero-center-title {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(1.8rem, 3.8vw, 4.2rem);
+  line-height: 1.25;
+  letter-spacing: -0.04rem;
+  color: rgba(242, 241, 237, 0.95);
+  margin: 0;
+}
+
+.forge-hero-bottom {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  max-width: 42rem;
+  margin-bottom: 1rem;
+}
+
+.forge-hero-desc {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(242, 241, 237, 0.8);
+  margin: 0;
+  letter-spacing: -0.02rem;
+}
+
+/* =========================================================================
+   SECTION 2: APPROACH & BRAND LOGO MARQUEE
+   ========================================================================= */
+.forge-approach-section {
+  position: relative;
+  z-index: 4;
+  min-height: 100vh;
+  background: var(--global-black);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-block: var(--gap-huge);
+  overflow: hidden;
+}
+
+.forge-approach-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.35;
+}
+
+.forge-approach-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.05);
+}
+
+.forge-approach-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--gap-m);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4rem;
+}
+
+@media (min-width: 768px) {
+  .forge-approach-content {
+    padding: 0 var(--gap-xl);
+  }
+}
+
+.forge-approach-title {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(2.6rem, 5.5vw, 5.8rem);
+  line-height: 1.15;
+  letter-spacing: -0.06rem;
+  color: var(--global-white);
+  margin: 0;
+  max-width: 50rem;
+}
+
+.forge-marquee-wrap {
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, #000 15%, #000 85%, transparent 100%);
+  user-select: none;
+}
+
+.forge-marquee-track {
+  display: flex;
+  gap: 4rem;
+  width: max-content;
+  animation: logoMarquee 28s linear infinite;
+}
+
+.forge-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes logoMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.forge-marquee-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.5rem;
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.forge-marquee-item:hover {
+  opacity: 1;
+}
+
+.forge-marquee-item img {
+  height: 100%;
+  max-height: 2.6rem;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.forge-approach-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+  max-width: 38rem;
+  margin-left: auto;
+}
+
+.forge-approach-desc {
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+/* =========================================================================
+   SECTION 3: STICKY 3-STEPS (IDENTITY, INSIGHT, COHESION)
+   Zero Empty Space: 3 Sequential Articles with Sticky Left Visual
+   ========================================================================= */
+.forge-steps-section {
+  position: relative;
+  z-index: 5;
+  background: var(--brand-bc2);
+  overflow: visible;
+}
+
+.forge-steps-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 1440px;
+  margin: 0 auto;
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .forge-steps-split {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.forge-steps-sticky-aside {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .forge-steps-sticky-aside {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    align-self: start;
+    padding: var(--gap-xl);
+    z-index: 10;
+  }
+}
+
+.forge-steps-visual {
+  position: relative;
+  aspect-ratio: 1/1;
+  width: 100%;
+  max-width: 32rem;
+  overflow: hidden;
+  background: var(--brand-bc1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+  border-radius: 4px;
+}
+
+.forge-steps-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.7s ease, transform 0.8s var(--easing-bezzy2);
+  opacity: 0;
+  transform: scale(1.06);
+  pointer-events: none;
+}
+
+.forge-steps-image.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.forge-steps-cards-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.forge-step-article {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3.5rem var(--gap-m);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+@media (min-width: 768px) {
+  .forge-step-article {
+    padding: 4.5rem var(--gap-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .forge-step-article {
+    min-height: 60vh;
+    padding: 5rem var(--gap-xl);
+  }
+}
+
+.forge-step-indicator {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--brand-bc5);
+  margin-bottom: 1rem;
+}
+
+.forge-step-indicator span {
+  opacity: 0.45;
+}
+
+.forge-step-heading {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(2.8rem, 5.5vw, 5.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.05rem;
+  margin: 0 0 1.5rem 0;
+  color: var(--brand-bc5);
+}
+
+.forge-step-desc {
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(242, 241, 237, 0.8);
+  margin: 0 0 2.5rem 0;
+  max-width: 32rem;
+}
+
+.forge-step-mobile-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  margin-block: 2rem;
+  border-radius: 4px;
+}
+
+@media (min-width: 1024px) {
+  .forge-step-mobile-img {
+    display: none;
+  }
+}
+
+/* =========================================================================
+   SECTION 4: STATEMENT / QUOTE SECTION
+   ========================================================================= */
+.forge-statement-section {
+  position: relative;
+  z-index: 6;
+  min-height: 80vh;
+  background: var(--brand-bc1);
+  display: flex;
+  align-items: center;
+  padding: var(--gap-huge) var(--gap-m);
+}
+
+@media (min-width: 768px) {
+  .forge-statement-section {
+    padding: var(--gap-huge) var(--gap-xl);
+  }
+}
+
+.forge-statement-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 1440px;
+  margin: 0 auto;
+  gap: 4rem;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .forge-statement-grid {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: center;
+  }
+}
+
+.forge-statement-quote {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(2.2rem, 4.4vw, 4.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.05rem;
+  color: #c9c7c2;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.forge-statement-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.forge-statement-copy {
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(242, 241, 237, 0.75);
+  margin: 0;
+}
+
+/* =========================================================================
+   SECTION 5: STICKY SERVICES SPLIT (6 SERVICES)
+   ========================================================================= */
+.forge-services-section {
+  position: relative;
+  z-index: 7;
+  background: var(--brand-bc1);
+  overflow: visible;
+}
+
+.forge-services-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 1440px;
+  margin: 0 auto;
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .forge-services-split {
+    grid-template-columns: 1.1fr 1fr;
+    align-items: start;
+  }
+}
+
+.forge-services-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.forge-service-card {
+  min-height: 52vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem var(--gap-m);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 768px) {
+  .forge-service-card {
+    padding: 4rem var(--gap-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .forge-service-card {
+    min-height: 52vh;
+    padding: 4rem var(--gap-xl);
+  }
+}
+
+.forge-service-tag {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  color: rgba(242, 241, 237, 0.4);
+  margin-bottom: 1rem;
+}
+
+.forge-service-title {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(2.8rem, 5vw, 5.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.05rem;
+  color: var(--brand-bc5);
+  margin: 0 0 1.5rem 0;
+}
+
+.forge-service-desc {
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(242, 241, 237, 0.8);
+  margin: 0 0 2.5rem 0;
+  max-width: 32rem;
+}
+
+.forge-services-sticky-panel {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .forge-services-sticky-panel {
+    display: block;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    align-self: start;
+    overflow: hidden;
+    background: var(--brand-bc1);
+    z-index: 10;
+  }
+}
+
+.forge-service-sticky-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.43, 0.195, 0.02, 1), transform 0.9s cubic-bezier(0.43, 0.195, 0.02, 1);
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.forge-service-sticky-image.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* Mobile service inline image */
+.forge-service-mobile-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  margin-top: 2rem;
+  border-radius: 4px;
+}
+
+@media (min-width: 1024px) {
+  .forge-service-mobile-img {
+    display: none;
+  }
+}
+
+/* =========================================================================
+   SECTION 6: "ORDINARY ENDS HERE" AERIAL CAR SHOWCASE
+   ========================================================================= */
+.forge-ordinary-section {
+  position: relative;
+  z-index: 8;
+  min-height: 120vh;
+  background: var(--global-black);
+  padding: var(--gap-huge) var(--gap-m);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .forge-ordinary-section {
+    padding: var(--gap-huge) var(--gap-xl);
+  }
+}
+
+.forge-ordinary-top-title {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(3.5rem, 9vw, 8.5rem);
+  line-height: 1;
+  letter-spacing: -0.1rem;
+  color: var(--brand-bc5);
+  text-align: center;
+  margin: 0;
+}
+
+.forge-ordinary-cars-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 78rem;
+  margin: 3rem auto;
+}
+
+.forge-car-eagle-eye {
+  position: relative;
+  transition: transform 0.6s var(--easing-bezzy2), filter 0.6s ease;
+}
+
+.forge-car-main {
+  width: clamp(18rem, 40vw, 36rem);
+  z-index: 2;
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.9));
+}
+
+.forge-car-side {
+  display: none;
+  width: clamp(14rem, 28vw, 26rem);
+  opacity: 0.85;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.85));
+}
+
+@media (min-width: 1024px) {
+  .forge-car-side {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .forge-car-side.left {
+    left: 4%;
+  }
+
+  .forge-car-side.right {
+    right: 4%;
+  }
+}
+
+.forge-car-eagle-eye img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.forge-ordinary-bottom-title {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(3.5rem, 9vw, 8.5rem);
+  line-height: 1;
+  letter-spacing: -0.1rem;
+  color: var(--brand-bc5);
+  text-align: center;
+  margin: 0 0 1.5rem 0;
+}
+
+.forge-ordinary-copy {
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(242, 241, 237, 0.8);
+  text-align: center;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+/* =========================================================================
+   SECTION 7 & 8: PREVIOUS BUILDS & AVAILABLE STOCK
+   ========================================================================= */
+.forge-full-banner {
+  position: relative;
+  z-index: 9;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--brand-bc1);
+}
+
+.forge-full-banner-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.forge-full-banner-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.forge-full-banner-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+.forge-full-banner-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 1.5rem;
+  max-width: 50rem;
+}
+
+.forge-full-banner-title {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(3rem, 6.5vw, 6.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.06rem;
+  color: var(--brand-bc5);
+  margin: 0;
+}
+
+.forge-full-banner-desc {
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(242, 241, 237, 0.8);
+  margin: 0 0 1.5rem 0;
+}
+
+/* =========================================================================
+   SECTION 9: FOOTER & FINAL CTA ("REFUSE ORDINARY")
+   ========================================================================= */
+.forge-footer-section {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  background: var(--global-black);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: var(--gap-huge);
+  overflow: hidden;
+}
+
+.forge-footer-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.45;
+}
+
+.forge-footer-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+.forge-footer-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to top, var(--global-black) 20%, transparent 80%);
+}
+
+.forge-footer-cta-box {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto auto;
+  gap: 1rem;
+  padding: 0 1.5rem;
+}
+
+.forge-footer-kicker {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  color: rgba(242, 241, 237, 0.6);
+  margin: 0;
+}
+
+.forge-footer-title {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(3.4rem, 8vw, 7.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.08rem;
+  color: var(--brand-bc5);
+  margin: 0 0 1.5rem 0;
+}
+
+.forge-footer-bottom-bar {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--gap-l) var(--gap-m);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (min-width: 768px) {
+  .forge-footer-bottom-bar {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: var(--gap-l) var(--gap-xl);
+  }
+}
+
+.forge-back-to-top {
+  background: transparent;
+  border: none;
+  color: var(--brand-bc5);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.28rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  overflow: clip;
+}
+
+.forge-back-to-top > span {
+  display: block;
+  overflow: clip;
+}
+
+.forge-back-to-top > span span {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  text-shadow: rgba(242, 241, 237, 0.7) 0px -4em 0px;
+  transition: transform 0.5s cubic-bezier(0.430, 0.195, 0.020, 1);
+}
+
+.forge-back-to-top:hover > span span {
+  transform: translateY(4em);
+}
+
+.forge-footer-legals {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.forge-footer-legals a {
+  color: rgba(242, 241, 237, 0.5);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.forge-footer-legals a:hover {
+  color: var(--brand-bc5);
+}
