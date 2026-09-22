@@ -1,0 +1,1090 @@
+/* ==========================================================================
+   HOME 2 - ULTRA-CLEAN LUXURY INDUSTRIAL (ESTILO UNITED CARRIERS)
+   Precision Animations, Radial Waves, Marquee, Rolling Links & Telemetry
+   ========================================================================== */
+
+:root {
+  /* PALETA OFICIAL DO MANUAL DE MARCA CENTER ÔNIBUS */
+  --color-center-blue: #122b4a;    /* Azul Center - base institucional */
+  --color-road-blue: #2e6da4;      /* Azul Rodagem - cor de apoio */
+  --color-signal-red: #c8102e;     /* Vermelho Sinal - único ponto de acento */
+  --color-chassis-gray: #e4e7eb;   /* Cinza Chassi - fundos e linhas técnicas */
+  --color-center-white: #f4f4f4;   /* Branco Center - textos claros e respiro */
+  --color-technical-black: #101418;/* Preto Técnico - base de alto contraste */
+
+  /* TOKENS DA INTERFACE HOME 2 */
+  --uc-bg: var(--color-technical-black);
+  --uc-bg-elevated: var(--color-center-blue);
+  --uc-surface: rgba(18, 43, 74, 0.65);
+  --uc-surface-hover: rgba(46, 109, 164, 0.35);
+  --uc-border: rgba(228, 231, 235, 0.14);
+  --uc-border-active: var(--color-road-blue);
+  --uc-blue: var(--color-center-blue);
+  --uc-blue-bright: var(--color-road-blue);
+  --uc-red: var(--color-signal-red);
+  --uc-red-glow: #a50d26;
+  --uc-text: var(--color-center-white);
+  --uc-text-muted: var(--color-chassis-gray);
+  --uc-text-subtle: #8a99a8;
+}
+
+.home-2-wrapper {
+  background-color: var(--uc-bg);
+  color: var(--uc-text);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: clip;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* ==========================================================================
+   SISTEMA GLOBAL DE MOTION & SCROLL REVEAL (FADE UP FLUIDO E ATIVO)
+   Transição aveludada, responsiva e sincronizada com a rolagem
+   ========================================================================== */
+
+.reveal-fade-up {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-fade-up.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Escalonamento suave em cascata */
+.reveal-delay-1 { transition-delay: 0.06s; }
+.reveal-delay-2 { transition-delay: 0.12s; }
+.reveal-delay-3 { transition-delay: 0.18s; }
+.reveal-delay-4 { transition-delay: 0.24s; }
+.reveal-delay-5 { transition-delay: 0.30s; }
+
+/* ==========================================================================
+   EFEITOS DE RADAR & ONDAS DE ESTÚDIO (INSPIRADOS EM UNITED CARRIERS)
+   ========================================================================== */
+
+.home-2-ambient-grid {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-2-ambient-vignette {
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 68% 40%, rgba(18, 43, 74, 0.28) 0%, transparent 60%),
+    radial-gradient(circle at 20% 75%, rgba(200, 16, 46, 0.12) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(7, 9, 13, 0.8) 0%, transparent 15%, transparent 85%, #07090d 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ondas concêntricas de radar pulsante */
+.home-2-radar-wave {
+  position: absolute;
+  top: 35%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  width: 32vw;
+  height: 32vw;
+  border-radius: 50%;
+  border: 1px solid rgba(46, 109, 164, 0.25);
+  pointer-events: none;
+  animation: radar-pulse 10s infinite linear;
+  z-index: 0;
+}
+
+.home-2-radar-wave:nth-child(2) {
+  animation-delay: 3.3s;
+}
+
+.home-2-radar-wave:nth-child(3) {
+  animation-delay: 6.6s;
+}
+
+@keyframes radar-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  70% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.6);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   HEADER FLUTUANTE GLASS COM STATUS EM TEMPO REAL
+   ========================================================================== */
+
+.home-2-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.15rem clamp(1.5rem, 5vw, 4.5rem);
+  background: rgba(7, 9, 13, 0.78);
+  border-bottom: 1px solid var(--uc-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.home-2-brand-area {
+  display: flex;
+  align-items: center;
+}
+
+.home-2-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 0.45rem 1rem;
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  text-decoration: none;
+}
+
+.home-2-logo-wrap:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.18);
+}
+
+.home-2-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.home-2-nav {
+  display: flex;
+  align-items: center;
+  gap: 2.2rem;
+}
+
+/* ROLLING FLIPPING TEXT ON HOVER (ESTILO UNITED CARRIERS) */
+.uc-flip-link {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  height: 1.25em;
+  overflow: hidden;
+  text-decoration: none;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--uc-text-muted);
+}
+
+.uc-flip-link .flip-text {
+  display: block;
+  transition: transform 0.38s cubic-bezier(0.66, 0, 0.15, 1);
+}
+
+.uc-flip-link .flip-text-clone {
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  color: #ffffff;
+  transition: transform 0.38s cubic-bezier(0.66, 0, 0.15, 1);
+}
+
+.uc-flip-link:hover .flip-text {
+  transform: translateY(-100%);
+}
+
+.uc-flip-link:hover .flip-text-clone {
+  transform: translateY(-100%);
+}
+
+.home-2-nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1.4rem;
+  background: var(--uc-red);
+  color: #ffffff !important;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(200, 16, 46, 0.35);
+}
+
+.home-2-nav-cta:hover {
+  background: var(--uc-red-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200, 16, 46, 0.55);
+}
+
+/* ==========================================================================
+   MARQUEE CONTÍNUO DE PARCEIROS E FABRICANTES HOMOLOGADOS
+   ========================================================================== */
+
+.home-2-marquee-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: rgba(13, 17, 23, 0.85);
+  border-top: 1px solid var(--uc-border);
+  border-bottom: 1px solid var(--uc-border);
+  padding: 0.85rem 0;
+  white-space: nowrap;
+  position: relative;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+.home-2-marquee-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 3rem;
+  animation: uc-marquee 32s linear infinite;
+}
+
+.home-2-marquee-inner:hover {
+  animation-play-state: paused;
+}
+
+@keyframes uc-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.home-2-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2rem;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7b8f9f;
+}
+
+.home-2-marquee-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--uc-red);
+}
+
+/* ==========================================================================
+   HERO SECTION MONUMENTAL
+   ========================================================================== */
+
+.home-2-content-layer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+.home-2-hero {
+  min-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(7.5rem, 14vh, 10.5rem) clamp(1.5rem, 5vw, 4.5rem) 4rem;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.home-2-hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 3.5rem;
+}
+
+.home-2-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--uc-blue-glow);
+  margin-bottom: 1.35rem;
+}
+
+.home-2-kicker::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  background: var(--uc-red);
+}
+
+.home-2-hero-title {
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: clamp(2.8rem, 6vw, 5.4rem);
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 1.6rem 0;
+}
+
+.home-2-hero-title span {
+  color: transparent;
+  -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.45);
+}
+
+.home-2-hero-copy {
+  max-width: 540px;
+  font-size: clamp(1rem, 1.2vw, 1.12rem);
+  line-height: 1.7;
+  color: var(--uc-text-muted);
+  margin: 0 0 2.4rem 0;
+}
+
+.home-2-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.home-2-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.95rem 2rem;
+  background: var(--uc-red);
+  color: #ffffff;
+  text-decoration: none;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 18px rgba(200, 16, 46, 0.35);
+}
+
+.home-2-btn-primary:hover {
+  background: var(--uc-red-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(200, 16, 46, 0.55);
+}
+
+.home-2-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.95rem 2rem;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--uc-border);
+  color: #ffffff;
+  text-decoration: none;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+
+.home-2-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Box de Telemetria */
+.home-2-hero-telemetry {
+  background: var(--uc-surface);
+  border: 1px solid var(--uc-border);
+  border-top: 2px solid var(--uc-blue-bright);
+  padding: 2rem;
+  border-radius: 4px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
+}
+
+.home-2-telemetry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.35rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--uc-border);
+}
+
+.home-2-telemetry-title {
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--uc-blue-glow);
+}
+
+.home-2-telemetry-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.home-2-telemetry-item strong {
+  display: block;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.home-2-telemetry-item span {
+  font-size: 0.76rem;
+  color: var(--uc-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ==========================================================================
+   SEÇÕES EM ZIGUE-ZAGUE COM PAINÉIS EDITORIAIS
+   ========================================================================== */
+
+.home-2-section {
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  padding: clamp(5rem, 11vh, 8.5rem) clamp(1.5rem, 5vw, 4.5rem);
+  position: relative;
+}
+
+.home-2-section-inner {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.home-2-col-left {
+  grid-column: 1 / span 6;
+}
+
+.home-2-col-right {
+  grid-column: 7 / span 6;
+}
+
+.home-2-editorial-card {
+  background: var(--uc-surface);
+  border: 1px solid var(--uc-border);
+  border-left: 3px solid var(--uc-blue-bright);
+  padding: clamp(2.2rem, 3.8vw, 3.2rem);
+  border-radius: 4px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 28px 56px rgba(0, 0, 0, 0.5);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.home-2-editorial-card:hover {
+  background: var(--uc-surface-hover);
+  border-color: rgba(255, 255, 255, 0.18);
+  border-left-color: var(--uc-red);
+  transform: translateY(-4px);
+  box-shadow: 0 34px 68px rgba(0, 0, 0, 0.65);
+}
+
+.home-2-card-tag {
+  display: inline-block;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--uc-red);
+  margin-bottom: 0.85rem;
+}
+
+.home-2-card-heading {
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: clamp(2.1rem, 3.4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 1.1rem;
+}
+
+.home-2-card-text {
+  font-size: 0.98rem;
+  line-height: 1.68;
+  color: var(--uc-text-muted);
+  margin: 0 0 1.85rem;
+}
+
+.home-2-specs-table {
+  width: 100%;
+  border-top: 1px solid var(--uc-border);
+  margin-bottom: 1.85rem;
+}
+
+.home-2-spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.72rem 0;
+  border-bottom: 1px solid var(--uc-border);
+  font-size: 0.86rem;
+}
+
+.home-2-spec-key {
+  color: var(--uc-text-subtle);
+  font-family: var(--font-archivo-condensed), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.home-2-spec-val {
+  color: #ffffff;
+  font-weight: 600;
+  font-family: var(--font-inter), monospace;
+}
+
+/* ==========================================================================
+   CATÁLOGO TÉCNICO VISUAL (PEÇAS REAIS EM ESTOQUE)
+   ========================================================================== */
+
+.home-2-catalog-section {
+  padding: 6rem clamp(1.5rem, 5vw, 4.5rem);
+  background: radial-gradient(circle at 25% 45%, rgba(18, 43, 74, 0.3) 0%, rgba(7, 9, 13, 0.98) 70%);
+  border-top: 1px solid var(--uc-border);
+  position: relative;
+  z-index: 10;
+}
+
+.home-2-catalog-grid {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .home-2-catalog-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.home-2-catalog-frame {
+  position: relative;
+  background: rgba(14, 19, 27, 0.7);
+  border: 1px solid rgba(46, 109, 164, 0.3);
+  border-radius: 4px;
+  padding: 1.5rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+
+.home-2-catalog-frame::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border-top: 2px solid var(--uc-red);
+  border-left: 2px solid var(--uc-red);
+  pointer-events: none;
+}
+
+.home-2-catalog-frame::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  border-bottom: 2px solid var(--uc-blue-bright);
+  border-right: 2px solid var(--uc-blue-bright);
+  pointer-events: none;
+}
+
+.home-2-catalog-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 800;
+  border-radius: 2px;
+  overflow: hidden;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-2-catalog-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-2-catalog-frame:hover .home-2-catalog-img {
+  transform: scale(1.03);
+}
+
+.home-2-catalog-frame-badge {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 2.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  background: rgba(7, 9, 13, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  font-family: var(--font-inter), monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-chassis-gray);
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.home-2-catalog-categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.home-2-catalog-cat-item {
+  background: var(--uc-surface);
+  border: 1px solid var(--uc-border);
+  border-left: 3px solid var(--uc-blue-bright);
+  padding: 1.25rem 1.5rem;
+  border-radius: 2px;
+  transition: all 0.25s ease;
+}
+
+.home-2-catalog-cat-item:hover {
+  border-color: rgba(46, 109, 164, 0.5);
+  border-left-color: var(--uc-red);
+  background: var(--uc-surface-hover);
+  transform: translateX(4px);
+}
+
+.home-2-catalog-cat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.home-2-catalog-cat-code {
+  font-family: var(--font-inter), monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--uc-red);
+}
+
+.home-2-catalog-cat-avail {
+  font-size: 0.72rem;
+  font-family: var(--font-inter), monospace;
+  color: var(--color-road-blue);
+  text-transform: uppercase;
+}
+
+.home-2-catalog-cat-title {
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.35rem 0;
+  text-transform: uppercase;
+}
+
+.home-2-catalog-cat-desc {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--uc-text-muted);
+  margin: 0;
+}
+
+/* ==========================================================================
+   SEÇÃO DE MÉTRICAS MONUMENTAIS ESTILO UNITED CARRIERS
+   ========================================================================== */
+
+.home-2-stats-section {
+  padding: 7.5rem clamp(1.5rem, 5vw, 4.5rem);
+  background: rgba(11, 15, 21, 0.85);
+  border-top: 1px solid var(--uc-border);
+  border-bottom: 1px solid var(--uc-border);
+  backdrop-filter: blur(16px);
+  position: relative;
+  z-index: 10;
+}
+
+.home-2-stats-grid {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+}
+
+.home-2-stat-box {
+  padding: 1.75rem;
+  border-left: 2px solid var(--uc-border);
+  transition: all 0.3s ease;
+}
+
+.home-2-stat-box:hover {
+  border-left-color: var(--uc-red);
+}
+
+.home-2-stat-num {
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: clamp(3.2rem, 5.2vw, 4.8rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.65rem;
+}
+
+.home-2-stat-num span {
+  color: var(--uc-red);
+}
+
+.home-2-stat-label {
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+  margin-bottom: 0.45rem;
+}
+
+.home-2-stat-desc {
+  font-size: 0.85rem;
+  color: var(--uc-text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ==========================================================================
+   BASES OPERACIONAIS & FILIAIS (SP, BA, RJ)
+   ========================================================================== */
+
+.home-2-units-section {
+  padding: 5.5rem clamp(1.5rem, 5vw, 4.5rem);
+  background: rgba(8, 12, 18, 0.7);
+  border-top: 1px solid var(--uc-border);
+  position: relative;
+  z-index: 10;
+}
+
+.home-2-units-grid {
+  max-width: 1440px;
+  margin: 2.5rem auto 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+}
+
+@media (max-width: 860px) {
+  .home-2-units-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.home-2-unit-card {
+  background: var(--uc-surface);
+  border: 1px solid var(--uc-border);
+  border-top: 2px solid var(--uc-blue-bright);
+  padding: 2rem;
+  border-radius: 4px;
+  backdrop-filter: blur(16px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.home-2-unit-card:hover {
+  border-color: rgba(46, 109, 164, 0.5);
+  border-top-color: var(--uc-red);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+.home-2-unit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--uc-border);
+}
+
+.home-2-unit-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(46, 109, 164, 0.16);
+  border: 1px solid rgba(46, 109, 164, 0.35);
+  border-radius: 2px;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-center-white);
+  letter-spacing: 0.05em;
+}
+
+.home-2-unit-type {
+  font-family: var(--font-inter), monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--uc-red);
+  text-transform: uppercase;
+}
+
+.home-2-unit-city {
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.65rem 0;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.home-2-unit-role {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--uc-text-muted);
+  margin: 0;
+}
+
+/* ==========================================================================
+   CTA FINAL DE COTAÇÃO & ENGENHARIA
+   ========================================================================== */
+
+.home-2-final-cta {
+  padding: clamp(6.5rem, 13vh, 10rem) clamp(1.5rem, 5vw, 4.5rem);
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.home-2-final-inner {
+  max-width: 820px;
+  margin: 0 auto;
+  background: var(--uc-surface);
+  border: 1px solid var(--uc-border);
+  border-top: 3px solid var(--uc-red);
+  padding: clamp(2.8rem, 5.5vw, 4.5rem);
+  border-radius: 4px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.65);
+}
+
+.home-2-final-title {
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: clamp(2.5rem, 4.8vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 1.35rem;
+}
+
+.home-2-final-copy {
+  font-size: 1.08rem;
+  line-height: 1.7;
+  color: var(--uc-text-muted);
+  margin: 0 0 2.5rem;
+}
+
+/* ==========================================================================
+   FOOTER ULTRA CLEAN
+   ========================================================================== */
+
+.home-2-footer {
+  border-top: 1px solid var(--uc-border);
+  padding: 3.2rem clamp(1.5rem, 5vw, 4.5rem);
+  background: #040608;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.84rem;
+  color: var(--uc-text-subtle);
+  position: relative;
+  z-index: 10;
+}
+
+.home-2-footer a {
+  color: var(--uc-text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.home-2-footer a:hover {
+  color: #ffffff;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 992px) {
+  .home-2-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .home-2-section-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .home-2-col-left,
+  .home-2-col-right {
+    grid-column: 1 / -1;
+  }
+
+  .home-2-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .home-2-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-2-nav {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   UNITED CARRIERS SPLIT-LINE-P GRADIENT ILLUMINATION
+   ========================================================================== */
+
+.split-line-p {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #ffffff 40%,
+    #2e6da4 52%,
+    rgba(228, 231, 235, 0.4) 68%,
+    rgba(228, 231, 235, 0.15) 100%
+  );
+  background-size: 240% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: uc-split-shine 6s ease-in-out infinite alternate;
+}
+
+@keyframes uc-split-shine {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0% 0; }
+}
+
+/* ==========================================================================
+   CUSTOM CURSOR FOLLOWER ESTILO UNITED CARRIERS (COM INÉRCIA E ANEL SVG)
+   ========================================================================== */
+
+.uc-cursor-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
+.uc-cursor-follower {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  margin-top: -24px;
+  margin-left: -24px;
+  color: #ffffff;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.08s linear;
+}
+
+.uc-cursor-svg {
+  width: 100%;
+  height: 100%;
+  animation: uc-cursor-spin 14s linear infinite;
+}
+
+@keyframes uc-cursor-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.uc-cursor-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: #ffffff;
+  pointer-events: none;
+}
+
+@media (pointer: coarse) {
+  .uc-cursor-layer {
+    display: none; /* Desativa em telas de toque */
+  }
+}
+

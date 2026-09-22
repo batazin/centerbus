@@ -1,10 +1,6 @@
-import { CenterbusOnePage } from "./_components/centerbus-one-page";
-import { SmoothScrollProvider } from "./_components/smooth-scroll-provider";
+import Home2 from "./home-2/page";
 
 export default function Home() {
-  return (
-    <SmoothScrollProvider anchorOffset={-90}>
-      <CenterbusOnePage />
-    </SmoothScrollProvider>
-  );
+  return <Home2 />;
 }
+

@@ -1,0 +1,218 @@
+/* ==========================================================================
+   HERO CLEAN - MINIMALISTA, SÓBRIA, ELEGANTE E SEM POLUIÇÃO
+   Frase Primordial: "Compromisso com o ônibus na rua."
+   Paleta: Azul Center (#122B4A) | Vermelho Sinal (#C8102E) | Cinza Chassi (#E4E7EB)
+   ========================================================================== */
+
+.hero-clean-section {
+  position: relative;
+  min-height: 88vh;
+  min-height: 88dvh;
+  display: flex;
+  align-items: center;
+  padding: clamp(7.5rem, 14vh, 10.5rem) clamp(1.5rem, 5vw, 5rem) 5rem;
+  background-color: var(--color-technical-black, #101418);
+  border-bottom: 1px solid rgba(46, 109, 164, 0.25);
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   VÍDEO DE FUNDO EM LOOP CONTÍNUO
+   ========================================================================== */
+
+.hero-clean-video-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-clean-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.38;
+  filter: saturate(1.1) brightness(0.85);
+  animation: heroEntranceVideo 1.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-clean-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(90deg, rgba(16, 20, 24, 0.94) 0%, rgba(18, 43, 74, 0.82) 48%, rgba(16, 20, 24, 0.72) 100%),
+    linear-gradient(180deg, rgba(16, 20, 24, 0.6) 0%, transparent 35%, rgba(16, 20, 24, 0.96) 100%);
+}
+
+/* ==========================================================================
+   ANIMAÇÃO DE ENTRADA (FADE UP MOTION FLUIDO E INSTANTÂNEO)
+   Execução ágil, amanteigada e sem sensação de lentidão
+   ========================================================================== */
+
+@keyframes heroEntranceFadeUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes heroEntranceBar {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scaleX(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scaleX(1);
+  }
+}
+
+@keyframes heroEntranceVideo {
+  0% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 0.38;
+    transform: scale(1);
+  }
+}
+
+/* ==========================================================================
+   CONTEÚDO ULTRA LIMPO E DIRETO
+   ========================================================================== */
+
+.hero-clean-container {
+  position: relative;
+  z-index: 2;
+  max-width: 960px;
+  margin: 0 auto 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* A Barra Vermelha Oficial enviada pela cliente */
+.hero-clean-red-bar {
+  display: block;
+  width: 54px;
+  height: 4px;
+  background-color: var(--color-signal-red, #c8102e);
+  margin-bottom: 1.1rem;
+  transform-origin: left center;
+  animation: heroEntranceBar 0.45s cubic-bezier(0.2, 0.9, 0.3, 1) 0.04s both;
+}
+
+/* Kicker Oficial */
+.hero-clean-kicker {
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-signal-red, #c8102e);
+  margin-bottom: 1.25rem;
+  animation: heroEntranceFadeUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) 0.08s both;
+}
+
+/* A FRASE PRIMORDIAL */
+.hero-clean-title {
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: clamp(3.2rem, 5.8vw, 5.6rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 1.5rem 0;
+  animation: heroEntranceFadeUp 0.55s cubic-bezier(0.2, 0.9, 0.3, 1) 0.14s both;
+}
+
+/* SUBTÍTULO OFICIAL DO MANUAL */
+.hero-clean-copy {
+  font-family: var(--font-inter), sans-serif;
+  font-size: clamp(1.12rem, 1.35vw, 1.28rem);
+  line-height: 1.68;
+  color: var(--color-chassis-gray, #e4e7eb);
+  max-width: 660px;
+  margin: 0 0 2.6rem 0;
+  animation: heroEntranceFadeUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) 0.20s both;
+}
+
+/* BOTÕES SÓBRIOS E DIRETOS */
+.hero-clean-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.hero-clean-action-item {
+  display: inline-flex;
+}
+
+.hero-fade-btn-1 {
+  animation: heroEntranceFadeUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) 0.26s both;
+}
+
+.hero-fade-btn-2 {
+  animation: heroEntranceFadeUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) 0.32s both;
+}
+
+.hero-clean-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1.05rem 2.2rem;
+  background: var(--color-signal-red, #c8102e);
+  color: #ffffff !important;
+  text-decoration: none;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 18px rgba(200, 16, 46, 0.35);
+}
+
+.hero-clean-btn-primary:hover {
+  background: #a50d26;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(200, 16, 46, 0.55);
+}
+
+.hero-clean-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1.05rem 2.2rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(228, 231, 235, 0.3);
+  color: #ffffff !important;
+  text-decoration: none;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+
+.hero-clean-btn-secondary:hover {
+  background: rgba(46, 109, 164, 0.25);
+  border-color: var(--color-road-blue, #2e6da4);
+  transform: translateY(-2px);
+}

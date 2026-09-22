@@ -1,0 +1,401 @@
+/* ==========================================================================
+   STICKY BUS SHOWCASE (SCROLLYTELLING 3D) - DARK INDUSTRIAL
+   ========================================================================== */
+
+.sticky-bus-container {
+  position: relative;
+  width: 100%;
+  height: 520vh; /* Permite rolar os 5 estágios com profundidade suave */
+  background-color: #0a0d12;
+  color: #f4f4f4;
+  overflow: clip;
+}
+
+/* Viewport travado na tela durante a rolagem */
+.sticky-bus-viewport {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: radial-gradient(circle at 65% 45%, #122b4a 0%, #0a0d12 65%, #05070a 100%);
+  isolation: isolate;
+}
+
+/* Canvas Three.js */
+.sticky-bus-canvas-host {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.sticky-bus-canvas-host canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  touch-action: pan-y;
+}
+
+/* Malha técnica de fundo e iluminação cinemática */
+.sticky-bus-grid-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-image: 
+    linear-gradient(rgba(46, 109, 164, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(46, 109, 164, 0.08) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.sticky-bus-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(5, 7, 10, 0.85) 100%),
+              linear-gradient(180deg, rgba(10, 13, 18, 0.9) 0%, transparent 15%, transparent 85%, #0a0d12 100%);
+  pointer-events: none;
+}
+
+/* HUD Superior e Controles Rápidos */
+.sticky-bus-hud-bar {
+  position: absolute;
+  top: 84px;
+  left: clamp(1rem, 4vw, 3.5rem);
+  right: clamp(1rem, 4vw, 3.5rem);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  pointer-events: none;
+}
+
+.sticky-bus-hud-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(16, 20, 24, 0.82);
+  border: 1px solid rgba(46, 109, 164, 0.35);
+  font-family: var(--font-archivo-condensed), system-ui, sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #70bbff;
+  border-radius: 2px;
+  backdrop-filter: blur(8px);
+}
+
+.sticky-bus-hud-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c8102e;
+  box-shadow: 0 0 10px #c8102e;
+  animation: pulse-red 2s infinite ease-in-out;
+}
+
+@keyframes pulse-red {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* Seletor de Peças e Modos de Visualização */
+.sticky-bus-controls {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(16, 20, 24, 0.75);
+  padding: 0.35rem;
+  border: 1px solid rgba(244, 244, 244, 0.12);
+  border-radius: 4px;
+  backdrop-filter: blur(10px);
+}
+
+.sticky-bus-control-btn {
+  padding: 0.35rem 0.75rem;
+  background: transparent;
+  border: none;
+  color: #a4b3c4;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 2px;
+}
+
+.sticky-bus-control-btn:hover {
+  color: #ffffff;
+  background: rgba(46, 109, 164, 0.25);
+}
+
+.sticky-bus-control-btn.is-active {
+  background: #2e6da4;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(46, 109, 164, 0.35);
+}
+
+/* Indicador de Rotação 3D interativa */
+.sticky-bus-drag-hint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  background: rgba(16, 20, 24, 0.85);
+  border: 1px solid rgba(244, 244, 244, 0.15);
+  border-radius: 30px;
+  font-size: 0.76rem;
+  color: #a4b3c4;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+
+.sticky-bus-drag-hint svg {
+  animation: rotate-hint 3s infinite ease-in-out;
+}
+
+@keyframes rotate-hint {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+}
+
+/* Container de Conteúdo Deslizante (Os Capítulos) */
+.sticky-bus-stage-card {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: min(460px, calc(100% - 2.5rem));
+  background: rgba(16, 20, 24, 0.88);
+  border: 1px solid rgba(46, 109, 164, 0.28);
+  border-left: 3px solid #c8102e;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(14px);
+  border-radius: 2px;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+.sticky-bus-stage-card.align-left {
+  left: clamp(1.2rem, 5vw, 4.5rem);
+}
+
+.sticky-bus-stage-card.align-right {
+  right: clamp(1.2rem, 5vw, 4.5rem);
+}
+
+.sticky-bus-stage-card.align-center {
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(560px, calc(100% - 2.5rem));
+  text-align: center;
+  border-left: 1px solid rgba(46, 109, 164, 0.35);
+  border-top: 3px solid #c8102e;
+}
+
+/* Estados de Visibilidade do Card */
+.sticky-bus-stage-card.is-hidden {
+  opacity: 0;
+  transform: translateY(-40%) scale(0.96);
+  pointer-events: none;
+}
+
+.sticky-bus-stage-card.is-visible {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+.sticky-bus-stage-card.align-center.is-hidden {
+  opacity: 0;
+  transform: translate(-50%, -40%) scale(0.96);
+  pointer-events: none;
+}
+
+.sticky-bus-stage-card.align-center.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Tipografia e Elementos do Card */
+.sticky-bus-card-tag {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-archivo-condensed), system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c8102e;
+}
+
+.sticky-bus-card-title {
+  margin: 0 0 0.85rem 0;
+  font-family: var(--font-archivo-condensed), system-ui, sans-serif;
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.sticky-bus-card-copy {
+  margin: 0 0 1.25rem 0;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: clamp(0.9rem, 1.1vw, 0.98rem);
+  line-height: 1.6;
+  color: #bcc8d4;
+}
+
+/* Grade de Especificações Técnicas */
+.sticky-bus-specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+  padding: 0.85rem;
+  background: rgba(10, 13, 18, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+.sticky-bus-spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.sticky-bus-spec-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #70bbff;
+  font-family: var(--font-archivo-condensed), sans-serif;
+}
+
+.sticky-bus-spec-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f4f4f4;
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* Botão de Ação do Card */
+.sticky-bus-card-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  background: #c8102e;
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-archivo-condensed), sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.sticky-bus-card-action:hover {
+  background: #e01234;
+  transform: translateY(-2px);
+}
+
+.sticky-bus-card-action.secondary {
+  background: transparent;
+  border: 1px solid rgba(46, 109, 164, 0.6);
+  color: #ffffff;
+}
+
+.sticky-bus-card-action.secondary:hover {
+  background: rgba(46, 109, 164, 0.2);
+}
+
+/* Indicador de Barra de Progresso Vertical */
+.sticky-bus-progress-track {
+  position: absolute;
+  right: clamp(1rem, 2.5vw, 2.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.sticky-bus-step-node {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.sticky-bus-step-node.is-active {
+  background: #c8102e;
+  box-shadow: 0 0 8px #c8102e;
+  transform: scale(1.4);
+}
+
+/* Responsividade para Telas Menores */
+@media (max-width: 768px) {
+  .sticky-bus-hud-bar {
+    top: 72px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .sticky-bus-controls {
+    overflow-x: auto;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .sticky-bus-stage-card {
+    width: calc(100% - 2rem);
+    left: 1rem !important;
+    right: 1rem !important;
+    top: auto;
+    bottom: 4rem;
+    transform: none !important;
+    padding: 1.25rem;
+  }
+
+  .sticky-bus-stage-card.align-center {
+    width: calc(100% - 2rem);
+    left: 1rem !important;
+    transform: none !important;
+  }
+
+  .sticky-bus-progress-track {
+    display: none;
+  }
+}

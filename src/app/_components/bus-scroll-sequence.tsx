@@ -14,9 +14,9 @@ const scenes = [
     frame: 1,
     enterAt: 0,
     exitAt: 11.2,
-    label: "ENTRADA",
-    title: "O ônibus volta pra rua.",
-    copy: "A operação começa pela identificação certa: modelo, aplicação e urgência da rota.",
+    label: "ESTRUTURA OPERACIONAL",
+    title: "Compromisso com o ônibus na rua.",
+    copy: "Estoque técnico com mais de 30 mil itens, conferência antes da separação e agilidade no despacho para manter sua frota em movimento.",
   },
   {
     frame: 44,
