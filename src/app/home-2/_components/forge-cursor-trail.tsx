@@ -3,46 +3,16 @@
 import { useEffect, useRef } from "react";
 
 const TRAIL_IMAGES = [
-  {
-    src: "https://cdn.sanity.io/images/ed72g2cx/production/c6816412804f885e5d48ee01ee3b9adf93cd6028-216x270.jpg?auto=format",
-    alt: "Matte black Lamborghini",
-  },
-  {
-    src: "https://cdn.sanity.io/images/ed72g2cx/production/265550d505b29aab616906bf6bb36e663f026042-216x270.jpg?auto=format",
-    alt: "Forge Lambo Interior",
-  },
-  {
-    src: "https://cdn.sanity.io/images/ed72g2cx/production/bac6b66368bb14a5f30b72c9023f0ca415bf445e-216x270.jpg?auto=format",
-    alt: "Man in black hoodie",
-  },
-  {
-    src: "https://cdn.sanity.io/images/ed72g2cx/production/0f2d5e67ef0b8559cbac591684049e1c759988b6-216x270.jpg?auto=format",
-    alt: "Two technicians meticulously applying PPF",
-  },
-  {
-    src: "https://cdn.sanity.io/images/ed72g2cx/production/07a3bb27867616577bbab5252feea9ee77852428-216x270.jpg?auto=format",
-    alt: "Rear view of a Porsche GT3RS",
-  },
-  {
-    src: "https://cdn.sanity.io/images/ed72g2cx/production/2f7e59ac553eeb39525d1b94edfd2f6586a4859e-216x270.jpg?auto=format",
-    alt: "Craftsman applying PPF",
-  },
-  {
-    src: "https://cdn.sanity.io/images/ed72g2cx/production/1a6aec7cc7bfe9642a02a0415b2d47abadecb094-216x270.jpg?auto=format",
-    alt: "Land Rover Defender in the workshop",
-  },
-  {
-    src: "https://cdn.sanity.io/images/ed72g2cx/production/9de158282b1e95cc1085aa13bcf87216d3f0935f-216x270.jpg?auto=format",
-    alt: "McLaren on grass",
-  },
-  {
-    src: "https://cdn.sanity.io/images/ed72g2cx/production/bdb1684b7192aadac5801b8990a0b00a58f4eb76-216x270.jpg?auto=format",
-    alt: "Audi R8 in orange outside the warehouse",
-  },
-  {
-    src: "https://cdn.sanity.io/images/ed72g2cx/production/5c3279c79808da6f7a90e463b6fa67e8cefab151-216x270.jpg?auto=format",
-    alt: "Range Rover getting a new wrap",
-  },
+  { src: "/images/forge/trail-01.jpg", alt: "Matte black Lamborghini" },
+  { src: "/images/forge/trail-02.jpg", alt: "Forge Lambo Interior" },
+  { src: "/images/forge/trail-03.jpg", alt: "Man in black hoodie" },
+  { src: "/images/forge/trail-04.jpg", alt: "Two technicians meticulously applying PPF" },
+  { src: "/images/forge/trail-05.jpg", alt: "Rear view of a Porsche GT3RS" },
+  { src: "/images/forge/trail-06.jpg", alt: "Craftsman applying PPF" },
+  { src: "/images/forge/trail-07.jpg", alt: "Land Rover Defender in the workshop" },
+  { src: "/images/forge/trail-08.jpg", alt: "McLaren on grass" },
+  { src: "/images/forge/trail-09.jpg", alt: "Audi R8 in orange outside the warehouse" },
+  { src: "/images/forge/trail-10.jpg", alt: "Range Rover getting a new wrap" },
 ];
 
 export function ForgeCursorTrail() {

@@ -1,0 +1,1341 @@
+/* ==========================================================================
+   FORGE AUTOMOTIVE - 100% FAITHFUL PIXEL-PERFECT CLONE STYLES
+   Matches Image 2 exactly: typography, layout, imagery, and animations
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Condensed:wght@400;500;600;700;800&family=Inter:wght@200;300;400;500;600;700&display=swap');
+
+:root {
+  --forge-bg: #090c10;
+  --forge-card-bg: #101418;
+  --forge-surface: #122b4a;
+  --forge-red: #c8102e;
+  --forge-white: #ffffff;
+  --forge-offwhite: #f4f4f4;
+  --forge-muted: rgba(244, 244, 244, 0.7);
+  --forge-subtle: rgba(244, 244, 244, 0.35);
+  --forge-border: rgba(244, 244, 244, 0.12);
+
+  --color-azul-center: #122b4a;
+  --color-azul-rodagem: #2e6da4;
+  --color-vermelho-sinal: #c8102e;
+  --color-cinza-chassi: #e4e7eb;
+  --color-branco-center: #f4f4f4;
+  --color-preto-tecnico: #101418;
+
+  --font-serif: 'Archivo Condensed', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Archivo Condensed', sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes gradient-angle {
+  to {
+    --gradient-angle: 360deg;
+  }
+}
+
+/* Global Reset for Home-2 */
+.forge-page {
+  background-color: var(--forge-bg);
+  color: var(--forge-white);
+  font-family: var(--font-sans);
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+.f-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.2rem 3.5rem;
+  pointer-events: none;
+}
+
+.f-header > * {
+  pointer-events: auto;
+}
+
+.f-header-socials {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+@media (max-width: 900px) {
+  .f-header-socials {
+    display: none;
+  }
+}
+
+.f-social-link {
+  color: var(--forge-offwhite);
+  opacity: 0.75;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.f-social-link:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.f-social-link svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  fill: currentColor;
+}
+
+.f-header-logo-wrap {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.f-header-logo {
+  height: 3.2rem;
+  width: auto;
+  fill: var(--forge-white);
+  transition: opacity 0.3s ease;
+}
+
+.f-header-logo:hover {
+  opacity: 0.85;
+}
+
+.f-header-nav-btn {
+  background: transparent;
+  border: none;
+  color: var(--forge-offwhite);
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  font-family: var(--font-sans);
+}
+
+.f-header-nav-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.25rem;
+  text-transform: uppercase;
+  transition: opacity 0.3s ease;
+}
+
+@media (max-width: 900px) {
+  .f-header-nav-label {
+    display: none;
+  }
+}
+
+.f-header-nav-btn:hover .f-header-nav-label {
+  opacity: 0.5;
+}
+
+.f-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 2rem;
+  height: 1.2rem;
+  position: relative;
+}
+
+.f-hamburger span {
+  width: 100%;
+  height: 1.5px;
+  background: var(--forge-white);
+  transition: transform 0.35s var(--ease-luxury), opacity 0.35s ease;
+}
+
+.f-hamburger.open span:nth-child(1) {
+  transform: translateY(5px) rotate(45deg);
+}
+
+.f-hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.f-hamburger.open span:nth-child(3) {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+/* Fullscreen Navigation Modal */
+.f-nav-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(10, 10, 10, 0.97);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s var(--ease-luxury), visibility 0.4s;
+  pointer-events: none;
+}
+
+.f-nav-modal.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.f-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.f-nav-link {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  color: var(--forge-offwhite);
+  text-decoration: none;
+  font-weight: 300;
+  letter-spacing: -0.05rem;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.f-nav-link:hover {
+  opacity: 0.5;
+  transform: translateX(8px);
+}
+
+.f-nav-contacts {
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  color: var(--forge-muted);
+}
+
+.f-nav-contacts a {
+  color: var(--forge-offwhite);
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.f-nav-contacts a:hover {
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   BUTTONS (Conic Glow & Character Roll)
+   ========================================================================== */
+.f-btn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  white-space: nowrap;
+  width: max-content;
+  padding: 1.2rem 3rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(242, 241, 237, 0.2);
+  text-decoration: none;
+  color: var(--forge-white);
+  cursor: pointer;
+  overflow: clip;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.4s ease;
+}
+
+.f-btn:hover {
+  border-color: rgba(242, 241, 237, 0.5);
+}
+
+.f-btn-shine {
+  position: absolute;
+  inset: -1px;
+  z-index: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--gradient-angle) at center,
+    transparent 0deg,
+    transparent 45deg,
+    rgba(242, 241, 237, 0.75) 90deg,
+    transparent 135deg,
+    transparent 225deg,
+    rgba(242, 241, 237, 0.75) 270deg,
+    transparent 315deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  padding: 1px;
+  animation: gradient-angle 4.5s linear infinite;
+}
+
+.f-btn-label {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  display: flex;
+  overflow: clip;
+}
+
+.f-btn-char {
+  display: inline-block;
+  transition: transform 0.5s var(--ease-luxury), opacity 0.5s ease;
+}
+
+.f-btn:hover .f-btn-char {
+  transform: translateY(-100%);
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   1. HERO SECTION (Drive-Forward Sticky Track & 3D Car Stage)
+   ========================================================================== */
+.f-hero-scroll-track {
+  position: relative;
+  width: 100%;
+  height: 200vh;
+  background-color: #060606;
+}
+
+.f-hero-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 13rem;
+  background-color: #060606;
+  background-image: radial-gradient(circle at 50% 65%, rgba(30, 30, 30, 0.45) 0%, #060606 75%);
+  overflow: hidden;
+}
+
+.f-hero-car-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.f-hero-car-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.f-hero-car-canvas.active {
+  opacity: 1;
+}
+
+.f-hero-bus-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 60%;
+  opacity: 0.85;
+  filter: saturate(1.05) brightness(0.92);
+  display: block;
+}
+
+.f-hero-media-switch {
+  position: absolute;
+  top: 9.5rem;
+  right: 3.5rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(16, 20, 24, 0.7);
+  border: 1px solid rgba(244, 244, 244, 0.15);
+  border-radius: 4px;
+  padding: 0.4rem;
+  backdrop-filter: blur(10px);
+}
+
+.f-hero-switch-btn {
+  background: transparent;
+  border: none;
+  color: var(--forge-muted);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.12rem;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.25s ease;
+}
+
+.f-hero-switch-btn.active {
+  background: var(--color-azul-center);
+  color: #fff;
+  border: 1px solid var(--color-azul-rodagem);
+  box-shadow: 0 2px 10px rgba(46, 109, 164, 0.4);
+}
+
+.f-hero-switch-btn:hover:not(.active) {
+  color: var(--forge-offwhite);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 768px) {
+  .f-hero-media-switch {
+    top: auto;
+    bottom: 2rem;
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
+
+.f-hero-car-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 65%;
+  opacity: 0.9;
+  transition: opacity 0.5s ease;
+}
+
+.f-hero-car-img.canvas-active {
+  opacity: 0;
+}
+
+.f-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    rgba(6, 6, 6, 0.85) 0%,
+    transparent 35%,
+    transparent 65%,
+    rgba(6, 6, 6, 0.98) 100%
+  );
+  pointer-events: none;
+}
+
+.f-hero-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  max-width: 90rem;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+.f-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3.2rem, 6.2vw, 6.6rem);
+  font-weight: 300;
+  letter-spacing: -0.1rem;
+  line-height: 1.12;
+  color: var(--forge-offwhite);
+  margin-bottom: 1.6rem;
+  text-wrap: balance;
+}
+
+.f-hero-desc {
+  font-size: clamp(1.4rem, 1.8vw, 1.8rem);
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--forge-muted);
+  max-width: 60rem;
+  margin: 0 auto;
+  text-wrap: balance;
+}
+
+.f-hero-reveal-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  text-align: center;
+  width: 90%;
+  max-width: 80rem;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.f-hero-reveal-headline {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 4.5vw, 4.8rem);
+  font-weight: 300;
+  line-height: 1.25;
+  color: var(--forge-white);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9);
+}
+
+.f-hero-reveal-headline span {
+  color: var(--forge-offwhite);
+  opacity: 0.85;
+}
+
+/* ==========================================================================
+   2. APPROACH SECTION (Leather stitching + Marquee)
+   ========================================================================== */
+.f-approach-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8rem 0 6rem;
+  overflow: hidden;
+}
+
+.f-approach-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.f-approach-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.65;
+}
+
+.f-approach-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    rgba(6, 6, 6, 0.9) 0%,
+    rgba(6, 6, 6, 0.4) 50%,
+    rgba(6, 6, 6, 0.95) 100%
+  );
+}
+
+.f-approach-content {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 140rem;
+  margin: 0 auto;
+  padding: 0 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 6rem;
+}
+
+.f-approach-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 5vw, 5.8rem);
+  font-weight: 300;
+  letter-spacing: -0.1rem;
+  color: var(--forge-offwhite);
+  max-width: 70rem;
+}
+
+/* Logo Marquee */
+.f-marquee-wrap {
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+}
+
+.f-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 6rem;
+  animation: f-marquee-scroll 35s linear infinite;
+}
+
+.f-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes f-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.f-marquee-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4.5rem;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.f-marquee-item:hover {
+  opacity: 1;
+}
+
+.f-marquee-item img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.f-marquee-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0.8rem 2rem;
+  border: 1px solid rgba(244, 244, 244, 0.15);
+  background: rgba(18, 43, 74, 0.35);
+  border-radius: 2px;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.f-marquee-badge:hover {
+  border-color: var(--color-azul-rodagem);
+  background: rgba(46, 109, 164, 0.35);
+  transform: translateY(-2px);
+}
+
+.f-marquee-badge-name {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15rem;
+  color: var(--forge-offwhite);
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.f-marquee-badge-type {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.15rem;
+  color: var(--color-azul-rodagem);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+.f-approach-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.f-approach-desc {
+  font-size: 1.7rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--forge-muted);
+  max-width: 55rem;
+}
+
+/* ==========================================================================
+   3. 3-STEP NARRATIVE (Identity, Insight, Cohesion)
+   ========================================================================== */
+.f-steps-section {
+  position: relative;
+  width: 100%;
+  padding: 8rem 4rem;
+  background-color: #0c0c0c;
+}
+
+.f-steps-grid {
+  max-width: 140rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8rem;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .f-steps-grid {
+    grid-template-columns: 1fr;
+    gap: 5rem;
+  }
+}
+
+.f-steps-visual-sticky {
+  position: sticky;
+  top: 14rem;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: #141414;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 992px) {
+  .f-steps-visual-sticky {
+    display: none;
+  }
+}
+
+.f-steps-visual-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-luxury), transform 0.6s var(--ease-luxury);
+  transform: scale(1.05);
+}
+
+.f-steps-visual-img.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.f-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rem;
+}
+
+@media (max-width: 992px) {
+  .f-steps-list {
+    gap: 6rem;
+  }
+}
+
+.f-step-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.f-step-counter {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: var(--forge-offwhite);
+}
+
+.f-step-counter span {
+  opacity: 0.4;
+  font-size: 1.8rem;
+}
+
+.f-step-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(3.2rem, 5vw, 6.4rem);
+  font-weight: 300;
+  letter-spacing: -0.1rem;
+  color: var(--forge-offwhite);
+}
+
+.f-step-desc {
+  font-size: 1.7rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--forge-muted);
+  max-width: 50rem;
+}
+
+.f-step-mobile-img {
+  display: none;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-top: 2rem;
+}
+
+@media (max-width: 992px) {
+  .f-step-mobile-img {
+    display: block;
+  }
+}
+
+/* ==========================================================================
+   4. STATEMENT SECTION
+   ========================================================================== */
+.f-statement-section {
+  position: relative;
+  width: 100%;
+  padding: 12rem 4rem;
+  background-color: #080808;
+  border-top: 1px solid var(--forge-border);
+  border-bottom: 1px solid var(--forge-border);
+}
+
+.f-statement-grid {
+  max-width: 140rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 8rem;
+  align-items: center;
+}
+
+@media (max-width: 992px) {
+  .f-statement-grid {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+}
+
+.f-statement-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.f-statement-quote {
+  font-family: var(--font-serif);
+  font-size: clamp(2.8rem, 4.5vw, 5.4rem);
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.05rem;
+  color: var(--forge-offwhite);
+}
+
+.f-statement-copy {
+  font-size: 1.7rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--forge-muted);
+  max-width: 58rem;
+}
+
+.f-statement-img-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.f-statement-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease-luxury);
+}
+
+.f-statement-img-wrap:hover img {
+  transform: scale(1.04);
+}
+
+/* ==========================================================================
+   5. SERVICES SECTION (6 Bespoke Disciplines with Sticky Image)
+   ========================================================================== */
+.f-services-section {
+  position: relative;
+  width: 100%;
+  padding: 10rem 4rem;
+  background-color: #0b0b0b;
+}
+
+.f-services-grid {
+  max-width: 140rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8rem;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .f-services-grid {
+    grid-template-columns: 1fr;
+    gap: 5rem;
+  }
+}
+
+.f-services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rem;
+}
+
+@media (max-width: 992px) {
+  .f-services-list {
+    gap: 6rem;
+  }
+}
+
+.f-service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.f-service-tag {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  color: var(--forge-subtle);
+}
+
+.f-service-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3.2rem, 5vw, 6.4rem);
+  font-weight: 300;
+  letter-spacing: -0.1rem;
+  color: var(--forge-offwhite);
+}
+
+.f-service-desc {
+  font-size: 1.7rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--forge-muted);
+  max-width: 50rem;
+}
+
+.f-services-sticky-panel {
+  position: sticky;
+  top: 14rem;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background-color: #141414;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 992px) {
+  .f-services-sticky-panel {
+    display: none;
+  }
+}
+
+.f-service-sticky-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-luxury), transform 0.6s var(--ease-luxury);
+  transform: scale(1.05);
+}
+
+.f-service-sticky-img.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.f-service-mobile-img {
+  display: none;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-top: 2rem;
+}
+
+@media (max-width: 992px) {
+  .f-service-mobile-img {
+    display: block;
+  }
+}
+
+/* ==========================================================================
+   6. "ORDINARY ENDS HERE" AERIAL SHOWCASE
+   Exact match to Image 2: Red GT3RS center with G-Wagon and Defender
+   ========================================================================== */
+.f-ordinary-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 10rem 2rem;
+  background: #080808 radial-gradient(circle at 50% 50%, #151515 0%, #080808 75%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.f-ordinary-top-title {
+  font-family: var(--font-serif);
+  font-size: clamp(4.5rem, 11vw, 14rem);
+  font-weight: 200;
+  letter-spacing: -0.2rem;
+  line-height: 1;
+  color: var(--forge-offwhite);
+  margin-bottom: 2rem;
+}
+
+.f-ordinary-cars-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 120rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.f-ordinary-car-main {
+  width: clamp(26rem, 38vw, 48rem);
+  position: relative;
+  z-index: 3;
+}
+
+.f-ordinary-car-main img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.9));
+}
+
+.f-ordinary-car-side {
+  position: absolute;
+  top: 15%;
+  width: clamp(20rem, 28vw, 36rem);
+  z-index: 2;
+  opacity: 0.9;
+}
+
+.f-ordinary-car-side img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.8));
+}
+
+.f-ordinary-car-side.left {
+  left: 2%;
+}
+
+.f-ordinary-car-side.right {
+  right: 2%;
+}
+
+.f-bus-badge {
+  display: inline-block;
+  margin-top: 1.2rem;
+  padding: 0.5rem 1.4rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  color: var(--forge-offwhite);
+  background: rgba(18, 43, 74, 0.7);
+  border: 1px solid rgba(46, 109, 164, 0.4);
+  border-radius: 2px;
+}
+
+.f-bus-badge.center {
+  background: rgba(200, 16, 46, 0.85);
+  border-color: rgba(200, 16, 46, 1);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(200, 16, 46, 0.4);
+}
+
+@media (max-width: 768px) {
+  .f-ordinary-car-side {
+    display: none;
+  }
+}
+
+.f-ordinary-bottom-title {
+  font-family: var(--font-serif);
+  font-size: clamp(4.5rem, 11vw, 14rem);
+  font-weight: 200;
+  letter-spacing: -0.2rem;
+  line-height: 1;
+  color: var(--forge-offwhite);
+  margin-top: 2rem;
+}
+
+.f-ordinary-desc {
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--forge-muted);
+  max-width: 50rem;
+  margin: 2rem auto 0;
+}
+
+/* ==========================================================================
+   7. MONUMENTAL BANNERS (Previous Builds & Available Stock)
+   ========================================================================== */
+.f-banner-section {
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  min-height: 60rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.f-banner-bg {
+  position: absolute;
+  inset: -10%;
+  z-index: 1;
+}
+
+.f-banner-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.f-banner-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(circle at center, rgba(6, 6, 6, 0.4) 0%, rgba(6, 6, 6, 0.9) 100%);
+}
+
+.f-banner-content {
+  position: relative;
+  z-index: 5;
+  max-width: 80rem;
+  padding: 0 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.f-banner-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3.8rem, 6.5vw, 8rem);
+  font-weight: 300;
+  letter-spacing: -0.15rem;
+  color: var(--forge-offwhite);
+  line-height: 1.1;
+}
+
+.f-banner-desc {
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--forge-muted);
+  max-width: 55rem;
+}
+
+/* ==========================================================================
+   8. FOOTER & "REFUSE ORDINARY"
+   Exact match to Image 2: Studio rear view of 3 cars
+   ========================================================================== */
+.f-footer-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10rem 4rem 4rem;
+  background-color: #060606;
+  overflow: hidden;
+}
+
+.f-footer-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.f-footer-bg img {
+  width: 100%;
+  max-height: 75vh;
+  object-fit: cover;
+  object-position: center bottom;
+  opacity: 0.9;
+}
+
+.f-footer-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    #060606 0%,
+    rgba(6, 6, 6, 0.7) 40%,
+    rgba(6, 6, 6, 0.4) 70%,
+    #060606 100%
+  );
+  pointer-events: none;
+}
+
+.f-footer-cta-box {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.f-footer-kicker {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.35rem;
+  text-transform: uppercase;
+  color: var(--forge-subtle);
+}
+
+.f-footer-title {
+  font-family: var(--font-serif);
+  font-size: clamp(4.5rem, 8vw, 9.6rem);
+  font-weight: 300;
+  letter-spacing: -0.15rem;
+  color: var(--forge-offwhite);
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.f-footer-bottom-bar {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 140rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4rem;
+  border-top: 1px solid rgba(242, 241, 237, 0.1);
+  margin-top: auto;
+}
+
+.f-back-to-top {
+  background: transparent;
+  border: none;
+  color: var(--forge-offwhite);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.25rem;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.f-back-to-top:hover {
+  opacity: 0.6;
+}
+
+.f-footer-legals {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.f-footer-legals a {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.25rem;
+  text-transform: uppercase;
+  color: var(--forge-subtle);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.f-footer-legals a:hover {
+  color: var(--forge-offwhite);
+}
+
+/* ==========================================================================
+   CURSOR TRAIL
+   ========================================================================== */
+.forge-trail-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  overflow: hidden;
+}
+
+.forge-trail-item {
+  position: absolute;
+  width: 16rem;
+  height: 20rem;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+
+.forge-trail-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
