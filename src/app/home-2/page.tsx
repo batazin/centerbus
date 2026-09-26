@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap, ScrollTrigger } from "../_lib/gsap";
 import { SmoothScrollProvider } from "../_components/smooth-scroll-provider";
-import { ForgeHeroCar } from "./_components/forge-hero-car";
-import "./forge-clean.css";
+import { ForgeHeader } from "./_components/forge-header";
+import "./forge.css";
 
-// Leading Brazilian Bus Bodywork & Chassis Manufacturers
+// Bus Manufacturers & Chassis Partners
 const BUS_MANUFACTURERS = [
   { name: "Marcopolo", type: "Carroceria" },
   { name: "Caio Induscar", type: "Carroceria" },
@@ -22,88 +22,99 @@ const BUS_MANUFACTURERS = [
   { name: "Agrale", type: "Chassi" },
 ];
 
-const STEPS = [
+const STEPS_DATA = [
   {
     num: "01",
     total: "03",
     tag: "CONFERÊNCIA",
     title: "Identificação Precisa",
-    desc: "Código, foto, chassi e montadora conferidos antes da separação para garantir a peça certa na primeira vez. Evitamos retrabalho na oficina.",
+    desc: "Código, foto, chassi e montadora conferidos antes da separação para garantir a peça certa na primeira vez. Evitamos retrabalho e horas paradas na oficina.",
     image: "/images/center/step-01-conferencia.jpg",
-    alt: "Identificação técnica de lanterna e código de carroceria Center Ônibus",
+    alt: "Conferência técnica de peças Center Ônibus",
   },
   {
     num: "02",
     total: "03",
     tag: "ESTOQUE",
     title: "Pronta Entrega",
-    desc: "Mais de 30 mil itens disponíveis: lanternas, faróis, para-brisas, retrovisores, climatização e componentes estruturais para todas as linhas.",
+    desc: "Mais de 30 mil itens disponíveis: lanternas, faróis, para-brisas, retrovisores, climatização e componentes estruturais para todas as linhas e montadoras.",
     image: "/images/center/step-02-estoque.jpg",
-    alt: "Conferência técnica no estoque de peças Center Ônibus",
+    alt: "Estoque amplo de peças Center Ônibus",
   },
   {
     num: "03",
     total: "03",
     tag: "LOGÍSTICA",
     title: "Despacho Ágil",
-    desc: "Entrega em até 48h para a Grande São Paulo e despacho no mesmo dia para transportadoras de todo o Brasil. O ônibus volta pra rua.",
+    desc: "Entrega em até 48h para a Grande São Paulo e despacho no mesmo dia para transportadoras de todo o Brasil. Resposta rápida para o ônibus voltar pra rua.",
     image: "/images/center/step-03-despacho.jpg",
-    alt: "Inspeção e liberação de ônibus na oficina técnica",
+    alt: "Despacho ágil e liberação de ônibus para a frota",
   },
 ];
 
-const SERVICES = [
+const SERVICES_DATA = [
   {
+    id: "iluminacao",
     tag: "Linha 01",
     title: "Iluminação & Sinalização",
-    desc: "Lanternas traseiras modulares, blocos ópticos, faróis halógenos e LED, delimitadoras e chicotes de reposição para todos os modelos.",
+    desc: "Lanternas traseiras modulares, blocos ópticos, faróis halógenos e LED, delimitadoras e chicotes de reposição para todos os modelos de carrocerias.",
     image: "/images/center/service-iluminacao.jpg",
     alt: "Lanternas e sinalização técnica para ônibus",
   },
   {
+    id: "vidros",
     tag: "Linha 02",
     title: "Vidros & Para-brisas",
-    desc: "Para-brisas laminados bipartidos e inteiriços, vigias traseiros, vidros de janelas móveis e fixas, borrachas e guarnições de vedação EPDM.",
+    desc: "Para-brisas laminados bipartidos e inteiriços, vigias traseiros, vidros de janelas móveis e fixas, borrachas e guarnições de vedação EPDM reforçadas.",
     image: "/images/center/service-vidros.jpg",
     alt: "Para-brisas e vidros para carrocerias de ônibus",
   },
   {
+    id: "retrovisores",
     tag: "Linha 03",
     title: "Retrovisores & Espelhos",
-    desc: "Conjuntos completos com braço tubular ou carenado, espelhos convexos auxiliares, comandos elétricos e desembaçadores térmicos.",
+    desc: "Conjuntos completos com braço tubular ou carenado, espelhos convexos auxiliares, comandos elétricos, desembaçadores térmicos e capas de proteção.",
     image: "/images/center/service-retrovisores.jpg",
     alt: "Retrovisores e espelhos de reposição",
   },
   {
+    id: "carroceria",
     tag: "Linha 04",
     title: "Carroceria & Chaparia",
-    desc: "Para-choques em fibra e plástico injetado, grades dianteiras, tampas de motor, painéis laterais, dobradiças reforçadas e fechaduras.",
+    desc: "Para-choques em fibra e plástico injetado, grades dianteiras, tampas de motor, painéis laterais, dobradiças reforçadas e fechaduras para frotas.",
     image: "/products/catalogo-geral-pecas.png",
     alt: "Peças de carroceria e lataria de ônibus",
   },
   {
+    id: "climatizacao",
     tag: "Linha 05",
     title: "Climatização & Filtros",
-    desc: "Filtros anti-pólen (Spheros CC305 / 335 / 355T), dutos de ar, grades de ventilação, motores de condensador e componentes térmicos.",
+    desc: "Filtros anti-pólen (Spheros CC305 / 335 / 355T), dutos de ar condicionado, grades de ventilação, motores de condensador e componentes térmicos.",
     image: "/products/co-11084-packaging.webp",
     alt: "Filtro anti-pólen CO 11084 e climatização Center Ônibus",
   },
   {
+    id: "vedacao",
     tag: "Linha 06",
     title: "Vedação & Acabamento",
-    desc: "Perfis de borracha para portas e janelas, pega-mãos, corrimãos, assoalhos taraflex, itinerários eletrônicos e componentes de cabine.",
+    desc: "Perfis de borracha para portas e janelas, pega-mãos, corrimãos de segurança, assoalhos taraflex, itinerários eletrônicos e componentes de cabine.",
     image: "/blog/conferencia-estoque.webp",
     alt: "Acabamento interno e vedação para ônibus",
   },
 ];
 
-function CenterButton({ text, href = "#contato" }: { text: string; href?: string }) {
+// Authentic Forge luxury button with conic gradient border shine and rolling characters
+function ForgeButton({ text, href = "#contact" }: { text: string; href?: string }) {
   return (
-    <a href={href} className="f-btn" aria-label={text}>
-      <span className="f-btn-shine" aria-hidden="true" />
-      <span className="f-btn-label">
+    <a href={href} className="forge-btn" aria-label={text}>
+      <span className="forge-btn-shine" aria-hidden="true" />
+      <span className="forge-btn-label">
         {text.split("").map((char, i) => (
-          <span key={i} className="f-btn-char" style={{ transitionDelay: `${i * 0.015}s` }}>
+          <span
+            key={i}
+            className="forge-btn-char"
+            style={{ transitionDelay: `${i * 0.02}s` }}
+          >
             {char === " " ? "\u00A0" : char}
           </span>
         ))}
@@ -113,463 +124,594 @@ function CenterButton({ text, href = "#contato" }: { text: string; href?: string
 }
 
 export default function Home2() {
-  const [activeStep, setActiveStep] = useState(0);
-  const [activeService, setActiveService] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isPreloaderLoaded, setIsPreloaderLoaded] = useState(false);
+  const [progressBarActive, setProgressBarActive] = useState(false);
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [activeServiceIndex, setActiveServiceIndex] = useState(0);
 
-  // Section Refs for ScrollTrigger
-  const stepItemsRef = useRef<(HTMLElement | null)[]>([]);
-  const serviceItemsRef = useRef<(HTMLElement | null)[]>([]);
+  const pageRef = useRef<HTMLDivElement>(null);
 
-  // Bus Parallax Refs
-  const busesWrapRef = useRef<HTMLDivElement>(null);
-  const busMainRef = useRef<HTMLDivElement>(null);
-  const busLeftRef = useRef<HTMLDivElement>(null);
-  const busRightRef = useRef<HTMLDivElement>(null);
+  const heroSectionRef = useRef<HTMLElement>(null);
+  const heroVehicleRef = useRef<HTMLDivElement>(null);
+  const heroTopRef = useRef<HTMLDivElement>(null);
+  const heroCenterRef = useRef<HTMLDivElement>(null);
+  const heroBottomRef = useRef<HTMLDivElement>(null);
 
-  // Header handlers
-  const toggleMenu = () => setMenuOpen((prev) => !prev);
-  const closeMenu = () => setMenuOpen(false);
+  const frotasSectionRef = useRef<HTMLElement>(null);
+  const carLeftRef = useRef<HTMLDivElement>(null);
+  const carMainRef = useRef<HTMLDivElement>(null);
+  const carRightRef = useRef<HTMLDivElement>(null);
+  const roadLinesRef = useRef<HTMLDivElement>(null);
+
+  const stepArticleRefs = useRef<(HTMLElement | null)[]>([]);
+  const serviceRefs = useRef<(HTMLElement | null)[]>([]);
+
+  // Preloader progress animation
+  useEffect(() => {
+    const timerStart = setTimeout(() => {
+      setProgressBarActive(true);
+    }, 80);
+
+    const timerEnd = setTimeout(() => {
+      setIsPreloaderLoaded(true);
+    }, 600);
+
+    return () => {
+      clearTimeout(timerStart);
+      clearTimeout(timerEnd);
+    };
+  }, []);
+
+  // 1. Mouse 3D Perspective Tilt on the Hero Studio Bus Stage
+  useEffect(() => {
+    const hero = heroSectionRef.current;
+    const vehicle = heroVehicleRef.current;
+    if (!hero || !vehicle) return;
+
+    const rotX = gsap.quickTo(vehicle, "rotationX", { duration: 0.8, ease: "power2.out" });
+    const rotY = gsap.quickTo(vehicle, "rotationY", { duration: 0.8, ease: "power2.out" });
+    const transX = gsap.quickTo(vehicle, "xPercent", { duration: 0.8, ease: "power2.out" });
+    const transY = gsap.quickTo(vehicle, "yPercent", { duration: 0.8, ease: "power2.out" });
+
+    const handlePointerMove = (e: MouseEvent) => {
+      const rect = hero.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+
+      rotY(x * 3.5);
+      rotX(-y * 2.5);
+      transX(x * 1.2);
+      transY(y * 1.2);
+    };
+
+    const handlePointerLeave = () => {
+      rotX(0);
+      rotY(0);
+      transX(0);
+      transY(0);
+    };
+
+    hero.addEventListener("mousemove", handlePointerMove, { passive: true });
+    hero.addEventListener("mouseleave", handlePointerLeave, { passive: true });
+
+    return () => {
+      hero.removeEventListener("mousemove", handlePointerMove);
+      hero.removeEventListener("mouseleave", handlePointerLeave);
+    };
+  }, []);
+
+  // 2. Scroll-driven timeline for Hero Vehicle zoom and statement reveal
+  useEffect(() => {
+    const hero = heroSectionRef.current;
+    const vehicle = heroVehicleRef.current;
+    const heroTop = heroTopRef.current;
+    const heroCenter = heroCenterRef.current;
+    const heroBottom = heroBottomRef.current;
+
+    if (!hero || !vehicle) return;
+
+    const ctx = gsap.context(() => {
+      // Pin hero during the vehicle reveal transition
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: "+=120%",
+          pin: true,
+          scrub: 0.5,
+          anticipatePin: 1,
+        },
+      });
+
+      // Top title fades and lifts
+      if (heroTop) {
+        tl.to(
+          heroTop,
+          {
+            opacity: 0,
+            y: -50,
+            duration: 0.35,
+            ease: "power2.inOut",
+          },
+          0
+        );
+      }
+
+      // Studio Bus scales and pushes forward into view
+      tl.to(
+        vehicle,
+        {
+          scale: 1.18,
+          y: "3%",
+          duration: 1,
+          ease: "none",
+        },
+        0
+      );
+
+      // Central editorial statement emerges smoothly
+      if (heroCenter) {
+        tl.fromTo(
+          heroCenter,
+          { opacity: 0, y: 40, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.45,
+            ease: "power2.out",
+          },
+          0.25
+        );
+      }
+
+      // Bottom bar fades gently
+      if (heroBottom) {
+        tl.to(
+          heroBottom,
+          {
+            opacity: 0.2,
+            duration: 0.4,
+            ease: "power2.in",
+          },
+          0.6
+        );
+      }
+
+      // Steps articles ScrollTrigger tracking for sticky image panel
+      stepArticleRefs.current.forEach((el, idx) => {
+        if (!el) return;
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 60%",
+          end: "bottom 40%",
+          onToggle: (self) => {
+            if (self.isActive) {
+              setActiveStepIndex(idx);
+            }
+          },
+        });
+      });
+
+      // Services cards ScrollTrigger tracking for sticky image panel
+      serviceRefs.current.forEach((el, idx) => {
+        if (!el) return;
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 60%",
+          end: "bottom 40%",
+          onToggle: (self) => {
+            if (self.isActive) {
+              setActiveServiceIndex(idx);
+            }
+          },
+        });
+      });
+
+      // 3. Scroll-driven highway driving animation for the aerial fleet
+      const frotas = frotasSectionRef.current;
+      const cMain = carMainRef.current;
+      const cLeft = carLeftRef.current;
+      const cRight = carRightRef.current;
+      const rLines = roadLinesRef.current;
+
+      if (frotas && cMain && cLeft && cRight) {
+        const frotasTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: frotas,
+            start: "top 85%",
+            end: "bottom 15%",
+            scrub: 0.7,
+          },
+        });
+
+        // Road dashed lines stream downward to create rapid forward movement
+        if (rLines) {
+          frotasTl.fromTo(
+            rLines,
+            { y: -140 },
+            { y: 160, ease: "none" },
+            0
+          );
+        }
+
+        // Left transit bus drives forward at steady cruise pace
+        frotasTl.fromTo(
+          cLeft,
+          { y: 180, rotation: -0.8 },
+          { y: -120, rotation: 0.5, ease: "none" },
+          0
+        );
+
+        // Main luxury coach starts behind, accelerates and overtakes powerfully forward
+        frotasTl.fromTo(
+          cMain,
+          { y: 240, scale: 0.94 },
+          { y: -180, scale: 1.05, ease: "power1.out" },
+          0
+        );
+
+        // Right executive van drives swiftly alongside
+        frotasTl.fromTo(
+          cRight,
+          { y: 280, rotation: 1 },
+          { y: -220, rotation: -0.4, ease: "power1.inOut" },
+          0
+        );
+      }
+    }, pageRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // 1. Step detection for active 1:1 image
-      stepItemsRef.current.forEach((el, idx) => {
-        if (!el) return;
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top center",
-          end: "bottom center",
-          onEnter: () => setActiveStep(idx),
-          onEnterBack: () => setActiveStep(idx),
-        });
-      });
-
-      // 2. Service detection for sticky photo panel
-      serviceItemsRef.current.forEach((el, idx) => {
-        if (!el) return;
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top center",
-          end: "bottom center",
-          onEnter: () => setActiveService(idx),
-          onEnterBack: () => setActiveService(idx),
-        });
-      });
-
-      // 3. Parallax showcase on the 3 bus models
-      if (busesWrapRef.current) {
-        if (busMainRef.current) {
-          gsap.fromTo(
-            busMainRef.current,
-            { scale: 0.88, opacity: 0.5 },
-            {
-              scale: 1,
-              opacity: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: busesWrapRef.current,
-                start: "top 85%",
-                end: "center center",
-                scrub: true,
-              },
-            }
-          );
-        }
-
-        if (busLeftRef.current) {
-          gsap.fromTo(
-            busLeftRef.current,
-            { x: -70, opacity: 0.4 },
-            {
-              x: 0,
-              opacity: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: busesWrapRef.current,
-                start: "top 80%",
-                end: "center center",
-                scrub: true,
-              },
-            }
-          );
-        }
-
-        if (busRightRef.current) {
-          gsap.fromTo(
-            busRightRef.current,
-            { x: 70, opacity: 0.4 },
-            {
-              x: 0,
-              opacity: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: busesWrapRef.current,
-                start: "top 80%",
-                end: "center center",
-                scrub: true,
-              },
-            }
-          );
-        }
-      }
-    });
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <SmoothScrollProvider anchorOffset={0} lerp={0.09} wheelMultiplier={0.82}>
-      <div className="forge-page">
-        {/* =========================================================================
-            HEADER & FULLSCREEN NAVIGATION
-            ========================================================================= */}
-        <header className="f-header">
-          {/* Institutional Contact Bar */}
-          <nav aria-label="Canais de Atendimento" className="f-header-socials">
-            <a
-              href="tel:+551122215000"
-              aria-label="Telefone (11) 2221-5000"
-              className="f-social-link"
-              style={{ fontSize: "0.85rem", letterSpacing: "0.1rem", textDecoration: "none" }}
-            >
-              (11) 2221-5000
-            </a>
-            <span style={{ opacity: 0.3 }}>|</span>
-            <a
-              href="https://wa.me/5511999999999"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="WhatsApp Vendas"
-              className="f-social-link"
-              style={{ fontSize: "0.85rem", letterSpacing: "0.1rem", textDecoration: "none" }}
-            >
-              WHATSAPP
-            </a>
-          </nav>
-
-          {/* Center Official Center Ônibus Negative Logo */}
-          <a href="#hero" className="f-header-logo-wrap" aria-label="Center Ônibus Início">
-            <img
-              src="/brand/center-onibus-logo-negative.png"
-              alt="Center Ônibus Distribuidora de Peças"
-              style={{ height: "3.2rem", width: "auto", objectFit: "contain" }}
-            />
-          </a>
-
-          {/* Right Menu Button */}
-          <button
-            type="button"
-            onClick={toggleMenu}
-            className="f-header-nav-btn"
-            aria-label="Navegação do site"
-          >
-            <span className="f-header-nav-label">{menuOpen ? "FECHAR" : "MENU"}</span>
-            <div className={`f-hamburger ${menuOpen ? "open" : ""}`}>
-              <span />
-              <span />
-              <span />
+      <div ref={pageRef} className="forge-body">
+        {/* 1. Preloader */}
+        <aside className={`forge-preloader ${isPreloaderLoaded ? "loaded" : ""}`}>
+          <p className="forge-preloader-text">
+            Estrutura técnica para carrocerias de ônibus. A peça certa, na primeira vez.
+          </p>
+          <div className="forge-preloader-progress-wrap">
+            <div className="forge-preloader-track">
+              <div className={`forge-preloader-bar ${progressBarActive ? "active" : ""}`} />
             </div>
-          </button>
-        </header>
-
-        {/* Fullscreen Navigation Modal */}
-        <div className={`f-nav-modal ${menuOpen ? "open" : ""}`}>
-          <nav aria-label="Navegação Principal">
-            <ul className="f-nav-list">
-              <li><a href="#hero" className="f-nav-link" onClick={closeMenu}>Início</a></li>
-              <li><a href="#estrutura" className="f-nav-link" onClick={closeMenu}>Estrutura Operacional</a></li>
-              <li><a href="#conferencia" className="f-nav-link" onClick={closeMenu}>Conferência Técnica</a></li>
-              <li><a href="#proposito" className="f-nav-link" onClick={closeMenu}>Nosso Propósito</a></li>
-              <li><a href="#linhas" className="f-nav-link" onClick={closeMenu}>Linhas de Peças</a></li>
-              <li><a href="#frotas" className="f-nav-link" onClick={closeMenu}>Frotas Atendidas</a></li>
-              <li><a href="#catalogo" className="f-nav-link" onClick={closeMenu}>Catálogo Técnico</a></li>
-              <li><a href="#contato" className="f-nav-link" onClick={closeMenu}>Fale Conosco</a></li>
-            </ul>
-          </nav>
-          <div className="f-nav-contacts">
-            <a href="tel:+551122215000">(11) 2221-5000</a>
-            <a href="mailto:contato@centeronibus.com.br">contato@centeronibus.com.br</a>
-            <span style={{ color: "var(--color-vermelho-sinal)", fontWeight: 700, marginTop: "1rem" }}>
-              O ÔNIBUS VOLTA PRA RUA.
-            </span>
           </div>
-        </div>
+        </aside>
 
-        {/* =========================================================================
-            1. HERO SECTION (ForgeHeroCar: 241-Frame 3D Bus Sequence Scrubbing)
-            ========================================================================= */}
-        <ForgeHeroCar />
+        {/* 2. Authentic Header */}
+        <ForgeHeader />
 
-        {/* =========================================================================
-            2. APPROACH SECTION (Estrutura Operacional + Marquee Encarroçadoras)
-            ========================================================================= */}
-        <section id="estrutura" className="f-approach-section">
-          <div className="f-approach-bg">
+        {/* 3. Hero Section with Luxury Studio Bus Stage */}
+        <section id="hero" ref={heroSectionRef} className="forge-hero-section">
+          {/* Subtle Ambient Texture Overlay */}
+          <div className="forge-hero-bg-texture" />
+
+          {/* Studio Bus Stage (Forge Atelier Style - Luxury Fleet) */}
+          <div ref={heroVehicleRef} className="forge-hero-vehicle-stage">
+            <img
+              src="/images/center/forge-hero-bus.jpg"
+              alt="Center Ônibus - Frotas em Atelier Studio"
+              className="forge-hero-vehicle-img"
+            />
+            <div className="forge-hero-overlay-radial" />
+          </div>
+
+          {/* Top Initial Headline */}
+          <div ref={heroTopRef} className="forge-hero-top">
+            <span className="forge-hero-kicker">DISTRIBUIÇÃO TÉCNICA DE PEÇAS</span>
+            <h1 className="forge-hero-title">O Ônibus Volta pra Rua.</h1>
+          </div>
+
+          {/* Central Pinned Editorial Statement */}
+          <div ref={heroCenterRef} className="forge-hero-center-reveal" style={{ opacity: 0 }}>
+            <span className="forge-hero-center-tag">RESPOSTA NO TEMPO DA OPERAÇÃO</span>
+            <h2 className="forge-hero-center-title">
+              Conhecimento antes do catálogo.
+              <br />
+              <span style={{ color: "#2E6DA4" }}>A peça certa, na primeira vez.</span>
+            </h2>
+          </div>
+
+          {/* Bottom Kicker & CTA */}
+          <div ref={heroBottomRef} className="forge-hero-bottom">
+            <p className="forge-hero-desc">
+              Mais de 30 mil itens para carrocerias de ônibus, vans e transporte de passageiros.
+            </p>
+            <div className="forge-hero-cta">
+              <ForgeButton text="Consultar Código da Peça" href="#catalogo" />
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Approach Section & Manufacturer Logo Marquee */}
+        <section id="approach" className="forge-approach-section">
+          <div className="forge-approach-bg">
             <img
               src="/images/center/approach-workshop.jpg"
-              alt="Inspeção técnica em garagem de ônibus"
+              alt="Oficina técnica e manutenção de ônibus"
+              loading="lazy"
             />
           </div>
-          <div className="f-approach-overlay" />
+          <div className="forge-approach-overlay" />
 
-          <div className="f-approach-content">
-            <h2 className="f-approach-title">Estrutura Operacional Para Manter Frotas em Movimento</h2>
+          <div className="forge-approach-top">
+            <span className="forge-approach-tag">ATENDIMENTO & COMPATIBILIDADE</span>
+            <h2 className="forge-approach-heading">
+              Atendemos as Principais Carrocerias e Chassis
+            </h2>
+          </div>
 
-            {/* Marquee of Brazilian Bus Bodywork & Chassis Manufacturers */}
-            <div className="f-marquee-wrap" aria-hidden="true">
-              <div className="f-marquee-track">
-                {BUS_MANUFACTURERS.concat(BUS_MANUFACTURERS).map((maker, idx) => (
-                  <div key={idx} className="f-marquee-item">
-                    <div className="f-marquee-badge">
-                      <span className="f-marquee-badge-name">{maker.name}</span>
-                      <span className="f-marquee-badge-type">{maker.type}</span>
-                    </div>
-                  </div>
+          {/* Infinite Marquee of Bus Manufacturers & Chassis */}
+          <div className="forge-logo-marquee-wrap">
+            <div className="forge-logo-marquee">
+              <ul className="forge-logo-list">
+                {BUS_MANUFACTURERS.map((m, idx) => (
+                  <li key={`m1-${idx}`} className="forge-logo-item">
+                    <span className="forge-logo-name">{m.name}</span>
+                    <span className="forge-logo-type">{m.type}</span>
+                  </li>
+                ))}
+              </ul>
+              {/* Duplicated list for seamless marquee infinite loop */}
+              <ul className="forge-logo-list" aria-hidden="true">
+                {BUS_MANUFACTURERS.map((m, idx) => (
+                  <li key={`m2-${idx}`} className="forge-logo-item">
+                    <span className="forge-logo-name">{m.name}</span>
+                    <span className="forge-logo-type">{m.type}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="forge-approach-bottom">
+            <p className="forge-approach-copy">
+              Conferência rigorosa de código, chassi e foto antes do despacho para evitar retrabalho
+              na oficina. Cada detalhe tem propósito para manter sua operação em movimento contínuo.
+            </p>
+            <ForgeButton text="Falar com Especialista" href="#contact" />
+          </div>
+        </section>
+
+        {/* 5. Sticky 3-Step Process (Forge Identity / Insight / Cohesion) */}
+        <section id="steps" className="forge-steps-section">
+          <div className="forge-steps-split">
+            {/* Left: Sticky Image Preview (Desktop) */}
+            <aside className="forge-steps-sticky-aside" aria-hidden="true">
+              <div className="forge-steps-visual">
+                {STEPS_DATA.map((step, idx) => (
+                  <img
+                    key={step.num}
+                    src={step.image}
+                    alt={step.alt}
+                    className={`forge-steps-image ${activeStepIndex === idx ? "active" : ""}`}
+                  />
                 ))}
               </div>
-            </div>
+            </aside>
 
-            <div className="f-approach-bottom">
-              <p className="f-approach-desc">
-                Conhecimento antes do catálogo. Código, foto, chassi e carroceria entram na mesma conferência antes de qualquer separação. Mais de 30 mil itens cadastrados com despacho ágil para todo o país.
-              </p>
-              <CenterButton text="Falar com Especialista" href="#contato" />
-            </div>
-          </div>
-        </section>
-
-        {/* =========================================================================
-            3. 3-STEP NARRATIVE (Identificação, Estoque, Logística)
-            ========================================================================= */}
-        <section id="conferencia" className="f-steps-section">
-          <div className="f-steps-grid">
-            {/* Left Sticky 1:1 Image Frame */}
-            <div className="f-steps-visual-sticky" aria-hidden="true">
-              {STEPS.map((step, idx) => (
-                <img
-                  key={step.title}
-                  src={step.image}
-                  alt={step.alt}
-                  className={`f-steps-visual-img ${activeStep === idx ? "active" : ""}`}
-                />
-              ))}
-            </div>
-
-            {/* Right Scrollable Step Articles */}
-            <div className="f-steps-list">
-              {STEPS.map((step, idx) => (
+            {/* Right: Scrollable Step Cards */}
+            <div className="forge-steps-cards-list">
+              {STEPS_DATA.map((step, idx) => (
                 <article
-                  key={step.title}
+                  key={step.num}
                   ref={(el) => {
-                    stepItemsRef.current[idx] = el;
+                    stepArticleRefs.current[idx] = el;
                   }}
-                  className="f-step-card"
+                  className="forge-step-article"
                 >
-                  <div className="f-step-counter">
-                    {step.num} <span>/ {step.total} — {step.tag}</span>
+                  <div className="forge-step-indicator">
+                    {step.num} <span>/ {step.total}</span> — {step.tag}
                   </div>
-                  <h3 className="f-step-heading">{step.title}</h3>
-                  <p className="f-step-desc">{step.desc}</p>
-                  <CenterButton text="Consultar Disponibilidade" href="#contato" />
+                  <h3 className="forge-step-heading">{step.title}</h3>
+                  <p className="forge-step-desc">{step.desc}</p>
+                  <ForgeButton text="Solicitar Peça" href="#contact" />
 
-                  {/* Inline photo on tablet/mobile */}
-                  <img src={step.image} alt={step.alt} className="f-step-mobile-img" loading="lazy" />
+                  {/* Mobile inline image */}
+                  <img
+                    src={step.image}
+                    alt={step.alt}
+                    className="forge-step-mobile-img"
+                    loading="lazy"
+                  />
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        {/* =========================================================================
-            4. STATEMENT SECTION (Conhecimento Antes do Catálogo)
-            ========================================================================= */}
-        <section id="proposito" className="f-statement-section">
-          <div className="f-statement-grid">
-            <div className="f-statement-left">
-              <h2 className="f-statement-quote">
-                No transporte de passageiros, cada hora de veículo parado representa prejuízo e atraso na linha.
-              </h2>
-              <p className="f-statement-copy">
-                A Center Ônibus não entrega apenas peças: entregamos a certeza de que o veículo volta a rodar sem retrabalho. Nossa bancada técnica valida código, foto e carroceria para Caio, Comil, Marcopolo, Neobus e todas as principais montadoras do país.
+        {/* 6. Monumental Editorial Statement */}
+        <section className="forge-statement-section">
+          <div className="forge-statement-grid">
+            <h2 className="forge-statement-quote">
+              No transporte de passageiros, cada hora de veículo parado representa prejuízo e atraso
+              na linha.
+            </h2>
+            <div className="forge-statement-details">
+              <p className="forge-statement-copy">
+                Nossos consultores entendem de montagem e aplicação prática. Antes de emitir o
+                pedido, validamos a compatibilidade exata com sua carroceria e garantimos despacho
+                imediato para quem precisa rodar.
               </p>
-              <CenterButton text="Solicitar Cotação" href="#contato" />
-            </div>
-
-            <div className="f-statement-img-wrap">
-              <img
-                src="/images/center/statement-consultor.jpg"
-                alt="Consultor técnico de peças Center Ônibus"
-                loading="lazy"
-              />
+              <ForgeButton text="Falar com Consultor" href="#contact" />
             </div>
           </div>
         </section>
 
-        {/* =========================================================================
-            5. SERVICES SECTION (6 Linhas de Peças com Sticky Photo Panel)
-            ========================================================================= */}
-        <section id="linhas" className="f-services-section">
-          <div className="f-services-grid">
-            {/* Left Scrollable Service Articles */}
-            <div className="f-services-list">
-              {SERVICES.map((srv, idx) => (
+        {/* 7. Sticky Services Split (6 Linhas de Peças) */}
+        <section id="services" className="forge-services-section">
+          <div className="forge-services-split">
+            {/* Left: Scrollable service cards */}
+            <div className="forge-services-list">
+              {SERVICES_DATA.map((srv, idx) => (
                 <article
-                  key={srv.title}
+                  key={srv.id}
                   ref={(el) => {
-                    serviceItemsRef.current[idx] = el;
+                    serviceRefs.current[idx] = el;
                   }}
-                  className="f-service-card"
+                  className="forge-service-card"
                 >
-                  <span className="f-service-tag">{srv.tag}</span>
-                  <h3 className="f-service-title">{srv.title}</h3>
-                  <p className="f-service-desc">{srv.desc}</p>
-                  <CenterButton text="Consultar Linha" href="#contato" />
+                  <span className="forge-service-tag">{srv.tag}</span>
+                  <h3 className="forge-service-title">{srv.title}</h3>
+                  <p className="forge-service-desc">{srv.desc}</p>
+                  <ForgeButton text="Consultar Linha" href="#contact" />
 
                   {/* Mobile image inline */}
-                  <img src={srv.image} alt={srv.alt} className="f-service-mobile-img" loading="lazy" />
+                  <img
+                    src={srv.image}
+                    alt={srv.alt}
+                    className="forge-service-mobile-img"
+                    loading="lazy"
+                  />
                 </article>
               ))}
             </div>
 
-            {/* Right Sticky Photo Panel */}
-            <div className="f-services-sticky-panel" aria-hidden="true">
-              {SERVICES.map((srv, idx) => (
+            {/* Right: Sticky Image Showcase (Desktop) */}
+            <aside className="forge-services-sticky-panel" aria-hidden="true">
+              {SERVICES_DATA.map((srv, idx) => (
                 <img
-                  key={srv.title}
+                  key={srv.id}
                   src={srv.image}
                   alt={srv.alt}
-                  className={`f-service-sticky-img ${activeService === idx ? "active" : ""}`}
+                  className={`forge-service-sticky-image ${activeServiceIndex === idx ? "active" : ""}`}
                 />
               ))}
-            </div>
+            </aside>
           </div>
         </section>
 
-        {/* =========================================================================
-            6. "FROTAS EM MOVIMENTO" BUS SHOWCASE
-            ========================================================================= */}
-        <section id="frotas" className="f-ordinary-section">
-          <h2 className="f-ordinary-top-title">FROTAS EM MOVIMENTO</h2>
+        {/* 8. "Ordinary Ends Here" Aerial Vehicle Showcase */}
+        <section id="frotas" ref={frotasSectionRef} className="forge-ordinary-section">
+          <h2 className="forge-ordinary-top-title">Frotas em Movimento</h2>
 
-          <div ref={busesWrapRef} className="f-ordinary-cars-wrap">
-            {/* Left Bus: Rodoviário */}
-            <div ref={busLeftRef} className="f-ordinary-car-side left">
-              <img
-                src="/sequences/bus/frame_0060.webp"
-                alt="Ônibus Rodoviário alta linha"
-                loading="lazy"
-              />
-              <span className="f-bus-badge">RODOVIÁRIO</span>
+          <div className="forge-ordinary-cars-container">
+            {/* Highway animated road lane lines */}
+            <div ref={roadLinesRef} className="forge-road-track-lines" aria-hidden="true">
+              <div className="forge-lane-divider" />
+              <div className="forge-lane-divider" />
             </div>
 
-            {/* Center Main Bus: Urbano */}
-            <div ref={busMainRef} className="f-ordinary-car-main">
+            {/* Left: Urban Transit Bus */}
+            <div ref={carLeftRef} className="forge-car-eagle-eye forge-car-side left">
+              <div className="forge-headlight-beam" />
               <img
-                src="/sequences/bus/frame_0120.webp"
-                alt="Ônibus Urbano Center Ônibus"
+                src="/images/center/bus-aerial-transit.png"
+                alt="Ônibus Urbano Transit POV aérea"
                 loading="lazy"
               />
-              <span className="f-bus-badge center">FROTAS URBANAS</span>
             </div>
 
-            {/* Right Bus: Micro & Fretamento */}
-            <div ref={busRightRef} className="f-ordinary-car-side right">
+            {/* Center: Luxury Touring Coach Bus */}
+            <div ref={carMainRef} className="forge-car-eagle-eye forge-car-main">
+              <div className="forge-headlight-beam main-beam" />
               <img
-                src="/sequences/bus/frame_0180.webp"
-                alt="Micro-ônibus e transporte executivo"
+                src="/images/center/bus-aerial-main.png"
+                alt="Ônibus Rodoviário Paradiso POV aérea"
                 loading="lazy"
               />
-              <span className="f-bus-badge">MICRO & FRETE</span>
+            </div>
+
+            {/* Right: Executive Minibus Van */}
+            <div ref={carRightRef} className="forge-car-eagle-eye forge-car-side right">
+              <div className="forge-headlight-beam" />
+              <img
+                src="/images/center/bus-aerial-minibus.png"
+                alt="Van Minibus Executiva POV aérea"
+                loading="lazy"
+              />
             </div>
           </div>
 
-          <h2 className="f-ordinary-bottom-title">SE RODA, A GENTE TEM.</h2>
-          <p className="f-ordinary-desc">
-            Atendimento especializado para empresas de transporte regular, operadores de turismo, frotas municipais e oficinas independentes de todo o Brasil.
+          <h2 className="forge-ordinary-bottom-title">Se Roda, A Gente Tem.</h2>
+          <p className="forge-ordinary-copy">
+            Linhas completas para carrocerias urbanas, rodoviárias e fretamento. Peças originais e
+            compatíveis de máxima durabilidade, com entrega em até 48 horas.
           </p>
         </section>
 
-        {/* =========================================================================
-            7. CATÁLOGO TÉCNICO MONUMENTAL BANNER
-            ========================================================================= */}
-        <section id="catalogo" className="f-banner-section">
-          <div className="f-banner-bg">
+        {/* 9. Monumental Full Banners */}
+        <section id="catalogo" className="forge-full-banner">
+          <div className="forge-full-banner-bg">
             <img
-              src="/products/catalogo-geral-pecas.png"
-              alt="Catálogo completo de peças de carroceria Center Ônibus"
+              src="/images/center/banner-catalogo-tecnico.jpg"
+              alt="Catálogo técnico de peças para carrocerias Center Ônibus"
               loading="lazy"
             />
           </div>
-          <div className="f-banner-overlay" />
-          <div className="f-banner-content">
-            <h2 className="f-banner-title">Catálogo de Peças</h2>
-            <p className="f-banner-desc">
-              Mais de 30 mil itens para carrocerias de ônibus organizados por montadora, chassi, sistema e aplicação técnica.
+          <div className="forge-full-banner-overlay" />
+          <div className="forge-full-banner-content">
+            <h2 className="forge-full-banner-title">Catálogo Técnico</h2>
+            <p className="forge-full-banner-desc">
+              Mais de 30 mil itens catalogados. Consulte por código de fabricante, foto da peça ou
+              montadora da carroceria.
             </p>
-            <CenterButton text="Consultar Catálogo" href="#contato" />
+            <ForgeButton text="Consultar Catálogo" href="#contact" />
           </div>
         </section>
 
-        {/* =========================================================================
-            8. ESTOQUE & DESPACHO IMEDIATO BANNER
-            ========================================================================= */}
-        <section id="estoque" className="f-banner-section">
-          <div className="f-banner-bg">
+        <section id="estoque" className="forge-full-banner">
+          <div className="forge-full-banner-bg">
             <img
               src="/images/center/banner-frotas.jpg"
-              alt="Terminal central e frota em operação atendida pela Center Ônibus"
+              alt="Estoque e liberação rápida de peças para frotas"
               loading="lazy"
             />
           </div>
-          <div className="f-banner-overlay" />
-          <div className="f-banner-content">
-            <h2 className="f-banner-title">Estoque Imediato</h2>
-            <p className="f-banner-desc">
-              Resposta no tempo da sua operação. Despacho rápido para transportadoras de todo o Brasil e entrega expressa na Grande São Paulo.
+          <div className="forge-full-banner-overlay" />
+          <div className="forge-full-banner-content">
+            <h2 className="forge-full-banner-title">Estoque Imediato</h2>
+            <p className="forge-full-banner-desc">
+              Despacho no mesmo dia para transportadoras de todo o país. Agilidade máxima para frotas
+              não ficarem paradas.
             </p>
-            <CenterButton text="Cotar Pelo WhatsApp" href="https://wa.me/5511999999999" />
+            <ForgeButton text="Solicitar Cotação" href="#contact" />
           </div>
         </section>
 
-        {/* =========================================================================
-            9. FOOTER & "O ÔNIBUS VOLTA PRA RUA"
-            ========================================================= */}
-        <footer id="contato" className="f-footer-section">
-          <div className="f-footer-bg">
+        {/* 10. Footer & Final CTA */}
+        <footer id="contact" className="forge-footer-section">
+          <div className="forge-footer-bg">
             <img
-              src="/images/center/hero-bus-lineup.jpg"
-              alt="Linha de ônibus liberados e operando"
+              src="/images/center/forge-hero-bus.jpg"
+              alt="Center Ônibus - Frotas prontas para rodar"
               loading="lazy"
             />
           </div>
-          <div className="f-footer-overlay" />
+          <div className="forge-footer-overlay" />
 
-          <div className="f-footer-cta-box">
-            <p className="f-footer-kicker">RESPOSTA NO TEMPO DA OPERAÇÃO</p>
-            <h2 className="f-footer-title">O ÔNIBUS VOLTA PRA RUA.</h2>
-            <CenterButton text="Falar com Especialista" href="https://wa.me/5511999999999" />
+          <div className="forge-footer-cta-box">
+            <p className="forge-footer-kicker">Sua frota no tempo certo</p>
+            <h2 className="forge-footer-title">O Ônibus Volta pra Rua.</h2>
+            <ForgeButton text="Fale com a Center Ônibus" href="https://wa.me/5511999999999" />
           </div>
 
-          <div className="f-footer-bottom-bar">
-            <button type="button" onClick={scrollToTop} className="f-back-to-top" aria-label="Voltar ao Topo">
+          <div className="forge-footer-bottom-bar">
+            <button
+              type="button"
+              onClick={scrollToTop}
+              className="forge-back-to-top"
+              aria-label="Voltar ao início"
+            >
               <span>
-                {"Voltar ao Topo".split("").map((c, i) => (
+                {"Voltar ao Início".split("").map((char, i) => (
                   <span key={i} style={{ transitionDelay: `${i * 0.02}s` }}>
-                    {c === " " ? "\u00A0" : c}
+                    {char === " " ? "\u00A0" : char}
                   </span>
                 ))}
               </span>
-              <span aria-hidden="true" style={{ marginLeft: "0.5rem" }}>↑</span>
+              <span aria-hidden="true">↑</span>
             </button>
 
-            <div className="f-footer-legals">
-              <span>Center Ônibus Distribuidora de Peças Ltda.</span>
-              <span>São Paulo - SP | Tel: (11) 2221-5000</span>
+            <div className="forge-footer-legals">
+              <span>Center Ônibus © {new Date().getFullYear()}</span>
+              <a href="#hero">Privacidade</a>
+              <a href="#hero">Termos</a>
             </div>
           </div>
         </footer>

@@ -11,13 +11,10 @@ export function ForgeHeroCar() {
   const stageRef = useRef<HTMLDivElement>(null);
   const busWrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const introTextRef = useRef<HTMLDivElement>(null);
   const revealTextRef = useRef<HTMLDivElement>(null);
 
-  // Default to 'video' media as requested by user ("coloca outro video/midia na hero")
-  const [activeMedia, setActiveMedia] = useState<"video" | "3d">("video");
   const [initialFrameLoaded, setInitialFrameLoaded] = useState(false);
 
   // Store loaded images for 3D sequence
@@ -73,7 +70,7 @@ export function ForgeHeroCar() {
       if (isCancelled) return;
       imagesRef.current.set(1, img1);
       setInitialFrameLoaded(true);
-      if (activeMedia === "3d") drawFrame(1);
+      drawFrame(1);
     };
 
     const anchors: number[] = [];
@@ -112,13 +109,13 @@ export function ForgeHeroCar() {
 
     const timer = setTimeout(() => {
       loadAnchorBatch();
-    }, 150);
+    }, 100);
 
     return () => {
       isCancelled = true;
       clearTimeout(timer);
     };
-  }, [activeMedia]);
+  }, []);
 
   // 2. Resize Canvas with DPR
   useEffect(() => {
@@ -132,15 +129,13 @@ export function ForgeHeroCar() {
       canvas.width = Math.round(rect.width * dpr);
       canvas.height = Math.round(rect.height * dpr);
 
-      if (activeMedia === "3d") {
-        drawFrame(activeFrameIndexRef.current);
-      }
+      drawFrame(activeFrameIndexRef.current);
     };
 
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [initialFrameLoaded, activeMedia]);
+  }, [initialFrameLoaded]);
 
   // 3. Mouse 3D Perspective Tilt on the media wrapper
   useEffect(() => {
@@ -200,16 +195,13 @@ export function ForgeHeroCar() {
           scrub: 0.35,
           anticipatePin: 1,
           onUpdate: (self) => {
-            // Update 3D canvas frames if in 3D mode
-            if (activeMedia === "3d") {
-              const targetFrame = Math.min(
-                TOTAL_FRAMES,
-                Math.max(1, Math.round(self.progress * (TOTAL_FRAMES - 1)) + 1)
-              );
-              if (targetFrame !== activeFrameIndexRef.current) {
-                activeFrameIndexRef.current = targetFrame;
-                drawFrame(targetFrame);
-              }
+            const targetFrame = Math.min(
+              TOTAL_FRAMES,
+              Math.max(1, Math.round(self.progress * (TOTAL_FRAMES - 1)) + 1)
+            );
+            if (targetFrame !== activeFrameIndexRef.current) {
+              activeFrameIndexRef.current = targetFrame;
+              drawFrame(targetFrame);
             }
           },
         },
@@ -271,60 +263,25 @@ export function ForgeHeroCar() {
     }, container);
 
     return () => ctx.revert();
-  }, [initialFrameLoaded, activeMedia]);
+  }, [initialFrameLoaded]);
 
   return (
     <div ref={containerRef} className="f-hero-scroll-track" id="hero">
       <div ref={stageRef} className="f-hero-stage">
-        {/* Media Switcher Badge (Top Right of Hero) */}
-        <div className="f-hero-media-switch" aria-label="Alternar Mídia da Hero">
-          <button
-            type="button"
-            className={`f-hero-switch-btn ${activeMedia === "video" ? "active" : ""}`}
-            onClick={() => setActiveMedia("video")}
-            title="Vídeo real da operação em movimento"
-          >
-            <span>▶ VÍDEO OPERACIONAL</span>
-          </button>
-          <button
-            type="button"
-            className={`f-hero-switch-btn ${activeMedia === "3d" ? "active" : ""}`}
-            onClick={() => setActiveMedia("3d")}
-            title="Sequência técnica 3D interativa no scroll"
-          >
-            <span>⟳ SEQUÊNCIA 3D</span>
-          </button>
-        </div>
-
         {/* Bus Media Stage Wrapper */}
         <div
           ref={busWrapperRef}
           className="f-hero-car-wrapper"
           style={{ transformOrigin: "50% 60%" }}
         >
-          {/* 1. Real Bus Video Loop */}
-          {activeMedia === "video" && (
-            <video
-              ref={videoRef}
-              src="/video/video1.mp4"
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="/images/center/hero-bus-lineup.jpg"
-              className="f-hero-bus-video"
-            />
-          )}
-
-          {/* 2. Main 3D Bus Canvas */}
+          {/* Main 3D Bus Canvas */}
           <canvas
             ref={canvasRef}
-            className={`f-hero-car-canvas ${activeMedia === "3d" ? "active" : ""}`}
-            style={{ display: activeMedia === "3d" ? "block" : "none" }}
+            className={`f-hero-car-canvas ${initialFrameLoaded ? "active" : ""}`}
           />
 
-          {/* 3. Fallback High-Res Bus Lineup Image */}
-          {activeMedia === "3d" && !initialFrameLoaded && (
+          {/* Fallback High-Res Bus Lineup Image */}
+          {!initialFrameLoaded && (
             <img
               src="/images/center/hero-bus-lineup.jpg"
               alt="Center Ônibus - Estrutura técnica para carrocerias de ônibus"

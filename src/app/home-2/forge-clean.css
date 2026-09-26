@@ -379,66 +379,7 @@
   opacity: 1;
 }
 
-.f-hero-bus-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 60%;
-  opacity: 0.85;
-  filter: saturate(1.05) brightness(0.92);
-  display: block;
-}
 
-.f-hero-media-switch {
-  position: absolute;
-  top: 9.5rem;
-  right: 3.5rem;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(16, 20, 24, 0.7);
-  border: 1px solid rgba(244, 244, 244, 0.15);
-  border-radius: 4px;
-  padding: 0.4rem;
-  backdrop-filter: blur(10px);
-}
-
-.f-hero-switch-btn {
-  background: transparent;
-  border: none;
-  color: var(--forge-muted);
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 0.12rem;
-  text-transform: uppercase;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.25s ease;
-}
-
-.f-hero-switch-btn.active {
-  background: var(--color-azul-center);
-  color: #fff;
-  border: 1px solid var(--color-azul-rodagem);
-  box-shadow: 0 2px 10px rgba(46, 109, 164, 0.4);
-}
-
-.f-hero-switch-btn:hover:not(.active) {
-  color: var(--forge-offwhite);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-@media (max-width: 768px) {
-  .f-hero-media-switch {
-    top: auto;
-    bottom: 2rem;
-    right: 50%;
-    transform: translateX(50%);
-  }
-}
 
 .f-hero-car-img {
   width: 100%;

@@ -3,16 +3,16 @@
 import { useEffect, useRef } from "react";
 
 const TRAIL_IMAGES = [
-  { src: "/images/forge/trail-01.jpg", alt: "Matte black Lamborghini" },
-  { src: "/images/forge/trail-02.jpg", alt: "Forge Lambo Interior" },
-  { src: "/images/forge/trail-03.jpg", alt: "Man in black hoodie" },
-  { src: "/images/forge/trail-04.jpg", alt: "Two technicians meticulously applying PPF" },
-  { src: "/images/forge/trail-05.jpg", alt: "Rear view of a Porsche GT3RS" },
-  { src: "/images/forge/trail-06.jpg", alt: "Craftsman applying PPF" },
-  { src: "/images/forge/trail-07.jpg", alt: "Land Rover Defender in the workshop" },
-  { src: "/images/forge/trail-08.jpg", alt: "McLaren on grass" },
-  { src: "/images/forge/trail-09.jpg", alt: "Audi R8 in orange outside the warehouse" },
-  { src: "/images/forge/trail-10.jpg", alt: "Range Rover getting a new wrap" },
+  { src: "/images/center/step-01-conferencia.jpg", alt: "Conferência técnica de peças" },
+  { src: "/images/center/service-iluminacao.jpg", alt: "Iluminação e lanternas de ônibus" },
+  { src: "/images/center/step-02-estoque.jpg", alt: "Estoque técnico de peças para carrocerias" },
+  { src: "/images/center/service-retrovisores.jpg", alt: "Retrovisores e espelhos de reposição" },
+  { src: "/images/center/step-03-despacho.jpg", alt: "Despacho ágil e inspeção de frotas" },
+  { src: "/images/center/service-vidros.jpg", alt: "Para-brisas e vidros de carroceria" },
+  { src: "/images/center/statement-consultor.jpg", alt: "Consultor especialista Center Ônibus" },
+  { src: "/products/co-11084-packaging.webp", alt: "Embalagem filtro CO 11084" },
+  { src: "/images/center/approach-workshop.jpg", alt: "Oficina técnica e manutenção de frotas" },
+  { src: "/blog/conferencia-estoque.webp", alt: "Organização e controle de estoque" },
 ];
 
 export function ForgeCursorTrail() {

@@ -164,6 +164,24 @@ The attached animation prompt is a reference for premium interaction quality, no
 - Never create horizontal overflow on mobile.
 - Test desktop and mobile behavior after motion changes.
 
+## Home 2 (`/home-2`): Inspiração e Benchmark Forge Automotive
+
+A rota `/home-2` utiliza como **inspiração e referência direta obrigatória** o site da **[Forge Automotive](https://forgeautomotive.co.uk/)**. Todas as decisões visuais, de animação e de layout desta página devem seguir esse benchmark:
+
+- **Site de Referência Principal:** `https://forgeautomotive.co.uk/`
+- **Hero Vehicle Sequence (Scroll-Driven):**
+  - O Hero **sempre** utiliza a sequência técnica do veículo (ônibus) renderizada em `<canvas>` e controlada frame a frame pelo `ScrollTrigger`.
+  - Conforme o usuário rola, o veículo avança/escala em direção à tela com efeito de profundidade, acompanhado de mouse tilt 3D sutil na perspectiva.
+  - **Proibido usar vídeo comum no Hero:** Nunca substituir a sequência por uma tag `<video>` em loop autoplay genérica nem inserir botões de alternância de mídia.
+- **Narrativa Editorial & Pinned Storytelling:**
+  - Frases técnicas e declarações editoriais que surgem centralizadas e se desvanecem com o avanço do veículo (*ex.: "RESPOSTA NO TEMPO DA OPERAÇÃO / CONHECIMENTO ANTES DO CATÁLOGO"*).
+  - Seções com fixação (pinning) no scroll, transições limpas e revelação progressiva de etapas/processos.
+- **Estética Atelier Aplicada ao Setor de Ônibus:**
+  - Atmosfera escura e técnica (`#060606` com texturas de carbono e ruído sutil).
+  - Microinterações inspiradas na Forge: bordas sutis com brilho (*conic gradient border shine*), badges técnicas numeradas e grid rigoroso.
+  - **Sem rastro de fotos no cursor:** Não utilizar o efeito de rastro de imagens/cards flutuantes no cursor (cursor trail) na Hero.
+
+
 ## Rebranding Work Order
 
 When implementing the rebrand, proceed in this order unless the user asks otherwise:
@@ -174,3 +192,5 @@ When implementing the rebrand, proceed in this order unless the user asks otherw
 4. Apply the system to internal pages.
 5. Review mobile layouts and remove horizontal overflow.
 6. Run `npm.cmd run build` to validate.
+
+
