@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ActiveFrame Test</title>
+</head>
+<body style="background:#0c0c0c; margin:0; overflow:hidden;">
+  <canvas id="c" width="1920" height="1080" style="width:100vw; height:100vh; object-fit:cover;"></canvas>
+  <script src="/ActiveFrame.js"></script>
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const statusDiv = document.createElement('div');
+    statusDiv.id = 'status';
+    statusDiv.style.cssText = 'position:fixed;top:10px;left:10px;color:#fff;font-family:sans-serif;font-size:20px;z-index:99;background:rgba(0,0,0,0.8);padding:10px;';
+    statusDiv.innerText = 'Loading...';
+    document.body.appendChild(statusDiv);
+
+    async function test() {
+      try {
+        statusDiv.innerText = 'Initializing ActiveFrame /videos/intro-scroll.af...';
+        const af = new ActiveFrame('/videos/intro-scroll.af', {
+          hardwareAcceleration: 'prefer-hardware',
+          process: (frame) => {
+            const cw = canvas.width;
+            const ch = canvas.height;
+            const fw = frame.displayWidth;
+            const fh = frame.displayHeight;
+            const scale = Math.max(cw / fw, ch / fh);
+            const dw = fw * scale;
+            const dh = fh * scale;
+            ctx.clearRect(0, 0, cw, ch);
+            ctx.drawImage(frame, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+            statusDiv.innerText = 'Frame rendered: ' + frame.timestamp;
+          }
+        });
+
+        await af.loading;
+        statusDiv.innerText = 'Loaded! Total frames: ' + af.manifest.totalFrames;
+        console.log('Loaded!', af.manifest);
+        af.setFrame(0);
+
+        // Test frame stepping
+        let current = 0;
+        setInterval(() => {
+          current = (current + 10) % af.manifest.totalFrames;
+          af.setFrame(current);
+          statusDiv.innerText = 'Current frame: ' + current + ' / ' + af.manifest.totalFrames;
+        }, 500);
+      } catch (e) {
+        statusDiv.innerText = 'Error: ' + e.message;
+        console.error('ActiveFrame error:', e);
+      }
+    }
+    test();
+  </script>
+</body>
+</html>

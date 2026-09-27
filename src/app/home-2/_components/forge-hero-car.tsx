@@ -14,62 +14,47 @@ interface ForgeHeroCarProps {
 
 export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, ForgeHeroCarProps>(
   function ForgeHeroCar({ className = "", onReady }, ref) {
-    const stageWrapperRef = useRef<HTMLDivElement | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const activeFrameRef = useRef<any>(null);
+    const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+    const lastDrawnFrameRef = useRef<number>(-1);
+
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasPaintedFirstFrame, setHasPaintedFirstFrame] = useState(false);
     const [useFallback, setUseFallback] = useState(false);
-    const fallbackImgRef = useRef<HTMLImageElement | null>(null);
 
-    // Cover drawing math for canvas
-    const drawCover = useCallback((frame: any) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      const cw = canvas.width;
-      const ch = canvas.height;
+    // Exact drawCoverFrame implementation from Forge Automotive (Chunk 456393)
+    const drawCoverFrame = useCallback((ctx: CanvasRenderingContext2D, frame: any, clientWidth: number, clientHeight: number) => {
       const fw = frame.displayWidth || frame.videoWidth || frame.width || 2880;
       const fh = frame.displayHeight || frame.videoHeight || frame.height || 1620;
+      if (!clientWidth || !clientHeight || !fw || !fh) return;
 
-      if (!cw || !ch || !fw || !fh) return;
-
-      const scale = Math.max(cw / fw, ch / fh);
+      const scale = Math.max(clientWidth / fw, clientHeight / fh);
       const drawW = fw * scale;
       const drawH = fh * scale;
-      const drawX = (cw - drawW) / 2;
-      const drawY = (ch - drawH) / 2;
+      const drawX = (clientWidth - drawW) / 2;
+      const drawY = (clientHeight - drawH) / 2;
 
-      ctx.clearRect(0, 0, cw, ch);
+      ctx.clearRect(0, 0, clientWidth, clientHeight);
       ctx.drawImage(frame, drawX, drawY, drawW, drawH);
     }, []);
 
-    // Expose setFrame method to parent (driven smoothly by ScrollTrigger)
+    // Expose setFrame method directly driven by ScrollTrigger progress [0, 1]
     useImperativeHandle(
       ref,
       () => ({
         isReady: isLoaded,
         setFrame: (progress: number) => {
           const clamped = Math.max(0, Math.min(1, progress));
-
-          // 1. Scrub through video frames (front-facing vehicle sequence)
-          if (activeFrameRef.current?.manifest?.totalFrames) {
-            const total = activeFrameRef.current.manifest.totalFrames;
+          const af = activeFrameRef.current;
+          if (af?.manifest?.totalFrames) {
+            const total = af.manifest.totalFrames;
             const targetFrame = Math.min(Math.round(clamped * (total - 1)), total - 1);
-            activeFrameRef.current.setFrame(targetFrame);
-          }
-
-          // 2. Drive vehicle forward into camera / pass through windshield into interior
-          // Smooth progressive scale pushing in towards the windshield center
-          if (stageWrapperRef.current) {
-            const zoomScale = 1 + Math.pow(clamped, 1.25) * 0.95; // grows up to ~1.95x
-            const yShift = clamped * 45; // slight shift so camera punches directly into cockpit
-            const fadeOut = clamped > 0.88 ? Math.max(0, 1 - (clamped - 0.88) * 7.5) : 1;
-
-            stageWrapperRef.current.style.transform = `scale(${zoomScale}) translateY(${yShift}px)`;
-            stageWrapperRef.current.style.opacity = `${fadeOut}`;
+            if (targetFrame !== lastDrawnFrameRef.current) {
+              lastDrawnFrameRef.current = targetFrame;
+              af.setFrame(targetFrame);
+            }
           }
         },
       }),
@@ -80,33 +65,40 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, ForgeHeroCarProps>(
       let isMounted = true;
       let activeFrameInstance: any = null;
 
-      const handleResize = () => {
+      const updateCanvasSize = () => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
-        const rect = canvas.getBoundingClientRect();
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const newW = Math.max(1, Math.round(rect.width * dpr));
-        const newH = Math.max(1, Math.round(rect.height * dpr));
+        const container = containerRef.current;
+        if (!canvas || !container) return false;
 
-        if (canvas.width !== newW || canvas.height !== newH) {
-          canvas.width = newW;
-          canvas.height = newH;
-          if (activeFrameInstance?.refresh) {
-            activeFrameInstance.refresh();
-          }
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        const { clientWidth: w, clientHeight: h } = container;
+        if (!w || !h) return false;
+
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h}px`;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return false;
+        ctxRef.current = ctx;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        if (activeFrameInstance?.refresh && lastDrawnFrameRef.current >= 0) {
+          activeFrameInstance.refresh(lastDrawnFrameRef.current);
         }
+        return true;
       };
 
-      async function initActiveFrame() {
+      async function init() {
         if (typeof window === "undefined") return;
 
-        // Check if browser has native VideoDecoder
         if (!("VideoDecoder" in window)) {
           if (isMounted) setUseFallback(true);
           return;
         }
 
-        // Load /ActiveFrame.js script if not loaded
+        // Ensure /ActiveFrame.js script is loaded
         if (!(window as any).ActiveFrame) {
           try {
             await new Promise<void>((resolve, reject) => {
@@ -124,7 +116,7 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, ForgeHeroCarProps>(
               document.head.appendChild(script);
             });
           } catch (e) {
-            console.warn("Failed to load /ActiveFrame.js script:", e);
+            console.warn("ActiveFrame script load error:", e);
             if (isMounted) setUseFallback(true);
             return;
           }
@@ -138,18 +130,23 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, ForgeHeroCarProps>(
           return;
         }
 
-        // Initialize canvas resolution
-        handleResize();
-        window.addEventListener("resize", handleResize, { passive: true });
+        updateCanvasSize();
+        window.addEventListener("resize", updateCanvasSize, { passive: true });
 
         try {
-          // Front-facing hero intro video sequence
-          activeFrameInstance = new ActiveFrameClass("/videos/hero-intro.af", {
+          // Forge Authentic 152-frame scroll sequence: front vehicle drives forward into cockpit
+          activeFrameInstance = new ActiveFrameClass("/videos/intro-scroll.af", {
             hardwareAcceleration: "prefer-hardware",
-            process: async (videoFrame: any) => {
+            process: (videoFrame: any) => {
               if (!isMounted) return;
-              drawCover(videoFrame);
-              setHasPaintedFirstFrame(true);
+              const ctx = ctxRef.current;
+              const container = containerRef.current;
+              if (ctx && container) {
+                drawCoverFrame(ctx, videoFrame, container.clientWidth, container.clientHeight);
+                if (!hasPaintedFirstFrame) {
+                  setHasPaintedFirstFrame(true);
+                }
+              }
             },
           });
 
@@ -160,12 +157,12 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, ForgeHeroCarProps>(
           }
 
           activeFrameRef.current = activeFrameInstance;
-          // Paint initial frame 0 (front-facing vehicle lineup) immediately
+          lastDrawnFrameRef.current = 0;
           activeFrameInstance.setFrame(0);
           setIsLoaded(true);
           onReady?.();
         } catch (err) {
-          console.warn("ActiveFrame decoder error or fallback:", err);
+          console.warn("ActiveFrame initialization error, using fallback poster:", err);
           if (isMounted) {
             setUseFallback(true);
             setIsLoaded(true);
@@ -174,47 +171,35 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, ForgeHeroCarProps>(
         }
       }
 
-      initActiveFrame();
+      init();
 
       return () => {
         isMounted = false;
-        window.removeEventListener("resize", handleResize);
+        window.removeEventListener("resize", updateCanvasSize);
         if (activeFrameInstance) {
           activeFrameInstance.destroy();
         }
         activeFrameRef.current = null;
+        ctxRef.current = null;
       };
-    }, [drawCover, onReady]);
+    }, [drawCoverFrame, hasPaintedFirstFrame, onReady]);
 
     return (
-      <div className={`forge-hero-car-container ${className}`}>
-        {/* Inner scaling wrapper centered on the front vehicle hood/windshield */}
-        <div
-          ref={stageWrapperRef}
-          className="forge-hero-car-stage-wrapper"
-          style={{
-            position: "absolute",
-            inset: 0,
-            transformOrigin: "50% 55%",
-            willChange: "transform, opacity",
-          }}
-        >
-          {/* Hardware-accelerated canvas for 1:1 front scroll sequence */}
-          <canvas
-            ref={canvasRef}
-            className={`forge-hero-car-canvas ${hasPaintedFirstFrame && !useFallback ? "active" : ""}`}
-          />
+      <div ref={containerRef} className={`forge-hero-car-container ${className}`}>
+        {/* Hardware-accelerated canvas for 1:1 Forge front scroll sequence */}
+        <canvas
+          ref={canvasRef}
+          className={`forge-hero-car-canvas ${hasPaintedFirstFrame && !useFallback ? "active" : ""}`}
+        />
 
-          {/* Front-Facing Supercars Lineup Poster / Fallback */}
-          {(!hasPaintedFirstFrame || useFallback) && (
-            <img
-              ref={fallbackImgRef}
-              src="/images/hero-cars.jpg"
-              alt="Forge Automotive Front Supercars Lineup: Porsche 911 GT3, Lotus, Lamborghini, Defender, G63"
-              className="forge-hero-car-poster"
-            />
-          )}
-        </div>
+        {/* Fallback front lineup poster if loading or unsupported */}
+        {(!hasPaintedFirstFrame || useFallback) && (
+          <img
+            src="/images/hero-cars.jpg"
+            alt="Forge Automotive Front Supercars Lineup"
+            className="forge-hero-car-poster"
+          />
+        )}
       </div>
     );
   }

@@ -137,9 +137,14 @@ export default function Home2() {
   const heroCenterRevealRef = useRef<HTMLDivElement>(null);
   const heroBottomRef = useRef<HTMLDivElement>(null);
 
+  const approachTrackRef = useRef<HTMLDivElement>(null);
+  const approachApertureSlotRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
   const stepArticleRefs = useRef<(HTMLElement | null)[]>([]);
+  const stepClippedRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const stepBlurRefs = useRef<(HTMLImageElement | null)[]>([]);
   const serviceRefs = useRef<(HTMLElement | null)[]>([]);
+  const serviceImgRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const statementQuoteRef = useRef<HTMLHeadingElement>(null);
   const craftsmanImgRef = useRef<HTMLImageElement>(null);
@@ -264,7 +269,149 @@ export default function Home2() {
           );
       }
 
-      // 3. Step articles tracking
+      // 2.5 Approach Aperture Transition (Hero -> Approach 1:1 Forge Aperture Reveal)
+      if (approachTrackRef.current && approachApertureSlotRef.current) {
+        const slot = approachApertureSlotRef.current;
+        const bgImg = slot.querySelector<HTMLImageElement>(".forge-approach-bg img");
+
+        const approachTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: approachTrackRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.3,
+          },
+        });
+
+        // Phase 1: Aperture starts COMPLETELY CLOSED at center (inset 50% 50%) and expands smoothly outward
+        approachTl.fromTo(
+          slot,
+          {
+            clipPath: "inset(50% 50% round 8px)",
+            border: "1px solid rgba(255, 255, 255, 0.16)",
+            boxShadow: "0 40px 100px rgba(0, 0, 0, 0.95)",
+          },
+          {
+            clipPath: "inset(0% 0% round 0px)",
+            border: "1px solid rgba(255, 255, 255, 0)",
+            boxShadow: "0 0px 0px rgba(0, 0, 0, 0)",
+            duration: 0.65,
+            ease: "power2.inOut",
+          },
+          0
+        );
+
+        if (bgImg) {
+          approachTl.fromTo(
+            bgImg,
+            { scale: 1.12 },
+            { scale: 1.0, duration: 0.65, ease: "power2.inOut" },
+            0
+          );
+        }
+
+        // Phase 2: Hold open at full screen for comfortable reading before scrolling to steps
+        approachTl.to(slot, { duration: 0.35 }, 0.65);
+      }
+
+      // 3. Step articles scroll-driven expanding clip-path reveal (1:1 Forge Automotive)
+      // Step 0 starts fully open
+      if (stepClippedRefs.current[0]) {
+        gsap.set(stepClippedRefs.current[0], { clipPath: "inset(0% 0% 0% 0%)" });
+      }
+
+      // Steps 1 & 2 start at inset(50%) and expand outward to inset(0%) as their articles scroll into view
+      stepClippedRefs.current.forEach((el, idx) => {
+        if (idx === 0 || !el) return;
+        const article = stepArticleRefs.current[idx];
+        if (article) {
+          gsap.fromTo(
+            el,
+            { clipPath: "inset(50%)" },
+            {
+              clipPath: "inset(0%)",
+              ease: "none",
+              scrollTrigger: {
+                trigger: article,
+                start: "top bottom",
+                end: "center center",
+                scrub: true,
+              },
+            }
+          );
+        }
+      });
+
+      // Background blurred images crossfade on scroll
+      stepBlurRefs.current.forEach((blurEl, idx) => {
+        if (!blurEl) return;
+        if (idx === 0) {
+          const article1 = stepArticleRefs.current[1];
+          if (article1) {
+            gsap.to(blurEl, {
+              opacity: 0,
+              ease: "none",
+              scrollTrigger: {
+                trigger: article1,
+                start: "top bottom",
+                end: "center center",
+                scrub: true,
+              },
+            });
+          }
+        } else if (idx === 1) {
+          const article1 = stepArticleRefs.current[1];
+          const article2 = stepArticleRefs.current[2];
+          if (article1) {
+            gsap.fromTo(
+              blurEl,
+              { opacity: 0 },
+              {
+                opacity: 0.35,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: article1,
+                  start: "top bottom",
+                  end: "center center",
+                  scrub: true,
+                },
+              }
+            );
+          }
+          if (article2) {
+            gsap.to(blurEl, {
+              opacity: 0,
+              ease: "none",
+              scrollTrigger: {
+                trigger: article2,
+                start: "top bottom",
+                end: "center center",
+                scrub: true,
+              },
+            });
+          }
+        } else if (idx === 2) {
+          const article2 = stepArticleRefs.current[2];
+          if (article2) {
+            gsap.fromTo(
+              blurEl,
+              { opacity: 0 },
+              {
+                opacity: 0.35,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: article2,
+                  start: "top bottom",
+                  end: "center center",
+                  scrub: true,
+                },
+              }
+            );
+          }
+        }
+      });
+
+      // Step articles active indicator tracking
       stepArticleRefs.current.forEach((el, idx) => {
         if (!el) return;
         ScrollTrigger.create({
@@ -298,18 +445,67 @@ export default function Home2() {
         );
       }
 
-      // 5. Service cards tracking
-      serviceRefs.current.forEach((el, idx) => {
-        if (!el) return;
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top 60%",
-          end: "bottom 40%",
-          onToggle: (self) => {
-            if (self.isActive) {
-              setActiveServiceIndex(idx);
-            }
-          },
+      // 5. Service cards and sliding wipe image reveal (1:1 Forge Automotive)
+      const mmServices = gsap.matchMedia();
+      mmServices.add("(min-width: 1024px)", () => {
+        serviceImgRefs.current.forEach((imgEl, idx) => {
+          const contentEl = serviceRefs.current[idx];
+          if (!imgEl || !contentEl) return;
+
+          // Image 0 starts fully visible; images 1-5 wipe UP from bottom over the previous image
+          if (idx > 0) {
+            gsap.fromTo(
+              imgEl,
+              { clipPath: "inset(100% 0% 0% 0%)" },
+              {
+                clipPath: "inset(0% 0% 0% 0%)",
+                ease: "none",
+                scrollTrigger: {
+                  trigger: contentEl,
+                  start: "top 95%",
+                  end: "top 10%",
+                  scrub: true,
+                },
+              }
+            );
+          }
+
+          // Subtle parallax scale on the photo
+          const innerImg = imgEl.querySelector("img");
+          if (innerImg) {
+            gsap.fromTo(
+              innerImg,
+              { scale: 1.15 },
+              {
+                scale: 1,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: contentEl,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: true,
+                },
+              }
+            );
+          }
+        });
+
+        // Left text: as each card scrolls past center, it fades out and moves up
+        serviceRefs.current.forEach((contentEl, idx) => {
+          if (!contentEl) return;
+          if (idx < serviceRefs.current.length - 1) {
+            gsap.to(contentEl, {
+              autoAlpha: 0,
+              y: -50,
+              ease: "none",
+              scrollTrigger: {
+                trigger: contentEl,
+                start: "center 35%",
+                end: "bottom 5%",
+                scrub: true,
+              },
+            });
+          }
         });
       });
 
@@ -410,50 +606,54 @@ export default function Home2() {
           </section>
         </div>
 
-        {/* 4. Approach Section & Luxury Brand Logo Marquee */}
-        <section id="approach" className="forge-approach-section">
-          <div className="forge-approach-bg" aria-hidden="true">
-            <img
-              src="/images/forge/approach-stitching.jpg"
-              alt="Hands meticulously stitching red leather"
-              loading="lazy"
-            />
-          </div>
-
-          {/* Top Row: Heading in Columns 2 to 8 */}
-          <div className="forge-approach-top-row">
-            <div className="forge-grid-12">
-              <div className="forge-approach-title-col">
-                <h2 className="forge-approach-title">Our Approach To Every Build</h2>
+        {/* 4. Approach Section with Aperture Reveal Transition (Hero -> Approach) */}
+        <div ref={approachTrackRef} className="forge-approach-track">
+          <div ref={approachApertureSlotRef} className="forge-approach-aperture-slot">
+            <section id="approach" className="forge-approach-section">
+              <div className="forge-approach-bg" aria-hidden="true">
+                <img
+                  src="/images/forge/approach-stitching.jpg"
+                  alt="Hands meticulously stitching red leather"
+                  loading="lazy"
+                />
               </div>
-            </div>
-          </div>
 
-          {/* Bottom Row: Marquee on Left (Col 1-8), Copy & Button on Right (Col 9-12) */}
-          <div className="forge-approach-bottom-row">
-            <div className="forge-grid-12">
-              <div className="forge-approach-marquee-col" aria-hidden="true">
-                <div className="forge-marquee-wrap">
-                  <div className="forge-marquee-track">
-                    {MARQUEE_LOGOS.concat(MARQUEE_LOGOS).map((logo, idx) => (
-                      <div key={idx} className="forge-marquee-item">
-                        <img src={logo.src} alt={logo.name} />
-                      </div>
-                    ))}
+              {/* Top Row: Heading in Columns 2 to 8 */}
+              <div className="forge-approach-top-row">
+                <div className="forge-grid-12">
+                  <div className="forge-approach-title-col">
+                    <h2 className="forge-approach-title">Our Approach To Every Build</h2>
                   </div>
                 </div>
               </div>
 
-              <div className="forge-approach-cta-col">
-                <p className="forge-approach-desc">
-                  Every decision is intentional, every detail has purpose based on your taste, your
-                  lifestyle, and your standards.
-                </p>
-                <ForgeButton text="Start Your Project" href="#contact" />
+              {/* Bottom Row: Marquee on Left (Col 1-8), Copy & Button on Right (Col 9-12) */}
+              <div className="forge-approach-bottom-row">
+                <div className="forge-grid-12">
+                  <div className="forge-approach-marquee-col" aria-hidden="true">
+                    <div className="forge-marquee-wrap">
+                      <div className="forge-marquee-track">
+                        {MARQUEE_LOGOS.concat(MARQUEE_LOGOS).map((logo, idx) => (
+                          <div key={idx} className="forge-marquee-item">
+                            <img src={logo.src} alt={logo.name} />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="forge-approach-cta-col">
+                    <p className="forge-approach-desc">
+                      Every decision is intentional, every detail has purpose based on your taste, your
+                      lifestyle, and your standards.
+                    </p>
+                    <ForgeButton text="Start Your Project" href="#contact" />
+                  </div>
+                </div>
               </div>
-            </div>
+            </section>
           </div>
-        </section>
+        </div>
 
         {/* 5. Sticky 3-Step Narrative (Identity, Insight, Cohesion) */}
         <section id="steps" ref={stepsRef} className="forge-steps-section">
@@ -463,9 +663,13 @@ export default function Home2() {
               {STEPS_DATA.map((step, idx) => (
                 <img
                   key={step.title}
+                  ref={(el) => {
+                    stepBlurRefs.current[idx] = el;
+                  }}
                   src={step.image}
                   alt=""
-                  className={`forge-steps-blur-img ${activeStepIndex === idx ? "active" : ""}`}
+                  className="forge-steps-blur-img"
+                  style={{ opacity: idx === 0 ? 0.35 : 0 }}
                 />
               ))}
             </div>
@@ -474,17 +678,28 @@ export default function Home2() {
           {/* Foreground 12-Column Grid */}
           <div className="forge-steps-foreground">
             <div className="forge-grid-12">
-              {/* Left: Sticky 1:1 image visual (Desktop: Columns 2 to 7) */}
+              {/* Left: Sticky 1:1 image visual with expanding inner clip-path reveal (Desktop: Columns 2 to 7) */}
               <aside className="forge-steps-sticky-col" aria-hidden="true">
                 <div className="forge-steps-sticky-inner">
                   <div className="forge-steps-visual">
                     {STEPS_DATA.map((step, idx) => (
-                      <img
+                      <div
                         key={step.title}
-                        src={step.image}
-                        alt={step.alt}
-                        className={`forge-steps-image ${activeStepIndex === idx ? "active" : ""}`}
-                      />
+                        ref={(el) => {
+                          stepClippedRefs.current[idx] = el;
+                        }}
+                        className="forge-step-clipped-wrapper"
+                        style={{
+                          zIndex: idx + 1,
+                          clipPath: idx === 0 ? "inset(0%)" : "inset(50%)",
+                        }}
+                      >
+                        <img
+                          src={step.image}
+                          alt={step.alt}
+                          className="forge-steps-image"
+                        />
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -589,12 +804,23 @@ export default function Home2() {
             {/* Right: Sticky Image Showcase (Desktop) */}
             <aside className="forge-services-sticky-panel" aria-hidden="true">
               {SERVICES_DATA.map((srv, idx) => (
-                <img
+                <div
                   key={srv.id}
-                  src={srv.image}
-                  alt={srv.alt}
-                  className={`forge-service-sticky-image ${activeServiceIndex === idx ? "active" : ""}`}
-                />
+                  ref={(el) => {
+                    serviceImgRefs.current[idx] = el;
+                  }}
+                  className="forge-service-image-item"
+                  style={{
+                    zIndex: idx + 1,
+                    clipPath: idx === 0 ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)",
+                  }}
+                >
+                  <img
+                    src={srv.image}
+                    alt={srv.alt}
+                    loading={idx === 0 ? "eager" : "lazy"}
+                  />
+                </div>
               ))}
             </aside>
           </div>
