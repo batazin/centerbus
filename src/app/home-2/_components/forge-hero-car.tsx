@@ -1,324 +1,221 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger } from "../../_lib/gsap";
+import { useEffect, useRef, useState, useImperativeHandle, forwardRef, useCallback } from "react";
 
-const TOTAL_FRAMES = 241;
-const framePath = (frame: number) => `/sequences/bus/frame_${String(frame).padStart(4, "0")}.webp`;
+export interface ForgeHeroCarHandle {
+  setFrame: (progress: number) => void;
+  isReady: boolean;
+}
 
-export function ForgeHeroCar() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const busWrapperRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+interface ForgeHeroCarProps {
+  className?: string;
+  onReady?: () => void;
+}
 
-  const introTextRef = useRef<HTMLDivElement>(null);
-  const revealTextRef = useRef<HTMLDivElement>(null);
+export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, ForgeHeroCarProps>(
+  function ForgeHeroCar({ className = "", onReady }, ref) {
+    const stageWrapperRef = useRef<HTMLDivElement | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const activeFrameRef = useRef<any>(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [hasPaintedFirstFrame, setHasPaintedFirstFrame] = useState(false);
+    const [useFallback, setUseFallback] = useState(false);
+    const fallbackImgRef = useRef<HTMLImageElement | null>(null);
 
-  const [initialFrameLoaded, setInitialFrameLoaded] = useState(false);
+    // Cover drawing math for canvas
+    const drawCover = useCallback((frame: any) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
 
-  // Store loaded images for 3D sequence
-  const imagesRef = useRef<Map<number, HTMLImageElement>>(new Map());
-  const activeFrameIndexRef = useRef<number>(1);
+      const cw = canvas.width;
+      const ch = canvas.height;
+      const fw = frame.displayWidth || frame.videoWidth || frame.width || 2880;
+      const fh = frame.displayHeight || frame.videoHeight || frame.height || 1620;
 
-  // Helper to draw a specific frame to the canvas
-  const drawFrame = (frameNum: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+      if (!cw || !ch || !fw || !fh) return;
 
-    let img = imagesRef.current.get(frameNum);
-    if (!img || !img.complete || img.naturalWidth === 0) {
-      let nearest = 1;
-      let minDiff = Infinity;
-      for (const [key, val] of imagesRef.current.entries()) {
-        if (val.complete && val.naturalWidth > 0) {
-          const diff = Math.abs(key - frameNum);
-          if (diff < minDiff) {
-            minDiff = diff;
-            nearest = key;
+      const scale = Math.max(cw / fw, ch / fh);
+      const drawW = fw * scale;
+      const drawH = fh * scale;
+      const drawX = (cw - drawW) / 2;
+      const drawY = (ch - drawH) / 2;
+
+      ctx.clearRect(0, 0, cw, ch);
+      ctx.drawImage(frame, drawX, drawY, drawW, drawH);
+    }, []);
+
+    // Expose setFrame method to parent (driven smoothly by ScrollTrigger)
+    useImperativeHandle(
+      ref,
+      () => ({
+        isReady: isLoaded,
+        setFrame: (progress: number) => {
+          const clamped = Math.max(0, Math.min(1, progress));
+
+          // 1. Scrub through video frames (front-facing vehicle sequence)
+          if (activeFrameRef.current?.manifest?.totalFrames) {
+            const total = activeFrameRef.current.manifest.totalFrames;
+            const targetFrame = Math.min(Math.round(clamped * (total - 1)), total - 1);
+            activeFrameRef.current.setFrame(targetFrame);
+          }
+
+          // 2. Drive vehicle forward into camera / pass through windshield into interior
+          // Smooth progressive scale pushing in towards the windshield center
+          if (stageWrapperRef.current) {
+            const zoomScale = 1 + Math.pow(clamped, 1.25) * 0.95; // grows up to ~1.95x
+            const yShift = clamped * 45; // slight shift so camera punches directly into cockpit
+            const fadeOut = clamped > 0.88 ? Math.max(0, 1 - (clamped - 0.88) * 7.5) : 1;
+
+            stageWrapperRef.current.style.transform = `scale(${zoomScale}) translateY(${yShift}px)`;
+            stageWrapperRef.current.style.opacity = `${fadeOut}`;
+          }
+        },
+      }),
+      [isLoaded]
+    );
+
+    useEffect(() => {
+      let isMounted = true;
+      let activeFrameInstance: any = null;
+
+      const handleResize = () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const newW = Math.max(1, Math.round(rect.width * dpr));
+        const newH = Math.max(1, Math.round(rect.height * dpr));
+
+        if (canvas.width !== newW || canvas.height !== newH) {
+          canvas.width = newW;
+          canvas.height = newH;
+          if (activeFrameInstance?.refresh) {
+            activeFrameInstance.refresh();
+          }
+        }
+      };
+
+      async function initActiveFrame() {
+        if (typeof window === "undefined") return;
+
+        // Check if browser has native VideoDecoder
+        if (!("VideoDecoder" in window)) {
+          if (isMounted) setUseFallback(true);
+          return;
+        }
+
+        // Load /ActiveFrame.js script if not loaded
+        if (!(window as any).ActiveFrame) {
+          try {
+            await new Promise<void>((resolve, reject) => {
+              const existing = document.querySelector('script[src="/ActiveFrame.js"]');
+              if (existing) {
+                existing.addEventListener("load", () => resolve(), { once: true });
+                existing.addEventListener("error", reject, { once: true });
+                return;
+              }
+              const script = document.createElement("script");
+              script.src = "/ActiveFrame.js";
+              script.async = true;
+              script.onload = () => resolve();
+              script.onerror = (e) => reject(e);
+              document.head.appendChild(script);
+            });
+          } catch (e) {
+            console.warn("Failed to load /ActiveFrame.js script:", e);
+            if (isMounted) setUseFallback(true);
+            return;
+          }
+        }
+
+        if (!isMounted) return;
+
+        const ActiveFrameClass = (window as any).ActiveFrame;
+        if (!ActiveFrameClass) {
+          if (isMounted) setUseFallback(true);
+          return;
+        }
+
+        // Initialize canvas resolution
+        handleResize();
+        window.addEventListener("resize", handleResize, { passive: true });
+
+        try {
+          // Front-facing hero intro video sequence
+          activeFrameInstance = new ActiveFrameClass("/videos/hero-intro.af", {
+            hardwareAcceleration: "prefer-hardware",
+            process: async (videoFrame: any) => {
+              if (!isMounted) return;
+              drawCover(videoFrame);
+              setHasPaintedFirstFrame(true);
+            },
+          });
+
+          await activeFrameInstance.loading;
+          if (!isMounted) {
+            activeFrameInstance.destroy();
+            return;
+          }
+
+          activeFrameRef.current = activeFrameInstance;
+          // Paint initial frame 0 (front-facing vehicle lineup) immediately
+          activeFrameInstance.setFrame(0);
+          setIsLoaded(true);
+          onReady?.();
+        } catch (err) {
+          console.warn("ActiveFrame decoder error or fallback:", err);
+          if (isMounted) {
+            setUseFallback(true);
+            setIsLoaded(true);
+            onReady?.();
           }
         }
       }
-      img = imagesRef.current.get(nearest);
-    }
 
-    if (!img || !img.complete || img.naturalWidth === 0) return;
+      initActiveFrame();
 
-    const cw = canvas.width;
-    const ch = canvas.height;
-    if (cw === 0 || ch === 0) return;
+      return () => {
+        isMounted = false;
+        window.removeEventListener("resize", handleResize);
+        if (activeFrameInstance) {
+          activeFrameInstance.destroy();
+        }
+        activeFrameRef.current = null;
+      };
+    }, [drawCover, onReady]);
 
-    const nw = img.naturalWidth;
-    const nh = img.naturalHeight;
-    const scale = Math.max(cw / nw, ch / nh);
-    const sw = nw * scale;
-    const sh = nh * scale;
-
-    ctx.clearRect(0, 0, cw, ch);
-    ctx.drawImage(img, (cw - sw) / 2, (ch - sh) / 2, sw, sh);
-  };
-
-  // 1. Preload 3D sequence in background
-  useEffect(() => {
-    let isCancelled = false;
-
-    const img1 = new Image();
-    img1.src = framePath(1);
-    img1.onload = () => {
-      if (isCancelled) return;
-      imagesRef.current.set(1, img1);
-      setInitialFrameLoaded(true);
-      drawFrame(1);
-    };
-
-    const anchors: number[] = [];
-    for (let i = 5; i <= TOTAL_FRAMES; i += 5) {
-      anchors.push(i);
-    }
-    if (!anchors.includes(TOTAL_FRAMES)) anchors.push(TOTAL_FRAMES);
-
-    const loadAnchorBatch = async () => {
-      for (const frame of anchors) {
-        if (isCancelled) break;
-        if (imagesRef.current.has(frame)) continue;
-
-        const img = new Image();
-        img.src = framePath(frame);
-        img.onload = () => {
-          if (!isCancelled) {
-            imagesRef.current.set(frame, img);
-          }
-        };
-      }
-
-      for (let frame = 2; frame <= TOTAL_FRAMES; frame++) {
-        if (isCancelled) break;
-        if (imagesRef.current.has(frame)) continue;
-
-        const img = new Image();
-        img.src = framePath(frame);
-        img.onload = () => {
-          if (!isCancelled) {
-            imagesRef.current.set(frame, img);
-          }
-        };
-      }
-    };
-
-    const timer = setTimeout(() => {
-      loadAnchorBatch();
-    }, 100);
-
-    return () => {
-      isCancelled = true;
-      clearTimeout(timer);
-    };
-  }, []);
-
-  // 2. Resize Canvas with DPR
-  useEffect(() => {
-    const handleResize = () => {
-      const canvas = canvasRef.current;
-      const stage = stageRef.current;
-      if (!canvas || !stage) return;
-
-      const rect = stage.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      canvas.width = Math.round(rect.width * dpr);
-      canvas.height = Math.round(rect.height * dpr);
-
-      drawFrame(activeFrameIndexRef.current);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [initialFrameLoaded]);
-
-  // 3. Mouse 3D Perspective Tilt on the media wrapper
-  useEffect(() => {
-    const stage = stageRef.current;
-    const busWrapper = busWrapperRef.current;
-    if (!stage || !busWrapper) return;
-
-    const rotX = gsap.quickTo(busWrapper, "rotationX", { duration: 0.8, ease: "power2.out" });
-    const rotY = gsap.quickTo(busWrapper, "rotationY", { duration: 0.8, ease: "power2.out" });
-    const transX = gsap.quickTo(busWrapper, "xPercent", { duration: 0.8, ease: "power2.out" });
-    const transY = gsap.quickTo(busWrapper, "yPercent", { duration: 0.8, ease: "power2.out" });
-
-    const handlePointerMove = (e: MouseEvent) => {
-      const rect = stage.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-
-      rotY(x * 3.5);
-      rotX(-y * 2.5);
-      transX(x * 1.2);
-      transY(y * 1.2);
-    };
-
-    const handlePointerLeave = () => {
-      rotX(0);
-      rotY(0);
-      transX(0);
-      transY(0);
-    };
-
-    stage.addEventListener("mousemove", handlePointerMove, { passive: true });
-    stage.addEventListener("mouseleave", handlePointerLeave, { passive: true });
-
-    return () => {
-      stage.removeEventListener("mousemove", handlePointerMove);
-      stage.removeEventListener("mouseleave", handlePointerLeave);
-    };
-  }, []);
-
-  // 4. GSAP ScrollTrigger Sequence Scrubbing & Narrative
-  useEffect(() => {
-    const container = containerRef.current;
-    const stage = stageRef.current;
-    const busWrapper = busWrapperRef.current;
-    const introText = introTextRef.current;
-    const revealText = revealTextRef.current;
-
-    if (!container || !stage || !busWrapper) return;
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: container,
-          start: "top top",
-          end: "+=180%",
-          pin: stage,
-          scrub: 0.35,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            const targetFrame = Math.min(
-              TOTAL_FRAMES,
-              Math.max(1, Math.round(self.progress * (TOTAL_FRAMES - 1)) + 1)
-            );
-            if (targetFrame !== activeFrameIndexRef.current) {
-              activeFrameIndexRef.current = targetFrame;
-              drawFrame(targetFrame);
-            }
-          },
-        },
-      });
-
-      // 1. Initial headline fades out and lifts
-      if (introText) {
-        tl.to(
-          introText,
-          {
-            opacity: 0,
-            y: -50,
-            duration: 0.3,
-            ease: "power2.inOut",
-          },
-          0
-        );
-      }
-
-      // 2. Bus media scales and drives forward
-      tl.to(
-        busWrapper,
-        {
-          scale: 1.22,
-          y: "4%",
-          duration: 1,
-          ease: "none",
-        },
-        0
-      );
-
-      // 3. Technical statement emerges in center as the bus moves
-      if (revealText) {
-        tl.fromTo(
-          revealText,
-          { opacity: 0, y: 40, scale: 0.94 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.4,
-            ease: "power2.out",
-          },
-          0.25
-        );
-
-        tl.to(
-          revealText,
-          {
-            opacity: 0.15,
-            y: -25,
-            scale: 1.04,
-            duration: 0.3,
-            ease: "power2.in",
-          },
-          0.72
-        );
-      }
-    }, container);
-
-    return () => ctx.revert();
-  }, [initialFrameLoaded]);
-
-  return (
-    <div ref={containerRef} className="f-hero-scroll-track" id="hero">
-      <div ref={stageRef} className="f-hero-stage">
-        {/* Bus Media Stage Wrapper */}
+    return (
+      <div className={`forge-hero-car-container ${className}`}>
+        {/* Inner scaling wrapper centered on the front vehicle hood/windshield */}
         <div
-          ref={busWrapperRef}
-          className="f-hero-car-wrapper"
-          style={{ transformOrigin: "50% 60%" }}
+          ref={stageWrapperRef}
+          className="forge-hero-car-stage-wrapper"
+          style={{
+            position: "absolute",
+            inset: 0,
+            transformOrigin: "50% 55%",
+            willChange: "transform, opacity",
+          }}
         >
-          {/* Main 3D Bus Canvas */}
+          {/* Hardware-accelerated canvas for 1:1 front scroll sequence */}
           <canvas
             ref={canvasRef}
-            className={`f-hero-car-canvas ${initialFrameLoaded ? "active" : ""}`}
+            className={`forge-hero-car-canvas ${hasPaintedFirstFrame && !useFallback ? "active" : ""}`}
           />
 
-          {/* Fallback High-Res Bus Lineup Image */}
-          {!initialFrameLoaded && (
+          {/* Front-Facing Supercars Lineup Poster / Fallback */}
+          {(!hasPaintedFirstFrame || useFallback) && (
             <img
-              src="/images/center/hero-bus-lineup.jpg"
-              alt="Center Ônibus - Estrutura técnica para carrocerias de ônibus"
-              className="f-hero-car-img"
+              ref={fallbackImgRef}
+              src="/images/hero-cars.jpg"
+              alt="Forge Automotive Front Supercars Lineup: Porsche 911 GT3, Lotus, Lamborghini, Defender, G63"
+              className="forge-hero-car-poster"
             />
           )}
         </div>
-
-        {/* Ambient Dark Gradient Overlay */}
-        <div className="f-hero-overlay" />
-
-        {/* Initial Hero Headlines */}
-        <div ref={introTextRef} className="f-hero-content">
-          <span className="f-hero-tag">DISTRIBUIÇÃO TÉCNICA DE PEÇAS</span>
-          <h1 className="f-hero-title">O ÔNIBUS VOLTA PRA RUA.</h1>
-          <p className="f-hero-desc">
-            Mais de 30 mil itens para carrocerias de ônibus, vans e transporte de passageiros.
-            A peça certa, na primeira vez.
-          </p>
-          <div className="f-hero-cta-wrap">
-            <a href="#catalogo" className="f-btn f-btn-primary">
-              <span className="f-btn-shine" aria-hidden="true" />
-              <span className="f-btn-label">CONSULTAR CÓDIGO DA PEÇA</span>
-            </a>
-          </div>
-        </div>
-
-        {/* Drive-Forward Technical Statement */}
-        <div ref={revealTextRef} className="f-hero-reveal-center">
-          <p className="f-hero-reveal-tag">RESPOSTA NO TEMPO DA OPERAÇÃO</p>
-          <h2 className="f-hero-reveal-headline">
-            CONHECIMENTO ANTES DO CATÁLOGO.
-            <br />
-            <span>A PEÇA CERTA, NA PRIMEIRA VEZ.</span>
-          </h2>
-        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+);
