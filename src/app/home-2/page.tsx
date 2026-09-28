@@ -705,8 +705,8 @@ export default function Home2() {
               <div className="forge-statement-portrait-wrap">
                 <img
                   ref={craftsmanImgRef}
-                  src="/images/forge/statement-craftsman.jpg"
-                  alt="Forge Craftsman at work"
+                  src="/images/center/statement-craftsman.jpg?v=1"
+                  alt="Especialista técnico em carrocerias e componentes Center Ônibus"
                   className="forge-statement-portrait-img"
                   loading="lazy"
                 />
@@ -781,32 +781,32 @@ export default function Home2() {
               <div className="forge-lane-divider" />
             </div>
 
-            {/* Left Car: Mercedes G-Wagon */}
+            {/* Left Bus: Transit Urban Bus */}
             <div ref={carLeftRef} className="forge-car-eagle-eye forge-car-side left">
               <div className="forge-headlight-beam" />
               <img
-                src="/images/forge/car-aerial-gwagon.png"
-                alt="Mercedes G-Wagon eagle eye POV"
+                src="/images/center/bus-aerial-transit.png?v=3"
+                alt="Ônibus Urbano e Metropolitano vista aérea superior"
                 loading="lazy"
               />
             </div>
 
-            {/* Center Main Car: Porsche 992 GT3RS */}
+            {/* Center Main Bus: Luxury Coach Bus */}
             <div ref={carMainRef} className="forge-car-eagle-eye forge-car-main">
               <div className="forge-headlight-beam main-beam" />
               <img
-                src="/images/forge/car-aerial-porsche.png"
-                alt="Porsche 992 GT3RS in Guards Red with carbon aerodynamic package"
+                src="/images/center/bus-aerial-main.png?v=3"
+                alt="Ônibus Rodoviário de Alta Categoria Center Ônibus vista aérea superior"
                 loading="lazy"
               />
             </div>
 
-            {/* Right Car: Land Rover Defender 110 */}
+            {/* Right Bus: Executive Minibus */}
             <div ref={carRightRef} className="forge-car-eagle-eye forge-car-side right">
               <div className="forge-headlight-beam" />
               <img
-                src="/images/forge/car-aerial-defender.png"
-                alt="Land Rover Defender 110 eagle eye POV"
+                src="/images/center/bus-aerial-minibus.png?v=3"
+                alt="Micro-ônibus Executivo e Turismo vista aérea superior"
                 loading="lazy"
               />
             </div>

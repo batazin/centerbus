@@ -1456,31 +1456,31 @@ html.lenis:has(.forge-body) body {
 }
 
 .forge-car-main {
-  width: clamp(18rem, 36vw, 32rem);
+  width: clamp(16rem, 26vw, 26rem);
   z-index: 2;
-  filter: drop-shadow(0 35px 60px rgba(0, 0, 0, 0.95));
+  filter: drop-shadow(0 40px 70px rgba(0, 0, 0, 0.98));
 }
 
 .forge-car-side {
   display: none;
-  width: clamp(14rem, 26vw, 24rem);
+  width: clamp(12rem, 20vw, 20rem);
   opacity: 0.88;
-  filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.9));
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.92));
 }
 
 @media (min-width: 1024px) {
   .forge-car-side {
     display: block;
     position: absolute;
-    top: 15%;
+    top: 12%;
   }
   
   .forge-car-side.left {
-    left: 4%;
+    left: 7%;
   }
 
   .forge-car-side.right {
-    right: 4%;
+    right: 7%;
   }
 }
 
