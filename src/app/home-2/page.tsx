@@ -54,52 +54,52 @@ const STEPS_DATA = [
 
 const SERVICES_DATA = [
   {
-    id: "bodystyling",
-    tag: "Service",
-    title: "Bodystyling",
-    desc: "From aero styling to carbon details and exterior refinement, bodywork is designed to change the vehicle’s presence without compromising its original character.",
-    image: "/images/forge/service-bodystyling.png",
-    alt: "Forge Service: Bodywork",
+    id: "carrocerias",
+    tag: "Componentes",
+    title: "Carrocerias & Lataria",
+    desc: "Painéis estruturais, saias, tampas traseiras e aerodinâmica para Marcopolo, Caio, Comil e Neobus. A peça certa, com encaixe perfeito na primeira vez.",
+    image: "/images/center/service-carroceria.jpg",
+    alt: "Center Ônibus: Carrocerias e Lataria",
   },
   {
-    id: "interior",
-    tag: "Service",
-    title: "Interior",
-    desc: "Material, stitching, trim and finish are selected to create an interior that feels personal, tactile and composed. We turn the cabin into a space of identity, comfort and control.",
-    image: "/images/forge/service-interior.jpg",
-    alt: "Forge Service: Interior",
+    id: "iluminacao",
+    tag: "Sistemas",
+    title: "Iluminação & Elétrica",
+    desc: "Faróis em LED, conjuntos ópticos modulares, lanternas traseiras e chicotes dedicados que garantem visibilidade e segurança operacional em rota.",
+    image: "/images/center/service-iluminacao.jpg",
+    alt: "Center Ônibus: Iluminação e Lanternas",
   },
   {
-    id: "wheels",
-    tag: "Service",
-    title: "Wheels",
-    desc: "Bespoke wheel upgrades designed to enhance stance, proportion and road presence, with fitments selected to complement the vehicle’s character and performance.",
-    image: "/images/forge/service-wheels.jpg",
-    alt: "Forge Service: Wheels",
+    id: "retrovisores",
+    tag: "Segurança",
+    title: "Retrovisores Técnicos",
+    desc: "Braços mecânicos e elétricos com espelhos bi-partidos e eliminação de pontos cegos. Robustez com fixação antivibração para frotas rodoviárias e urbanas.",
+    image: "/images/center/service-retrovisores.jpg",
+    alt: "Center Ônibus: Retrovisores Técnicos",
   },
   {
-    id: "lighting",
-    tag: "Service",
-    title: "Lighting",
-    desc: "Lighting gives a vehicle its expression. From subtle tinting to signature illumination and refined visual details, we use light to sharpen character, presence and atmosphere.",
-    image: "/images/forge/service-lighting.jpg",
-    alt: "Forge Service: Lighting",
+    id: "vidros",
+    tag: "Estrutural",
+    title: "Vidros & Para-brisas",
+    desc: "Para-brisas laminados panorâmicos, borrachas guarnição de alta vedação e vidros laterais colados que suportam as torções reais de rodagem.",
+    image: "/images/center/service-vidros.jpg",
+    alt: "Center Ônibus: Vidros e Para-brisas",
   },
   {
-    id: "exhaust",
-    tag: "Service",
-    title: "Exhaust",
-    desc: "Exhaust upgrades are chosen for tone, response and presence. Not noise for the sake of noise, but a sound profile that gives the vehicle more character and depth.",
-    image: "/images/forge/service-exhaust.jpg",
-    alt: "Forge Service: Exhaust",
+    id: "climatizacao",
+    tag: "Operação",
+    title: "Climatização & Filtros",
+    desc: "Filtros antipólen homologados CO 11084, condensadores e componentes Spheros e Valeo. Ar limpo e controle térmico no tempo da sua operação.",
+    image: "/images/center/service-climatizacao.jpg",
+    alt: "Center Ônibus: Climatização e Filtros de Ar",
   },
   {
-    id: "protection",
-    tag: "Service",
-    title: "Protection",
-    desc: "Paint protective film solutions that preserve the finish of the vehicle while allowing for satin finishes, coloured films and full visual transformation.",
-    image: "/images/forge/service-protection.jpg",
-    alt: "Forge Service: Wraps / PPF",
+    id: "protecao",
+    tag: "Acabamento",
+    title: "Para-choques & Proteção",
+    desc: "Para-choques modulares reforçados, almas de impacto estruturais e frisos de absorção que protegem o veículo e mantêm seu ônibus na rua.",
+    image: "/images/center/service-parachoques.jpg",
+    alt: "Center Ônibus: Para-choques e Proteção",
   },
 ];
 
@@ -585,22 +585,22 @@ export default function Home2() {
 
             {/* Top Text */}
             <div ref={heroTopRef} className="forge-hero-top">
-              <h1 className="forge-hero-title">For Those Who Refuse Ordinary</h1>
+              <h1 className="forge-hero-title">Manter o Brasil em Movimento</h1>
             </div>
 
             {/* Center Reveal Text (Hidden at start, reveals during scroll) */}
             <div ref={heroCenterRevealRef} className="forge-hero-center-reveal" style={{ opacity: 0 }}>
               <h2 className="forge-hero-center-title">
-                We don’t modify vehicles
+                A peça certa, na primeira vez
                 <br />
-                We build them for you
+                Resposta no tempo da operação
               </h2>
             </div>
 
             {/* Bottom Text */}
             <div ref={heroBottomRef} className="forge-hero-bottom">
               <p className="forge-hero-desc">
-                A luxury automotive atelier for bespoke styling, performance and craftsmanship.
+                Especialistas técnicos em componentes e carrocerias de ônibus. O ônibus volta pra rua.
               </p>
             </div>
           </section>

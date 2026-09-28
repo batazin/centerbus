@@ -170,9 +170,10 @@ A rota `/home-2` utiliza como **inspiração e referência direta obrigatória**
 
 - **Site de Referência Principal:** `https://forgeautomotive.co.uk/`
 - **Hero Vehicle Sequence (Scroll-Driven):**
-  - O Hero **sempre** utiliza a sequência técnica do veículo (ônibus) renderizada em `<canvas>` e controlada frame a frame pelo `ScrollTrigger`.
-  - Conforme o usuário rola, o veículo avança/escala em direção à tela com efeito de profundidade, acompanhado de mouse tilt 3D sutil na perspectiva.
-  - **Proibido usar vídeo comum no Hero:** Nunca substituir a sequência por uma tag `<video>` em loop autoplay genérica nem inserir botões de alternância de mídia.
+  - O Hero utiliza a sequência cinematográfica em frames de alta definição com o ônibus rodoviário rodando fisicamente na pista em direção à câmera conforme o scroll (com movimento real de rodagem dos pneus, reflexos no asfalto molhado e iluminação dinâmica dos faróis).
+  - A sequência foca 100% no avanço contínuo do ônibus em direção à tela, sem cortes bruscos para raio-x, cabine ou traseira em hangar.
+  - Sincronização direta em hardware no `<canvas>` via `setFrame(progress)` controlado pelo `ScrollTrigger`, com suporte a mouse tilt 3D e sem sobreposições fantasmas.
+  - **Proibido usar vídeo comum no Hero:** Nunca substituir a sequência interativa por uma tag `<video>` em loop autoplay genérica nem inserir botões de alternância de mídia.
 - **Narrativa Editorial & Pinned Storytelling:**
   - Frases técnicas e declarações editoriais que surgem centralizadas e se desvanecem com o avanço do veículo (*ex.: "RESPOSTA NO TEMPO DA OPERAÇÃO / CONHECIMENTO ANTES DO CATÁLOGO"*).
   - Seções com fixação (pinning) no scroll, transições limpas e revelação progressiva de etapas/processos.
@@ -180,6 +181,14 @@ A rota `/home-2` utiliza como **inspiração e referência direta obrigatória**
   - Atmosfera escura e técnica (`#060606` com texturas de carbono e ruído sutil).
   - Microinterações inspiradas na Forge: bordas sutis com brilho (*conic gradient border shine*), badges técnicas numeradas e grid rigoroso.
   - **Sem rastro de fotos no cursor:** Não utilizar o efeito de rastro de imagens/cards flutuantes no cursor (cursor trail) na Hero.
+  - **Transição da Hero para Approach (Aperture Reveal):**
+    - A abertura começa **100% fechada no centro** (`clipPath: inset(50% 50% round 8px)`) e expande suavemente até tela cheia (`inset(0% 0%)`), fixando no topo sem nunca vir cortada ("meia aberta") de baixo.
+    - Proibida barra de rolagem horizontal em qualquer resolução (`overflow-x: hidden` no html, `overflow-x: clip` no body/.forge-body e `min-width: 0; max-width: 100%` em colunas com marquee).
+- **Seção de Serviços (Componentes de Carroceria de Ônibus):**
+  - **Layout Full Bleed à Direita:** O painel de fotos fixado à direita ocupa 54% da tela até o limite direito (`top: 0; height: 100dvh;`), sem nenhuma sobra ou margem preta vazia à direita da foto.
+  - **Efeito de Revelação (Bottom-to-Top Wipe):** A imagem seguinte sempre sobe passando diretamente por cima da imagem atual (`clipPath: inset(100% 0% 0%)` ➔ `inset(0% 0% 0%)`) acompanhada de leve escala de profundidade (`scale: 1.15` ➔ `1.0`).
+  - **Sincronia do Texto:** Conforme o card ativo sobe além do centro, ele desvanece suavemente (`autoAlpha: 0, y: -50`) enquanto o próximo card ganha foco.
+  - **Substituição Gradual de Assets:** Troca metódica de fotos de carros de luxo por fotos de alta definição de ônibus e componentes reais de carroceria (lanternas, retrovisores, vidros, para-choques, climatização), preservando 100% da estrutura, grids e timings originais da Forge.
 
 
 ## Rebranding Work Order
