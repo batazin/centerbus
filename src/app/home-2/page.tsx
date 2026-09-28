@@ -31,24 +31,24 @@ const STEPS_DATA = [
     total: "03",
     title: "Identity",
     desc: "Every build begins with the person behind the wheel, shaped around their individual taste, lifestyle, presence and personal sense of identity on the road.",
-    image: "/images/forge/step-01-identity.jpg",
-    alt: "Forge Identity – Spirit of Ecstasy",
+    image: "/images/center/step-01-identidade-dark.jpg?v=3",
+    alt: "Center Ônibus: Grade e Emblema Aerodinâmico",
   },
   {
     num: "02",
     total: "03",
     title: "Insight",
     desc: "Exterior, interior and performance are brought together through a considered, detail-led approach, creating one complete and fully resolved vision.",
-    image: "/images/forge/step-02-insight.jpg",
-    alt: "Forge Intent – Custom Carbon Fibre",
+    image: "/images/center/step-02-precisao-dark.jpg?v=3",
+    alt: "Center Ônibus: Inspeção e Encaixe Técnico de Painel",
   },
   {
     num: "03",
     total: "03",
     title: "Cohesion",
     desc: "Every modification is chosen with precision, ensuring each detail adds purpose, balance and distinction to the final bespoke automotive build.",
-    image: "/images/forge/step-03-cohesion.jpg",
-    alt: "Forge Cohesion – Backend McLaren",
+    image: "/images/center/step-03-rodagem-dark.jpg?v=3",
+    alt: "Center Ônibus: Traseira Aerodinâmica, Difusor e Iluminação LED",
   },
 ];
 
@@ -142,7 +142,6 @@ export default function Home2() {
   const stepsRef = useRef<HTMLDivElement>(null);
   const stepArticleRefs = useRef<(HTMLElement | null)[]>([]);
   const stepClippedRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const stepBlurRefs = useRef<(HTMLImageElement | null)[]>([]);
   const serviceRefs = useRef<(HTMLElement | null)[]>([]);
   const serviceImgRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -320,109 +319,58 @@ export default function Home2() {
         gsap.set(stepClippedRefs.current[0], { clipPath: "inset(0% 0% 0% 0%)" });
       }
 
-      // Steps 1 & 2 start at inset(50%) and expand outward to inset(0%) as their articles scroll into view
-      stepClippedRefs.current.forEach((el, idx) => {
-        if (idx === 0 || !el) return;
-        const article = stepArticleRefs.current[idx];
-        if (article) {
-          gsap.fromTo(
-            el,
-            { clipPath: "inset(50%)" },
-            {
-              clipPath: "inset(0%)",
-              ease: "none",
-              scrollTrigger: {
-                trigger: article,
-                start: "top bottom",
-                end: "center center",
-                scrub: true,
-              },
-            }
-          );
-        }
-      });
+      // Step 1 to Step 2 transition (triggered by article 1 scrolling in)
+      const article1 = stepArticleRefs.current[1];
+      if (article1 && stepClippedRefs.current[1]) {
+        gsap.fromTo(
+          stepClippedRefs.current[1],
+          { clipPath: "inset(50% 50% 50% 50%)" },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            ease: "none",
+            scrollTrigger: {
+              trigger: article1,
+              start: "top 85%",
+              end: "center center",
+              scrub: true,
+            },
+          }
+        );
+      }
 
-      // Background blurred images crossfade on scroll
-      stepBlurRefs.current.forEach((blurEl, idx) => {
-        if (!blurEl) return;
-        if (idx === 0) {
-          const article1 = stepArticleRefs.current[1];
-          if (article1) {
-            gsap.to(blurEl, {
-              opacity: 0,
-              ease: "none",
-              scrollTrigger: {
-                trigger: article1,
-                start: "top bottom",
-                end: "center center",
-                scrub: true,
-              },
-            });
+      // Step 2 to Step 3 transition (triggered by article 2 scrolling in)
+      const article2 = stepArticleRefs.current[2];
+      if (article2 && stepClippedRefs.current[2]) {
+        gsap.fromTo(
+          stepClippedRefs.current[2],
+          { clipPath: "inset(50% 50% 50% 50%)" },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            ease: "none",
+            scrollTrigger: {
+              trigger: article2,
+              start: "top 85%",
+              end: "center center",
+              scrub: true,
+            },
           }
-        } else if (idx === 1) {
-          const article1 = stepArticleRefs.current[1];
-          const article2 = stepArticleRefs.current[2];
-          if (article1) {
-            gsap.fromTo(
-              blurEl,
-              { opacity: 0 },
-              {
-                opacity: 0.35,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: article1,
-                  start: "top bottom",
-                  end: "center center",
-                  scrub: true,
-                },
-              }
-            );
-          }
-          if (article2) {
-            gsap.to(blurEl, {
-              opacity: 0,
-              ease: "none",
-              scrollTrigger: {
-                trigger: article2,
-                start: "top bottom",
-                end: "center center",
-                scrub: true,
-              },
-            });
-          }
-        } else if (idx === 2) {
-          const article2 = stepArticleRefs.current[2];
-          if (article2) {
-            gsap.fromTo(
-              blurEl,
-              { opacity: 0 },
-              {
-                opacity: 0.35,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: article2,
-                  start: "top bottom",
-                  end: "center center",
-                  scrub: true,
-                },
-              }
-            );
-          }
-        }
-      });
+        );
+      }
 
-      // Step articles active indicator tracking
+      // Step articles active indicator tracking & background blur switcher
       stepArticleRefs.current.forEach((el, idx) => {
         if (!el) return;
         ScrollTrigger.create({
           trigger: el,
-          start: "top 60%",
-          end: "bottom 40%",
+          start: "top 55%",
+          end: "bottom 45%",
           onToggle: (self) => {
             if (self.isActive) {
               setActiveStepIndex(idx);
             }
           },
+          onEnter: () => setActiveStepIndex(idx),
+          onEnterBack: () => setActiveStepIndex(idx),
         });
       });
 
@@ -612,8 +560,8 @@ export default function Home2() {
             <section id="approach" className="forge-approach-section">
               <div className="forge-approach-bg" aria-hidden="true">
                 <img
-                  src="/images/forge/approach-stitching.jpg"
-                  alt="Hands meticulously stitching red leather"
+                  src="/images/center/approach-precision-v2.jpg?v=3"
+                  alt="Ajuste técnico de precisão em componentes e carroceria Center Ônibus"
                   loading="lazy"
                 />
               </div>
@@ -663,13 +611,9 @@ export default function Home2() {
               {STEPS_DATA.map((step, idx) => (
                 <img
                   key={step.title}
-                  ref={(el) => {
-                    stepBlurRefs.current[idx] = el;
-                  }}
                   src={step.image}
                   alt=""
-                  className="forge-steps-blur-img"
-                  style={{ opacity: idx === 0 ? 0.35 : 0 }}
+                  className={`forge-steps-blur-img ${activeStepIndex === idx ? "active" : ""}`}
                 />
               ))}
             </div>
@@ -691,7 +635,7 @@ export default function Home2() {
                         className="forge-step-clipped-wrapper"
                         style={{
                           zIndex: idx + 1,
-                          clipPath: idx === 0 ? "inset(0%)" : "inset(50%)",
+                          clipPath: idx === 0 ? "inset(0% 0% 0% 0%)" : "inset(50% 50% 50% 50%)",
                         }}
                       >
                         <img
