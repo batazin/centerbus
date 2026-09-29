@@ -823,8 +823,8 @@ export default function Home2() {
         <section id="builds" className="forge-full-banner">
           <div className="forge-full-banner-bg" aria-hidden="true">
             <img
-              src="/images/forge/banner-previous-builds.png"
-              alt="A Forge collection of custom vehicles including Porsche 911 GT3"
+              src="/images/center/banner-previous-builds.jpg?v=1"
+              alt="Conjunto óptico Full LED e faróis de precisão em carroceria de ônibus Center Ônibus"
               loading="lazy"
             />
           </div>
@@ -843,8 +843,8 @@ export default function Home2() {
         <section id="stock" className="forge-full-banner">
           <div className="forge-full-banner-bg" aria-hidden="true">
             <img
-              src="/images/forge/banner-available-stock.jpg"
-              alt="Custom Forge Porsche 911 GT3, Lamborghini, Defender, and G-Wagen on wet tarmac"
+              src="/images/center/banner-available-stock.jpg?v=1"
+              alt="Frota de ônibus rodoviários, urbanos e executivos alinhados em hangar técnico Center Ônibus"
               loading="lazy"
             />
           </div>
@@ -863,8 +863,8 @@ export default function Home2() {
         <footer id="contact" className="forge-footer-section">
           <div className="forge-footer-bg" aria-hidden="true">
             <img
-              src="/images/forge/footer-cars-rear.jpg"
-              alt="Three custom Forge vehicles in dark studio"
+              src="/images/center/footer-buses-rear.jpg?v=1"
+              alt="Três ônibus rodoviários modernos vistos pela traseira com iluminação LED vermelha e difusores Center Ônibus"
               loading="lazy"
             />
           </div>
