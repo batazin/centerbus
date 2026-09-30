@@ -1847,3 +1847,92 @@ html.lenis:has(.forge-body) body {
 .forge-footer-legals a:hover {
   color: var(--color-road-blue);
 }
+
+/* =========================================================================
+   MOBILE RESPONSIVE REFINEMENTS (< 768px & < 480px)
+   Zero Horizontal Overflow, Fluid Touch Targets & Clean Typography
+   ========================================================================= */
+@media (max-width: 768px) {
+  .forge-hero-top {
+    top: 13vh;
+  }
+  
+  .forge-hero-bottom {
+    bottom: 5vh;
+    padding: 0 1.25rem;
+    gap: 1.2rem;
+  }
+
+  .forge-hero-desc {
+    font-size: 0.95rem;
+    max-width: 90vw;
+  }
+
+  .forge-approach-section {
+    padding-block: 4rem;
+  }
+
+  .forge-step-article {
+    min-height: auto;
+    padding: 3rem 0;
+  }
+
+  .forge-ordinary-cars-container {
+    min-height: 28rem;
+    margin: 2rem auto;
+  }
+
+  .forge-car-main {
+    width: clamp(14rem, 65vw, 20rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .forge-btn {
+    padding: 0.95rem 1.6rem;
+    max-width: 100%;
+  }
+
+  .forge-btn-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.18rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .forge-hero-title {
+    font-size: clamp(2.6rem, 11vw, 3.8rem);
+  }
+
+  .forge-hero-center-title {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .forge-approach-title {
+    font-size: clamp(2.2rem, 9vw, 3.4rem);
+  }
+
+  .forge-statement-quote {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .forge-service-title {
+    font-size: clamp(2.2rem, 8vw, 3.2rem);
+  }
+
+  .forge-ordinary-top-title,
+  .forge-ordinary-bottom-title {
+    font-size: clamp(2.6rem, 11vw, 4rem);
+  }
+
+  .forge-full-banner-title,
+  .forge-footer-title {
+    font-size: clamp(2.4rem, 9.5vw, 3.6rem);
+  }
+
+  .forge-footer-legals {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
