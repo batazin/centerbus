@@ -7,46 +7,42 @@ import { ForgeHeroCar, ForgeHeroCarHandle } from "./_components/forge-hero-car";
 import { ForgeHeader } from "./_components/forge-header";
 import "./forge.css";
 
-// 14 Luxury Automotive Marques featured on Forge
-const MARQUEE_LOGOS = [
-  { name: "Aston Martin", src: "/images/forge/logo-astonmartin.svg" },
-  { name: "Audi", src: "/images/forge/logo-audi.svg" },
-  { name: "Bentley", src: "/images/forge/logo-bentley.svg" },
-  { name: "Jaguar", src: "/images/forge/logo-jaguar.svg" },
-  { name: "Lamborghini", src: "/images/forge/logo-lamborghini.svg" },
-  { name: "Land Rover", src: "/images/forge/logo-landrover.svg" },
-  { name: "Lotus", src: "/images/forge/logo-lotus.svg" },
-  { name: "Lucid", src: "/images/forge/logo-lucid.svg" },
-  { name: "Maserati", src: "/images/forge/logo-maserati.svg" },
-  { name: "McLaren", src: "/images/forge/logo-mclaren.svg" },
-  { name: "Mercedes", src: "/images/forge/logo-mercedes.svg" },
-  { name: "Polestar", src: "/images/forge/logo-polestar.svg" },
-  { name: "Porsche", src: "/images/forge/logo-porsche.svg" },
-  { name: "Rolls Royce", src: "/images/forge/logo-rollsroyce.svg" },
+// Principais marcas e encarroçadoras atendidas pela Center Ônibus
+const MARQUEE_BRANDS = [
+  "Marcopolo",
+  "Caio Induscar",
+  "Comil Ônibus",
+  "Neobus",
+  "Busscar",
+  "Mascarello",
+  "Irizar",
+  "Volare",
+  "Spheros Climatização",
+  "Valeo Thermal",
 ];
 
 const STEPS_DATA = [
   {
     num: "01",
     total: "03",
-    title: "Identity",
-    desc: "Every build begins with the person behind the wheel, shaped around their individual taste, lifestyle, presence and personal sense of identity on the road.",
+    title: "Identificação Precisa",
+    desc: "Diagnóstico ágil por modelo, chassi ou código CO. Nossa equipe técnica entende a realidade da carroceria antes mesmo de abrir o catálogo.",
     image: "/images/center/step-01-identidade-dark.jpg?v=3",
     alt: "Center Ônibus: Grade e Emblema Aerodinâmico",
   },
   {
     num: "02",
     total: "03",
-    title: "Insight",
-    desc: "Exterior, interior and performance are brought together through a considered, detail-led approach, creating one complete and fully resolved vision.",
+    title: "Estoque em Pronta-Entrega",
+    desc: "Mais de 15.000 itens disponíveis para Marcopolo, Caio, Comil e Neobus. Estoque real com conferência rigorosa de encaixe técnico.",
     image: "/images/center/step-02-precisao-dark.jpg?v=3",
     alt: "Center Ônibus: Inspeção e Encaixe Técnico de Painel",
   },
   {
     num: "03",
     total: "03",
-    title: "Cohesion",
-    desc: "Every modification is chosen with precision, ensuring each detail adds purpose, balance and distinction to the final bespoke automotive build.",
+    title: "O Ônibus Volta pra Rua",
+    desc: "Despacho prioritário e logística rápida para todo o Brasil. A peça certa, na primeira vez, mantendo sua frota em movimento constante.",
     image: "/images/center/step-03-rodagem-dark.jpg?v=3",
     alt: "Center Ônibus: Traseira Aerodinâmica, Difusor e Iluminação LED",
   },
@@ -103,11 +99,13 @@ const SERVICES_DATA = [
   },
 ];
 
-// Helper button with conic gradient shine & character roll
-function ForgeButton({ text, href = "#contact" }: { text: string; href?: string }) {
+// Helper button with moving neon border & character roll
+function ForgeButton({ text, href = "#contact", className = "" }: { text: string; href?: string; className?: string }) {
   return (
-    <a href={href} className="forge-btn" aria-label={text}>
-      <span className="forge-btn-shine" aria-hidden="true" />
+    <a href={href} className={`forge-btn ${className}`.trim()} aria-label={text}>
+      <span className="forge-btn-border-glow" aria-hidden="true" />
+      <span className="forge-btn-border-beam" aria-hidden="true" />
+      <span className="forge-btn-inner" aria-hidden="true" />
       <span className="forge-btn-label">
         {text.split("").map((char, i) => (
           <span
@@ -457,41 +455,56 @@ export default function Home2() {
         });
       });
 
-      // 6. Aerial Cars Parallax ("Ordinary Ends Here")
+      // 6. Aerial Buses Driving Motion along Highway ("O Ônibus Volta pra Rua")
       if (carLeftRef.current && carMainRef.current && carRightRef.current) {
-        gsap.to(carLeftRef.current, {
-          y: -110,
-          ease: "none",
-          scrollTrigger: {
-            trigger: carLeftRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
+        // Center Coach Bus: Accelerates forward powerfully along its lane, overtaking side traffic
+        gsap.fromTo(
+          carMainRef.current,
+          { y: 220, scale: 0.9 },
+          {
+            y: -300,
+            scale: 1.08,
+            ease: "none",
+            scrollTrigger: {
+              trigger: carMainRef.current,
+              start: "top 95%",
+              end: "bottom 5%",
+              scrub: 1.2,
+            },
+          }
+        );
 
-        gsap.to(carMainRef.current, {
-          y: -160,
-          scale: 1.04,
-          ease: "none",
-          scrollTrigger: {
-            trigger: carMainRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
+        // Left Urban Bus: Cruising at steady speed along the left lane
+        gsap.fromTo(
+          carLeftRef.current,
+          { y: 110 },
+          {
+            y: -150,
+            ease: "none",
+            scrollTrigger: {
+              trigger: carLeftRef.current,
+              start: "top 95%",
+              end: "bottom 5%",
+              scrub: 1.5,
+            },
+          }
+        );
 
-        gsap.to(carRightRef.current, {
-          y: -80,
-          ease: "none",
-          scrollTrigger: {
-            trigger: carRightRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
+        // Right Minibus: Cruising along the right lane
+        gsap.fromTo(
+          carRightRef.current,
+          { y: 140 },
+          {
+            y: -90,
+            ease: "none",
+            scrollTrigger: {
+              trigger: carRightRef.current,
+              start: "top 95%",
+              end: "bottom 5%",
+              scrub: 1.8,
+            },
+          }
+        );
       }
     });
 
@@ -508,7 +521,7 @@ export default function Home2() {
         {/* 1. Preloader */}
         <aside className={`forge-preloader ${isPreloaderLoaded ? "loaded" : ""}`} aria-hidden="true">
           <p className="forge-preloader-text">
-            Bespoke vehicles built on distinction, desire, and identity. not simply to be modified.
+            CENTRO DE DISTRIBUIÇÃO E COMPONENTES TÉCNICOS • O ÔNIBUS VOLTA PRA RUA
           </p>
           <div className="forge-preloader-progress-wrap">
             <div className="forge-preloader-track">
@@ -531,9 +544,9 @@ export default function Home2() {
               <ForgeHeroCar ref={heroCarRef} />
             </div>
 
-            {/* Top Text */}
+            {/* Top Text - Primeira coisa que o lead lê na tela */}
             <div ref={heroTopRef} className="forge-hero-top">
-              <h1 className="forge-hero-title">Manter o Brasil em Movimento</h1>
+              <h1 className="forge-hero-title">O Ônibus Volta pra Rua</h1>
             </div>
 
             {/* Center Reveal Text (Hidden at start, reveals during scroll) */}
@@ -545,11 +558,12 @@ export default function Home2() {
               </h2>
             </div>
 
-            {/* Bottom Text */}
+            {/* Bottom Text & Initial Hero CTA */}
             <div ref={heroBottomRef} className="forge-hero-bottom">
               <p className="forge-hero-desc">
-                Especialistas técnicos em componentes e carrocerias de ônibus. O ônibus volta pra rua.
+                Especialistas técnicos em componentes e carrocerias. Manter o Brasil em movimento.
               </p>
+              <ForgeButton text="Falar com a Equipe" href="#contact" />
             </div>
           </section>
         </div>
@@ -570,7 +584,7 @@ export default function Home2() {
               <div className="forge-approach-top-row">
                 <div className="forge-grid-12">
                   <div className="forge-approach-title-col">
-                    <h2 className="forge-approach-title">Our Approach To Every Build</h2>
+                    <h2 className="forge-approach-title">Conhecimento Antes do Catálogo</h2>
                   </div>
                 </div>
               </div>
@@ -581,9 +595,14 @@ export default function Home2() {
                   <div className="forge-approach-marquee-col" aria-hidden="true">
                     <div className="forge-marquee-wrap">
                       <div className="forge-marquee-track">
-                        {MARQUEE_LOGOS.concat(MARQUEE_LOGOS).map((logo, idx) => (
+                        {MARQUEE_BRANDS.concat(MARQUEE_BRANDS).map((brand, idx) => (
                           <div key={idx} className="forge-marquee-item">
-                            <img src={logo.src} alt={logo.name} />
+                            <span className="forge-marquee-item-text">
+                              {brand}
+                              <span className="marquee-dot" aria-hidden="true">
+                                •
+                              </span>
+                            </span>
                           </div>
                         ))}
                       </div>
@@ -592,10 +611,10 @@ export default function Home2() {
 
                   <div className="forge-approach-cta-col">
                     <p className="forge-approach-desc">
-                      Every decision is intentional, every detail has purpose based on your taste, your
-                      lifestyle, and your standards.
+                      Atendemos quem vive a rotina da estrada e da frota. Diagnóstico preciso, peças originais
+                      e estoque imediato para que o ônibus volte para a rua sem surpresas.
                     </p>
-                    <ForgeButton text="Start Your Project" href="#contact" />
+                    <ForgeButton text="Falar com Especialista" href="#contact" />
                   </div>
                 </div>
               </div>
@@ -665,7 +684,7 @@ export default function Home2() {
                     </div>
                     <h3 className="forge-step-heading">{step.title}</h3>
                     <p className="forge-step-desc">{step.desc}</p>
-                    <ForgeButton text="Start Your Project" href="#contact" />
+                    <ForgeButton text="Consultar Peça" href="#contact" />
 
                     {/* Mobile inline image */}
                     <img
@@ -687,16 +706,13 @@ export default function Home2() {
             {/* Left Content (Columns 2 to 8) */}
             <div className="forge-statement-content-col">
               <h2 ref={statementQuoteRef} className="forge-statement-quote">
-                A vehicle should say something before it moves. Every line, material, and finish is
-                considered.
+                Cada hora com o ônibus parado na garagem custa caro. Conhecimento técnico é o que garante a peça certa, na primeira vez.
               </h2>
               <div className="forge-statement-copy-wrap">
                 <p className="forge-statement-copy">
-                  Our services are shaped with intent, from exterior styling and interior refinement to
-                  performance upgrades, detailing and bespoke finishes; each detail sharpens the
-                  vehicle’s character without overpowering it.
+                  Com mais de duas décadas de experiência direta em oficinas e pátios de frotas rodoviárias e urbanas, atendemos quem precisa de agilidade. Do para-brisa ao compressor de ar-condicionado, nosso compromisso é uma palavra que se cumpre: resposta rápida para o ônibus voltar pra rua.
                 </p>
-                <ForgeButton text="Start Your Project" href="#contact" />
+                <ForgeButton text="Falar com a Equipe Técnica" href="#contact" />
               </div>
             </div>
 
@@ -732,7 +748,7 @@ export default function Home2() {
                   <span className="forge-service-tag">{srv.tag}</span>
                   <h3 className="forge-service-title">{srv.title}</h3>
                   <p className="forge-service-desc">{srv.desc}</p>
-                  <ForgeButton text="Start Your Project" href="#contact" />
+                  <ForgeButton text="Consultar Disponibilidade" href="#contact" />
 
                   {/* Mobile inline image */}
                   <img
@@ -770,9 +786,9 @@ export default function Home2() {
           </div>
         </section>
 
-        {/* 8. "Ordinary Ends Here" Aerial Vehicle Showcase */}
+        {/* 8. "O Ônibus Volta pra Rua" Aerial Vehicle Showcase */}
         <section id="ordinary" className="forge-ordinary-section">
-          <h2 className="forge-ordinary-top-title">Ordinary</h2>
+          <h2 className="forge-ordinary-top-title">O Ônibus</h2>
 
           <div className="forge-ordinary-cars-container">
             {/* Highway Road Track Lines */}
@@ -812,14 +828,14 @@ export default function Home2() {
             </div>
           </div>
 
-          <h2 className="forge-ordinary-bottom-title">Ends Here</h2>
+          <h2 className="forge-ordinary-bottom-title">Volta pra Rua</h2>
           <p className="forge-ordinary-copy">
-            Complete expressions of taste, intent and individuality, shaped through detail, restraint
-            and presence.
+            Do rodoviário de alta categoria ao transporte urbano diário: disponibilidade imediata,
+            especificações homologadas e suporte técnico dedicado a cada quilômetro da sua frota.
           </p>
         </section>
 
-        {/* 9. Previous Builds Full Monumental Card */}
+        {/* 9. Catálogo Técnico Especializado Full Monumental Card */}
         <section id="builds" className="forge-full-banner">
           <div className="forge-full-banner-bg" aria-hidden="true">
             <img
@@ -830,16 +846,16 @@ export default function Home2() {
           </div>
           <div className="forge-full-banner-overlay" />
           <div className="forge-full-banner-content">
-            <h2 className="forge-full-banner-title">Previous Builds</h2>
+            <h2 className="forge-full-banner-title">Catálogo Técnico Especializado</h2>
             <p className="forge-full-banner-desc">
-              A collection of previous bespoke builds, shaped by craft, character and the people behind
-              the wheel.
+              Linha completa de componentes de reposição homologados para as principais encarroçadoras e
+              montadoras do Brasil.
             </p>
-            <ForgeButton text="Explore Builds" href="#contact" />
+            <ForgeButton text="Acessar Catálogo" href="#contact" />
           </div>
         </section>
 
-        {/* 10. Available Stock Full Monumental Card */}
+        {/* 10. Estoque em Pronta-Entrega Full Monumental Card */}
         <section id="stock" className="forge-full-banner">
           <div className="forge-full-banner-bg" aria-hidden="true">
             <img
@@ -850,12 +866,12 @@ export default function Home2() {
           </div>
           <div className="forge-full-banner-overlay" />
           <div className="forge-full-banner-content">
-            <h2 className="forge-full-banner-title">Available Stock</h2>
+            <h2 className="forge-full-banner-title">Estoque em Pronta-Entrega</h2>
             <p className="forge-full-banner-desc">
-              Builds available for purchase, refined with intent, engineered with purpose, and ready to
-              make a statement.
+              Agilidade logística para frotistas, mecânicos e garagens com despacho diário para todo o
+              Brasil. Se roda, a gente tem.
             </p>
-            <ForgeButton text="Browse Stock" href="#contact" />
+            <ForgeButton text="Consultar Estoque" href="#contact" />
           </div>
         </section>
 
@@ -871,9 +887,9 @@ export default function Home2() {
           <div className="forge-footer-overlay" />
 
           <div className="forge-footer-cta-box">
-            <p className="forge-footer-kicker">Are you ready to</p>
-            <h2 className="forge-footer-title">Refuse Ordinary</h2>
-            <ForgeButton text="Start Your Project" href="#contact" />
+            <p className="forge-footer-kicker">Resposta no tempo da sua operação</p>
+            <h2 className="forge-footer-title">O Ônibus Volta pra Rua</h2>
+            <ForgeButton text="Solicitar Orçamento" href="#contact" />
           </div>
 
           <div className="forge-footer-bottom-bar">
@@ -881,10 +897,10 @@ export default function Home2() {
               type="button"
               onClick={scrollToTop}
               className="forge-back-to-top"
-              aria-label="Back to Top"
+              aria-label="Voltar ao Topo"
             >
               <span>
-                {"Back to Top".split("").map((char, i) => (
+                {"Voltar ao Topo".split("").map((char, i) => (
                   <span key={i} style={{ transitionDelay: `${i * 0.02}s` }}>
                     {char === " " ? "\u00A0" : char}
                   </span>
@@ -894,9 +910,9 @@ export default function Home2() {
             </button>
 
             <div className="forge-footer-legals">
-              <a href="#hero">Cookies</a>
-              <a href="#hero">Privacy</a>
-              <a href="#hero">Terms</a>
+              <a href="#hero">Privacidade</a>
+              <a href="#hero">Termos</a>
+              <a href="#contact">Atendimento</a>
             </div>
           </div>
         </footer>

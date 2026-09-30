@@ -6,13 +6,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500;600;700&display=swap');
 
 :root {
-  --brand-bc1: #0C0C0C;
-  --brand-bc2: #161616;
-  --brand-bc3: #410306;
-  --brand-bc4: #C5A064;
-  --brand-bc5: #F2F1ED;
-  --global-white: #ffffff;
-  --global-black: #000000;
+  /* =========================================================================
+     PALETA OFICIAL DO MANUAL DE MARCA CENTER ÔNIBUS (DARK ATELIER TONES)
+     Fonte: docs/design-system.md & AGENTS.md | Versão 1.0 (Manual Center Onibus)
+     ========================================================================= */
+  --color-center-blue: #122B4A;     /* Azul Center - base institucional */
+  --color-road-blue: #2E6DA4;       /* Azul Rodagem - cor de apoio e iluminação técnica */
+  --color-signal-red: #C8102E;      /* Vermelho Sinal - ponto único de atenção e CTA */
+  --color-chassis-gray: #E4E7EB;    /* Cinza Chassi - linhas técnicas e divisores */
+  --color-center-white: #F4F4F4;    /* Branco Center - textos claros e respiro */
+  --color-technical-black: #101418; /* Preto Técnico - base de alto contraste */
+
+  /* TOKENS DE SUPERFÍCIE EM TONS ESCUROS BASEADOS NA IDENTIDADE CENTER */
+  --global-black: #0A0F17;          /* Fundo dark profundo com matiz azul técnico */
+  --brand-bc1: #0D1622;             /* Superfície escura primária (Azul Center escuro) */
+  --brand-bc2: #122B4A;             /* Azul Center oficial (painéis e contraste) */
+  --brand-bc3: #16355B;             /* Azul institucional de apoio */
+  --brand-bc4: #C8102E;             /* Vermelho Sinal (acento e sinalização) */
+  --brand-bc5: #F4F4F4;             /* Branco Center (tipografia e alta legibilidade) */
+  --global-white: #FFFFFF;
 
   --gap-xxs: 0.2rem;
   --gap-xs: 0.4rem;
@@ -150,13 +162,13 @@ html.lenis:has(.forge-body) body {
   height: 2px;
   border-radius: 1px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(228, 231, 235, 0.15);
 }
 
 .forge-preloader-bar {
   width: 100%;
   height: 100%;
-  background: var(--brand-bc5);
+  background: linear-gradient(90deg, var(--color-road-blue), var(--color-signal-red));
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 1.8s cubic-bezier(0.65, 0, 0.35, 1);
@@ -398,17 +410,18 @@ html.lenis:has(.forge-body) body {
   font-size: 0.95rem;
   letter-spacing: 0.15rem;
   text-transform: uppercase;
-  color: rgba(242, 241, 237, 0.6);
+  color: rgba(228, 231, 235, 0.65);
 }
 
 .forge-nav-contacts a {
   color: var(--brand-bc5);
   text-decoration: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, color 0.3s ease;
 }
 
 .forge-nav-contacts a:hover {
-  opacity: 0.6;
+  color: var(--color-road-blue);
+  opacity: 1;
 }
 
 /* Header Navigation & Social Hovers matching Forge original */
@@ -425,8 +438,8 @@ html.lenis:has(.forge-body) body {
 }
 
 /* =========================================================================
-   SIGNATURE BUTTON WITH CONIC GRADIENT SHINE & CHARACTER ROLL EFFECT
-   Exact 1:1 Forge Automotive Button
+   SIGNATURE BUTTON WITH LIVING MOVING NEON BORDER & CHARACTER ROLL
+   Exact Forge Automotive Atelier Aesthetic with Neon Border Beam
    ========================================================================= */
 .forge-btn {
   --ease: cubic-bezier(0.430, 0.195, 0.020, 1);
@@ -436,43 +449,130 @@ html.lenis:has(.forge-body) body {
   place-items: center;
   white-space: nowrap;
   width: max-content;
-  padding: 1.1rem 2.8rem;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(242, 241, 237, 0.18);
+  padding: 1.15rem 2.9rem;
+  background: rgba(228, 231, 235, 0.12);
+  border: none;
+  border-radius: 4px;
   text-decoration: none;
-  color: var(--global-white);
+  color: var(--color-center-white);
   cursor: pointer;
-  overflow: clip;
-  backdrop-filter: blur(8px);
-  transition: border-color 0.5s ease;
+  overflow: hidden;
+  box-sizing: border-box;
+  isolation: isolate;
+  transition: transform 0.35s cubic-bezier(0.430, 0.195, 0.020, 1), box-shadow 0.4s ease;
+}
+
+/* 1. Neon Ambient Glow (Soft blurred radiance that spills outward) */
+.forge-btn-border-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500%;
+  height: 500%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 45deg,
+    rgba(46, 109, 164, 0.35) 65deg,
+    #2E6DA4 78deg,
+    #5BA8E8 88deg,
+    #FFFFFF 90deg,
+    #C8102E 95deg,
+    rgba(200, 16, 46, 0.35) 105deg,
+    transparent 125deg,
+    transparent 225deg,
+    rgba(46, 109, 164, 0.35) 245deg,
+    #2E6DA4 258deg,
+    #5BA8E8 268deg,
+    #FFFFFF 270deg,
+    #C8102E 275deg,
+    rgba(200, 16, 46, 0.35) 285deg,
+    transparent 305deg,
+    transparent 360deg
+  );
+  filter: blur(10px);
+  opacity: 0.85;
+  animation: forgeNeonSpin 3.5s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* 2. Sharp Neon Border Beam (The crisp laser pulse that sweeps the perimeter) */
+.forge-btn-border-beam {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500%;
+  height: 500%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 55deg,
+    rgba(46, 109, 164, 0.6) 72deg,
+    #2E6DA4 82deg,
+    #5BA8E8 88deg,
+    #FFFFFF 90deg,
+    #C8102E 93deg,
+    rgba(200, 16, 46, 0.6) 100deg,
+    transparent 118deg,
+    transparent 235deg,
+    rgba(46, 109, 164, 0.6) 252deg,
+    #2E6DA4 262deg,
+    #5BA8E8 268deg,
+    #FFFFFF 270deg,
+    #C8102E 273deg,
+    rgba(200, 16, 46, 0.6) 280deg,
+    transparent 298deg,
+    transparent 360deg
+  );
+  animation: forgeNeonSpin 3.5s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Backward compatibility fallback */
+.forge-btn-shine {
+  display: none;
+}
+
+/* 3. Inner Card Mask (Covers center, leaving precisely 1.5px glowing neon perimeter) */
+.forge-btn-inner {
+  position: absolute;
+  inset: 1.5px;
+  background: #0A0F17;
+  border-radius: 2.5px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  z-index: 2;
+  pointer-events: none;
+  transition: background-color 0.35s ease, border-color 0.35s ease;
 }
 
 .forge-btn:hover {
-  border-color: rgba(242, 241, 237, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(46, 109, 164, 0.45), 0 0 60px rgba(91, 168, 232, 0.2);
 }
 
-.forge-btn-shine {
-  position: absolute;
-  inset: -1px;
-  z-index: 0;
-  pointer-events: none;
-  background: conic-gradient(
-    from var(--gradient-angle) at center,
-    transparent 0deg,
-    transparent 45deg,
-    rgba(242, 241, 237, 0.75) 90deg,
-    transparent 135deg,
-    transparent 225deg,
-    rgba(242, 241, 237, 0.75) 270deg,
-    transparent 315deg,
-    transparent 360deg
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  padding: 1px;
-  animation: gradient-angle 5s linear infinite;
+.forge-btn:hover .forge-btn-inner {
+  background: #0F1724;
+  border-color: rgba(91, 168, 232, 0.3);
+}
+
+.forge-btn:hover .forge-btn-border-glow {
+  opacity: 1;
+  filter: blur(14px);
+}
+
+@keyframes forgeNeonSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 .forge-btn-label {
@@ -483,21 +583,21 @@ html.lenis:has(.forge-body) body {
   letter-spacing: 0.3rem;
   text-transform: uppercase;
   position: relative;
-  z-index: 1;
+  z-index: 3;
   display: block;
   overflow: clip;
   transition: opacity 0.5s ease;
 }
 
 .forge-btn:hover .forge-btn-label {
-  opacity: 0.75;
+  opacity: 1;
 }
 
 .forge-btn-char {
   display: inline-block;
   padding: 0;
   margin: 0;
-  text-shadow: rgba(242, 241, 237, 0.7) 0px -4em 0px;
+  text-shadow: rgba(244, 244, 244, 0.75) 0px -4em 0px;
   transition: transform 0.5s cubic-bezier(0.430, 0.195, 0.020, 1);
 }
 
@@ -571,8 +671,8 @@ html.lenis:has(.forge-body) body {
 .forge-hero-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 55%, rgba(0, 0, 0, 0.05) 0%, rgba(12, 12, 12, 0.6) 65%, #000000 100%),
-              linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, transparent 25%, transparent 75%, #000000 100%);
+  background: radial-gradient(circle at 50% 55%, rgba(18, 43, 74, 0.08) 0%, rgba(10, 15, 23, 0.65) 65%, var(--global-black) 100%),
+              linear-gradient(to bottom, rgba(10, 15, 23, 0.75) 0%, transparent 25%, transparent 75%, var(--global-black) 100%);
   pointer-events: none;
   z-index: 3;
 }
@@ -711,24 +811,32 @@ html.lenis:has(.forge-body) body {
   text-wrap: balance;
 }
 
-/* Hero Bottom Text */
+/* Hero Bottom Text & Signature CTA Button */
 .forge-hero-bottom {
   position: absolute;
-  bottom: 8vh;
+  bottom: 6vh;
   left: 0;
   right: 0;
   z-index: 4;
   text-align: center;
   padding: 0 1.5rem;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.forge-hero-bottom .forge-btn {
+  pointer-events: auto;
 }
 
 .forge-hero-desc {
   font-family: var(--font-body);
-  font-size: clamp(1rem, 1.35vw, 1.25rem);
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
   font-weight: 300;
   line-height: 1.4;
-  color: rgba(242, 241, 237, 0.8);
+  color: rgba(228, 231, 235, 0.82);
   margin: 0 auto;
   max-width: 42rem;
   letter-spacing: -0.01em;
@@ -924,6 +1032,24 @@ html.lenis:has(.forge-body) body {
   filter: brightness(0) invert(1);
 }
 
+.forge-marquee-item-text {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  font-weight: 500;
+  letter-spacing: 0.28rem;
+  text-transform: uppercase;
+  color: var(--color-center-white);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 3.5rem;
+}
+
+.forge-marquee-item-text .marquee-dot {
+  color: var(--color-signal-red);
+  font-size: 1.1rem;
+}
+
 .forge-approach-desc {
   font-family: var(--font-body);
   font-size: clamp(1rem, 1.25vw, 1.2rem);
@@ -966,7 +1092,7 @@ html.lenis:has(.forge-body) body {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 35% 50%, rgba(6, 6, 6, 0.15) 0%, rgba(6, 6, 6, 0.65) 100%);
+  background: radial-gradient(circle at 35% 50%, rgba(10, 15, 23, 0.2) 0%, rgba(10, 15, 23, 0.85) 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -1026,8 +1152,8 @@ html.lenis:has(.forge-body) body {
   max-width: 34rem;
   overflow: hidden;
   background: var(--brand-bc1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(46, 109, 164, 0.3);
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85), 0 0 30px rgba(18, 43, 74, 0.25);
   border-radius: 4px;
 }
 
@@ -1074,12 +1200,12 @@ html.lenis:has(.forge-body) body {
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 300;
-  color: var(--brand-bc5);
+  color: var(--color-road-blue);
   margin-bottom: 1.5rem;
 }
 
 .forge-step-indicator span {
-  opacity: 0.5;
+  color: rgba(228, 231, 235, 0.45);
 }
 
 .forge-step-heading {
@@ -1097,7 +1223,7 @@ html.lenis:has(.forge-body) body {
   font-size: clamp(1rem, 1.25vw, 1.2rem);
   font-weight: 300;
   line-height: 1.6;
-  color: rgba(242, 241, 237, 0.8);
+  color: rgba(228, 231, 235, 0.82);
   margin: 0 0 2.5rem 0;
   max-width: 32rem;
   text-wrap: pretty;
@@ -1159,7 +1285,8 @@ html.lenis:has(.forge-body) body {
   max-width: 25rem;
   overflow: hidden;
   border-radius: 4px;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(46, 109, 164, 0.25);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 30px rgba(18, 43, 74, 0.2);
   position: relative;
 }
 
@@ -1208,7 +1335,7 @@ html.lenis:has(.forge-body) body {
   font-size: clamp(1rem, 1.25vw, 1.2rem);
   font-weight: 300;
   line-height: 1.6;
-  color: rgba(242, 241, 237, 0.75);
+  color: rgba(228, 231, 235, 0.78);
   margin: 0;
   text-wrap: pretty;
 }
@@ -1255,7 +1382,7 @@ html.lenis:has(.forge-body) body {
   justify-content: center;
   align-items: flex-start;
   padding: 4rem var(--gap-m);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(228, 231, 235, 0.08);
 }
 
 @media (min-width: 768px) {
@@ -1279,7 +1406,7 @@ html.lenis:has(.forge-body) body {
   font-weight: 600;
   letter-spacing: 0.3rem;
   text-transform: uppercase;
-  color: rgba(242, 241, 237, 0.4);
+  color: var(--color-road-blue);
   margin-bottom: 1rem;
 }
 
@@ -1297,7 +1424,7 @@ html.lenis:has(.forge-body) body {
   font-size: clamp(1rem, 1.25vw, 1.2rem);
   font-weight: 300;
   line-height: 1.6;
-  color: rgba(242, 241, 237, 0.8);
+  color: rgba(228, 231, 235, 0.82);
   margin: 0 0 2.5rem 0;
   max-width: 32rem;
 }
@@ -1435,37 +1562,44 @@ html.lenis:has(.forge-body) body {
   will-change: transform;
 }
 
+.forge-car-eagle-eye img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .forge-headlight-beam {
   position: absolute;
-  top: -90px;
+  top: -100px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
-  height: 160px;
-  background: radial-gradient(ellipse at 50% 100%, rgba(220, 240, 255, 0.3) 0%, rgba(46, 109, 164, 0.12) 50%, transparent 80%);
+  width: 95%;
+  height: 180px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(220, 240, 255, 0.35) 0%, rgba(46, 109, 164, 0.16) 50%, transparent 80%);
   pointer-events: none;
-  filter: blur(14px);
+  filter: blur(16px);
   z-index: -1;
   opacity: 0.85;
 }
 
 .forge-headlight-beam.main-beam {
-  top: -130px;
-  height: 230px;
-  background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.38) 0%, rgba(46, 109, 164, 0.18) 55%, transparent 80%);
+  top: -140px;
+  height: 250px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.45) 0%, rgba(46, 109, 164, 0.22) 55%, transparent 80%);
+  filter: blur(18px);
 }
 
 .forge-car-main {
   width: clamp(16rem, 26vw, 26rem);
   z-index: 2;
-  filter: drop-shadow(0 40px 70px rgba(0, 0, 0, 0.98));
+  filter: drop-shadow(0 45px 75px rgba(0, 0, 0, 0.98));
 }
 
 .forge-car-side {
   display: none;
   width: clamp(12rem, 20vw, 20rem);
-  opacity: 0.88;
-  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.92));
+  opacity: 0.92;
+  filter: drop-shadow(0 35px 55px rgba(0, 0, 0, 0.94));
 }
 
 @media (min-width: 1024px) {
@@ -1505,7 +1639,7 @@ html.lenis:has(.forge-body) body {
   font-size: clamp(1rem, 1.3vw, 1.25rem);
   font-weight: 300;
   line-height: 1.6;
-  color: rgba(242, 241, 237, 0.8);
+  color: rgba(228, 231, 235, 0.82);
   text-align: center;
   max-width: 36rem;
   margin: 0 auto;
@@ -1572,7 +1706,7 @@ html.lenis:has(.forge-body) body {
   font-size: clamp(1rem, 1.3vw, 1.25rem);
   font-weight: 300;
   line-height: 1.6;
-  color: rgba(242, 241, 237, 0.8);
+  color: rgba(228, 231, 235, 0.82);
   margin: 0 0 1.5rem 0;
 }
 
@@ -1629,7 +1763,7 @@ html.lenis:has(.forge-body) body {
   font-weight: 600;
   letter-spacing: 0.3rem;
   text-transform: uppercase;
-  color: rgba(242, 241, 237, 0.6);
+  color: var(--color-signal-red);
   margin: 0;
 }
 
@@ -1654,7 +1788,7 @@ html.lenis:has(.forge-body) body {
   flex-direction: column;
   gap: 2rem;
   align-items: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(228, 231, 235, 0.12);
 }
 
 @media (min-width: 768px) {
@@ -1690,7 +1824,7 @@ html.lenis:has(.forge-body) body {
   display: inline-block;
   padding: 0;
   margin: 0;
-  text-shadow: rgba(242, 241, 237, 0.7) 0px -4em 0px;
+  text-shadow: rgba(244, 244, 244, 0.75) 0px -4em 0px;
   transition: transform 0.5s cubic-bezier(0.430, 0.195, 0.020, 1);
 }
 
@@ -1704,12 +1838,12 @@ html.lenis:has(.forge-body) body {
 }
 
 .forge-footer-legals a {
-  color: rgba(242, 241, 237, 0.5);
+  color: rgba(228, 231, 235, 0.5);
   font-size: 0.85rem;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .forge-footer-legals a:hover {
-  color: var(--brand-bc5);
+  color: var(--color-road-blue);
 }
