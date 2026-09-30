@@ -2,7 +2,46 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const NAV_ITEMS = [
+  {
+    num: "01",
+    label: "Início",
+    href: "/",
+    detail: "Apresentação & operação da frota",
+  },
+  {
+    num: "02",
+    label: "Catálogo de Peças",
+    href: "/produtos",
+    detail: "Mais de 30.000 itens em estoque técnico",
+  },
+  {
+    num: "03",
+    label: "Sobre a Center Ônibus",
+    href: "/sobre/a-center-onibus",
+    detail: "Mais de 30 anos no transporte coletivo & ISO 9001",
+  },
+  {
+    num: "04",
+    label: "Vendedores & Regiões",
+    href: "/vendedores",
+    detail: "Atendimento dedicado por estado em todo o Brasil",
+  },
+  {
+    num: "05",
+    label: "Blog Técnico",
+    href: "/blog",
+    detail: "Guias práticos de identificação e manutenção",
+  },
+  {
+    num: "06",
+    label: "Fale Conosco",
+    href: "/fale-conosco",
+    detail: "Cotações no tempo da sua operação e SAC",
+  },
+];
 
 export function ForgeHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,9 +49,28 @@ export function ForgeHeader() {
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => setMenuOpen(false);
 
+  // Fecha o menu ao pressionar ESC e bloqueia o scroll de fundo
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [menuOpen]);
+
   return (
     <>
-      <header className="forge-header">
+      <header className={`forge-header ${menuOpen ? "is-menu-open" : ""}`}>
         {/* Social Links (Desktop) */}
         <nav aria-label="Social media" className="forge-header-socials">
           <a
@@ -51,7 +109,7 @@ export function ForgeHeader() {
         </a>
 
         {/* Center Official Brand Logo */}
-        <Link href="/home-2" className="forge-header-logo-wrap" aria-label="Center Ônibus Início">
+        <Link href="/" className="forge-header-logo-wrap" aria-label="Center Ônibus Início" onClick={closeMenu}>
           <Image
             src="/brand/center-onibus-logo-negative.png"
             alt="Center Ônibus"
@@ -62,16 +120,16 @@ export function ForgeHeader() {
           />
         </Link>
 
-        {/* Right Navigate Button */}
+        {/* Right Navigate / Close Button */}
         <button
           type="button"
-          aria-label="Navigate"
+          aria-label={menuOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"}
           aria-expanded={menuOpen}
           aria-controls="site-menu"
           className="forge-menu-trigger"
           onClick={toggleMenu}
         >
-          <span className="forge-menu-label">{menuOpen ? "Close" : "Navigate"}</span>
+          <span className="forge-menu-label">{menuOpen ? "Fechar" : "Navegação"}</span>
           <div className={`forge-menu-icon ${menuOpen ? "open" : ""}`}>
             <span />
             <span />
@@ -80,57 +138,60 @@ export function ForgeHeader() {
         </button>
       </header>
 
-      {/* Fullscreen Navigation Modal */}
+      {/* Fullscreen Navigation Modal - Atelier Forge Design */}
       <div id="site-menu" className={`forge-nav-overlay ${menuOpen ? "open" : ""}`}>
-        <nav aria-label="Main navigation">
-          <ul className="forge-nav-list">
-            <li>
-              <a href="#hero" className="forge-nav-link" onClick={closeMenu}>
-                Início
-              </a>
-            </li>
-            <li>
-              <a href="#approach" className="forge-nav-link" onClick={closeMenu}>
-                Operação & Conhecimento
-              </a>
-            </li>
-            <li>
-              <a href="#steps" className="forge-nav-link" onClick={closeMenu}>
-                Processo de Atendimento
-              </a>
-            </li>
-            <li>
-              <a href="#services" className="forge-nav-link" onClick={closeMenu}>
-                Peças & Carrocerias
-              </a>
-            </li>
-            <li>
-              <a href="#ordinary" className="forge-nav-link" onClick={closeMenu}>
-                O Ônibus Volta pra Rua
-              </a>
-            </li>
-            <li>
-              <a href="#builds" className="forge-nav-link" onClick={closeMenu}>
-                Catálogo Técnico
-              </a>
-            </li>
-            <li>
-              <a href="#stock" className="forge-nav-link" onClick={closeMenu}>
-                Estoque Pronta-Entrega
-              </a>
-            </li>
-            <li>
-              <a href="#contact" className="forge-nav-link" onClick={closeMenu}>
-                Fale com a Equipe
-              </a>
-            </li>
-          </ul>
-        </nav>
+        <div className="forge-nav-wrap">
+          {/* Central Editorial Navigation List */}
+          <div className="forge-nav-body">
+            <nav aria-label="Navegação do site" className="forge-nav-main">
+              <ul className="forge-nav-items">
+                {NAV_ITEMS.map((item) => (
+                  <li key={item.href} className="forge-nav-row">
+                    <Link
+                      href={item.href}
+                      className="forge-nav-anchor"
+                      onClick={closeMenu}
+                    >
+                      <span className="forge-nav-index">{item.num}</span>
+                      <span className="forge-nav-title">{item.label}</span>
+                      <span className="forge-nav-detail">{item.detail}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
 
-        <div className="forge-nav-contacts">
-          <span>Atendimento & Vendas</span>
-          <a href="tel:+551129673002">+55 (11) 2967-3002</a>
-          <a href="mailto:vendas@centeronibus.com.br">vendas@centeronibus.com.br</a>
+          {/* Bottom Operational Bar */}
+          <footer className="forge-nav-bottom">
+            <div className="forge-nav-meta">
+              <span className="forge-nav-meta-label">Atendimento</span>
+              <a href="tel:+551129673002" className="forge-nav-meta-val">+55 (11) 2967-3002</a>
+              <span className="forge-nav-dot">•</span>
+              <a href="mailto:vendas@centeronibus.com.br" className="forge-nav-meta-val">vendas@centeronibus.com.br</a>
+            </div>
+
+            <div className="forge-nav-units-line">
+              <span>São Paulo</span>
+              <span className="forge-nav-dot">•</span>
+              <span>Bahia</span>
+              <span className="forge-nav-dot">•</span>
+              <span>Rio de Janeiro</span>
+            </div>
+
+            <div className="forge-nav-bottom-cta">
+              <Link
+                href="/fale-conosco"
+                className="forge-nav-cta-action"
+                onClick={closeMenu}
+              >
+                <span>Solicitar Cotação</span>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                </svg>
+              </Link>
+            </div>
+          </footer>
         </div>
       </div>
     </>

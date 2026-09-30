@@ -352,21 +352,32 @@ html.lenis:has(.forge-body) body {
   transform: translateY(50%) rotate(-45deg);
 }
 
-/* Fullscreen Menu Overlay */
+/* Fullscreen Menu Overlay - Atelier Forge Automotive Signature */
+.forge-header.is-menu-open .forge-header-phone,
+.forge-header.is-menu-open .forge-header-socials {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity 0.25s ease, visibility 0.25s;
+}
+
 .forge-nav-overlay {
   position: fixed;
   inset: 0;
   z-index: 998;
-  background: rgba(12, 12, 12, 0.98);
-  backdrop-filter: blur(12px);
+  background: radial-gradient(ellipse 90% 80% at 50% 20%, rgba(14, 20, 28, 0.985) 0%, rgba(6, 9, 13, 0.995) 100%);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  padding-top: 80px;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.5s ease, visibility 0.5s;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
   pointer-events: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .forge-nav-overlay.open {
@@ -375,53 +386,297 @@ html.lenis:has(.forge-body) body {
   pointer-events: all;
 }
 
-.forge-nav-list {
+.forge-nav-wrap {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  min-height: calc(100dvh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(1.5rem, 4vh, 3.5rem) clamp(1.25rem, 5vw, 4.5rem) clamp(1.5rem, 4vh, 3rem);
+  box-sizing: border-box;
+}
+
+/* Central Editorial Navigation List */
+.forge-nav-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.forge-nav-main {
+  width: 100%;
+}
+
+.forge-nav-items {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1.75rem;
+  gap: clamp(0.6rem, 1.8vh, 1.5rem);
 }
 
-.forge-nav-link {
-  font-family: var(--font-heading);
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  color: var(--brand-bc5);
+/* Signature Forge Automotive Focus-Dim Hover Effect (Desktop) */
+@media (hover: hover) and (pointer: fine) {
+  .forge-nav-items:has(.forge-nav-anchor:hover) .forge-nav-anchor:not(:hover) {
+    opacity: 0.22;
+  }
+}
+
+.forge-nav-row {
+  position: relative;
+}
+
+.forge-nav-anchor {
+  display: grid;
+  grid-template-columns: 3.5rem auto 1fr;
+  align-items: baseline;
+  gap: clamp(1rem, 2.5vw, 2.5rem);
   text-decoration: none;
-  text-transform: capitalize;
-  letter-spacing: -0.05rem;
-  font-weight: 300;
+  padding: 0.4rem 0;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.forge-nav-anchor:hover {
+  transform: translateX(18px);
+}
+
+.forge-nav-index {
+  font-family: var(--font-heading);
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  font-weight: 600;
+  color: var(--color-road-blue);
+  letter-spacing: 0.12rem;
+  transition: color 0.3s ease;
+}
+
+.forge-nav-anchor:hover .forge-nav-index {
+  color: var(--color-signal-red);
+}
+
+.forge-nav-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 4.8vw, 4.4rem);
+  font-weight: 500;
+  color: var(--brand-bc5);
+  letter-spacing: -0.02rem;
+  text-transform: uppercase;
+  line-height: 1;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.forge-nav-anchor:hover .forge-nav-title {
+  color: #ffffff;
+}
+
+/* Subtle contextual detail smoothly reveals on hover */
+.forge-nav-detail {
+  font-family: var(--font-body);
+  font-size: clamp(0.82rem, 1.05vw, 0.96rem);
+  color: rgba(228, 231, 235, 0.45);
+  letter-spacing: 0.02rem;
+  opacity: 0;
+  transform: translateX(-10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  padding-left: 1rem;
 }
 
-.forge-nav-link:hover {
-  opacity: 0.6;
-  transform: translateX(8px);
+.forge-nav-anchor:hover .forge-nav-detail {
+  opacity: 1;
+  transform: translateX(0);
+  color: rgba(228, 231, 235, 0.85);
 }
 
-.forge-nav-contacts {
-  margin-top: 3.5rem;
-  text-align: center;
+/* Bottom Operational Bar */
+.forge-nav-bottom {
+  margin-top: clamp(2rem, 4vh, 3.5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(228, 231, 235, 0.1);
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.forge-nav-meta {
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
-  font-size: 0.95rem;
+  font-size: 0.84rem;
+}
+
+.forge-nav-meta-label {
+  font-size: 0.7rem;
   letter-spacing: 0.15rem;
   text-transform: uppercase;
-  color: rgba(228, 231, 235, 0.65);
+  color: rgba(228, 231, 235, 0.45);
+  font-weight: 500;
 }
 
-.forge-nav-contacts a {
+.forge-nav-meta-val {
   color: var(--brand-bc5);
   text-decoration: none;
-  transition: opacity 0.3s ease, color 0.3s ease;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
-.forge-nav-contacts a:hover {
+.forge-nav-meta-val:hover {
   color: var(--color-road-blue);
-  opacity: 1;
+}
+
+.forge-nav-dot {
+  color: rgba(228, 231, 235, 0.25);
+  font-size: 0.75rem;
+}
+
+.forge-nav-units-line {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  color: rgba(228, 231, 235, 0.5);
+  letter-spacing: 0.04rem;
+}
+
+.forge-nav-cta-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1.4rem;
+  border-radius: 4px;
+  background: var(--color-signal-red);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.forge-nav-cta-action:hover {
+  background: #a60d26;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200, 16, 46, 0.4);
+}
+
+/* Responsive Rules for Tablet & Mobile */
+@media (max-width: 1024px) {
+  .forge-nav-anchor {
+    grid-template-columns: 2.8rem 1fr;
+    gap: 1rem;
+  }
+  .forge-nav-detail {
+    display: none;
+  }
+  .forge-nav-title {
+    font-size: clamp(2rem, 5.5vw, 3.2rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .forge-nav-overlay {
+    padding-top: 72px;
+  }
+
+  .forge-nav-wrap {
+    min-height: calc(100dvh - 72px);
+    padding: 1.25rem 1.25rem 2.25rem;
+    justify-content: flex-start;
+    gap: 2rem;
+  }
+
+  .forge-nav-body {
+    flex: 0 0 auto;
+    padding: 0;
+  }
+
+  .forge-nav-items {
+    gap: 0;
+  }
+
+  .forge-nav-anchor {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.95rem 0;
+    border-bottom: 1px solid rgba(228, 231, 235, 0.07);
+    transform: none !important;
+  }
+
+  .forge-nav-anchor:hover {
+    transform: none;
+  }
+
+  .forge-nav-index {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--color-signal-red);
+    min-width: 1.8rem;
+    letter-spacing: 0.08rem;
+    flex-shrink: 0;
+  }
+
+  .forge-nav-title {
+    font-size: clamp(1.35rem, 5.4vw, 1.8rem);
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: normal;
+    color: var(--brand-bc5);
+  }
+
+  .forge-nav-detail {
+    display: none !important;
+  }
+
+  .forge-nav-bottom {
+    margin-top: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(228, 231, 235, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.15rem;
+  }
+
+  .forge-nav-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .forge-nav-meta-val {
+    font-size: 0.95rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: #ffffff;
+  }
+
+  .forge-nav-dot {
+    display: none;
+  }
+
+  .forge-nav-units-line {
+    font-size: 0.74rem;
+    color: rgba(228, 231, 235, 0.55);
+    letter-spacing: 0.04rem;
+  }
+
+  .forge-nav-cta-action {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    font-size: 0.88rem;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
 }
 
 /* Header Navigation & Social Hovers matching Forge original */
