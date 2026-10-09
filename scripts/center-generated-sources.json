@@ -1,0 +1,67 @@
+[
+  {
+    "name": "step-01-identidade-dark",
+    "prompt": "Square 1200x1200. Photorealistic premium editorial photograph of the front corner of a full-size Brazilian modern long-distance coach BUS, clearly tall panoramic windshield and LED headlamp integrated into bus bodywork, dark navy blue paint. Low close view, dramatic restrained studio edge light. No SUV, no car, no logos, no text. Technical dark industrial atmosphere #101418 #122B4A. High material fidelity, no excessive neon.",
+    "path": "asset-sources/step-01-identidade-dark.png"
+  },
+  {
+    "name": "step-03-rodagem-dark",
+    "prompt": "Square 1200x1200. Premium photorealistic editorial photograph of the REAR of a full-size Brazilian long-distance coach BUS driving on a wet road at dusk, tall vertical bus silhouette, rear engine ventilation grille, narrow red taillamps, motion in road only, crisp believable vehicle. Dark navy industrial atmosphere. No SUV, no sports car, no fake emblems, no text or watermark.",
+    "path": "asset-sources/step-03-rodagem-dark.png"
+  },
+  {
+    "name": "bus-aerial-main",
+    "prompt": "Single long-distance double decker coach bus, exact 90 degree orthographic TOP DOWN view of roof, front facing TOP of image. Entire bus isolated on truly transparent background with clean alpha, no ground, no cast shadow, no perspective, no text or logo. Dark navy body, two rooftop HVAC units, roof hatches, slim mirrors, realistic full size BUS proportions. Vertical 800x1600 canvas, maximum quality.",
+    "path": "asset-sources/bus-aerial-main.png"
+  },
+  {
+    "name": "bus-aerial-transit",
+    "prompt": "Single Brazilian urban transit BUS, exact 90 degree orthographic TOP DOWN view of roof, front facing TOP of image. Entire bus isolated on truly transparent background with clean alpha, no ground, no cast shadow, no perspective, no text or logo. Off-white body, rooftop air-conditioning unit and roof escape hatches, slim mirrors, realistic long rectangular BUS proportions. Vertical 800x1600 canvas, maximum quality.",
+    "path": "asset-sources/bus-aerial-transit.png"
+  },
+  {
+    "name": "bus-aerial-minibus",
+    "prompt": "Single compact Brazilian executive MICRO BUS, exact 90 degree orthographic TOP DOWN view of roof, front facing TOP of image. Entire bus isolated on truly transparent background with clean alpha, no ground, no cast shadow, no perspective, no text or logo. Silver and navy body, rooftop air-conditioning, roof hatch, realistic shorter wide MICRO BUS proportions, not an SUV nor car nor van. Vertical 800x1600 canvas, maximum quality.",
+    "path": "asset-sources/bus-aerial-minibus.png"
+  },
+  {
+    "name": "footer-buses-rear",
+    "prompt": "Widescreen 1920x1080 premium photorealistic concept scene: three full-size modern Brazilian long distance COACH BUSES aligned, seen from rear, very tall flat rear silhouettes with engine ventilation grilles, red taillamps and red reflections on wet asphalt in dark industrial night environment. Balanced wide composition with negative space at upper half for website text. Navy and black, restrained red. No cars, SUVs or vans. No text, no logos, no watermark.",
+    "path": "asset-sources/footer-buses-rear.png"
+  },
+  {
+    "name": "service-carroceria",
+    "prompt": "Use case: product-mockup. Premium technical editorial category illustration for Center Ônibus bus bodywork parts distributor, not an exact sellable SKU photograph. A detached full-size BUS bodywork side skirt panel and a rear engine access hatch, slightly curved fiberglass surfaces, matte navy blue finish, visible mounting points, industrial replacement bodywork. No complete vehicle. Landscape 1600x1200, 4:3. Photorealistic high-end industrial studio photography, dark #101418 and navy #122B4A background, restrained blue edge light with soft natural overhead highlight, authentic material textures. Entire subject visible with generous framing for cropping. No human, no text, no logos, no watermarks, no neon, no decorative carbon. Highest available quality and resolution.",
+    "path": "asset-sources/service-carroceria.png"
+  },
+  {
+    "name": "service-iluminacao",
+    "prompt": "Use case: product-mockup. Premium technical editorial category illustration for Center Ônibus bus bodywork parts distributor, not an exact sellable SKU photograph. A standalone full-size BUS rectangular headlight unit and two vertical modular rear taillamp assemblies with red amber and clear sections, disconnected replacement parts displayed on workbench, crisp lens geometry. No car fascia. Landscape 1600x1200, 4:3. Photorealistic high-end industrial studio photography, dark #101418 and navy #122B4A background, restrained blue edge light with soft natural overhead highlight, authentic material textures. Entire subject visible with generous framing for cropping. No human, no text, no logos, no watermarks, no neon, no decorative carbon. Highest available quality and resolution.",
+    "path": "asset-sources/service-iluminacao.png"
+  },
+  {
+    "name": "service-retrovisores",
+    "prompt": "Use case: product-mockup. Premium technical editorial category illustration for Center Ônibus bus bodywork parts distributor, not an exact sellable SKU photograph. A standalone full-size Brazilian BUS long curved support arm with large vertically stacked convex and flat mirror assembly, matte black grain texture, credible mounting flange. No car mirror. Landscape 1600x1200, 4:3. Photorealistic high-end industrial studio photography, dark #101418 and navy #122B4A background, restrained blue edge light with soft natural overhead highlight, authentic material textures. Entire subject visible with generous framing for cropping. No human, no text, no logos, no watermarks, no neon, no decorative carbon. Highest available quality and resolution.",
+    "path": "asset-sources/service-retrovisores.png"
+  },
+  {
+    "name": "service-vidros",
+    "prompt": "Use case: product-mockup. Premium technical editorial category illustration for Center Ônibus bus bodywork parts distributor, not an exact sellable SKU photograph. A large BUS panoramic laminated curved windshield resting upright in a safe workshop glass rack with dark rubber seals arranged alongside, visible glass edge thickness and restrained reflections. Landscape 1600x1200, 4:3. Photorealistic high-end industrial studio photography, dark #101418 and navy #122B4A background, restrained blue edge light with soft natural overhead highlight, authentic material textures. Entire subject visible with generous framing for cropping. No human, no text, no logos, no watermarks, no neon, no decorative carbon. Highest available quality and resolution.",
+    "path": "asset-sources/service-vidros.png"
+  },
+  {
+    "name": "service-climatizacao",
+    "prompt": "Use case: product-mockup. Premium technical editorial category illustration for Center Ônibus bus bodywork parts distributor, not an exact sellable SKU photograph. Two bus cabin pollen filter cartridges with dense white pleated filter media and black rectangular sealing frames, small industrial heat exchanger in background. No branding or model identifiers. Detailed folds and seals. Landscape 1600x1200, 4:3. Photorealistic high-end industrial studio photography, dark #101418 and navy #122B4A background, restrained blue edge light with soft natural overhead highlight, authentic material textures. Entire subject visible with generous framing for cropping. No human, no text, no logos, no watermarks, no neon, no decorative carbon. Highest available quality and resolution.",
+    "path": "asset-sources/service-climatizacao.png"
+  },
+  {
+    "name": "service-parachoques",
+    "prompt": "Use case: product-mockup. Premium technical editorial category illustration for Center Ônibus bus bodywork parts distributor, not an exact sellable SKU photograph. A detached broad curved fiberglass front bumper for a full-size BUS, navy finish, recessed lamp openings and visible mounting brackets, replacement bodywork part on dark supports. No SUV bumper or car bumper. Landscape 1600x1200, 4:3. Photorealistic high-end industrial studio photography, dark #101418 and navy #122B4A background, restrained blue edge light with soft natural overhead highlight, authentic material textures. Entire subject visible with generous framing for cropping. No human, no text, no logos, no watermarks, no neon, no decorative carbon. Highest available quality and resolution.",
+    "path": "asset-sources/service-parachoques.png"
+  },
+  {
+    "name": "banner-previous-builds",
+    "prompt": "Use case: product-mockup. Premium technical editorial category illustration for Center Ônibus bus bodywork parts distributor, not an exact sellable SKU photograph. Macro close view of a full-size Brazilian coach BUS headlamp and adjacent tall navy body panel, clear layered optics and precise mounting seam, composition wide with dark negative space for website heading. Clearly BUS proportions, no luxury car. Widescreen 1920x1080. Photorealistic high-end industrial studio photography, dark #101418 and navy #122B4A background, restrained blue edge light with soft natural overhead highlight, authentic material textures. Entire subject visible with generous framing for cropping. No human, no text, no logos, no watermarks, no neon, no decorative carbon. Highest available quality and resolution.",
+    "path": "asset-sources/banner-previous-builds.png"
+  }
+]

@@ -3,7 +3,6 @@
    Exact 1:1 Reproduction of Visual Identity, Typography, and Shaders
    ========================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500;600;700&display=swap');
 
 :root {
   /* =========================================================================
@@ -38,8 +37,8 @@
   --gap-uber: 9.6rem;
   --gap-col: calc(8.333vw + 1.6rem);
 
-  --font-heading: 'Cormorant Garamond', Garamond, 'Times New Roman', Georgia, serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: var(--font-archivo-condensed), 'Arial Narrow', sans-serif;
+  --font-body: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --easing-bezzy: cubic-bezier(0.8, 0, 0, 1);
   --easing-bezzy2: cubic-bezier(0.430, 0.195, 0.020, 1);
   --easing-bezzy3: cubic-bezier(0.5, 0, 0, 1);
@@ -78,6 +77,34 @@ body:has(.forge-body) {
   background-color: var(--global-black) !important;
   max-width: 100% !important;
   width: 100% !important;
+}
+
+html:has(.forge-body) body[data-menu-open="true"] {
+  overflow: hidden !important;
+}
+
+.forge-body :is(h1, h2, h3) { font-weight: 700; }
+.forge-body :is(a, button):focus-visible {
+  outline: 2px solid #F4F4F4;
+  outline-offset: 6px;
+}
+.forge-body .forge-grid-12 > * { min-width: 0; }
+.forge-marquee-wrap:hover .forge-marquee-track { animation-play-state: paused; }
+.forge-hero-center-reveal { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .forge-body *, .forge-body *::before, .forge-body *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  .forge-approach-track { height: auto !important; }
+  .forge-approach-aperture-slot { position: relative !important; clip-path: none !important; }
+  .forge-hero-center-reveal { display: none; }
+  .forge-steps-sticky-col, .forge-services-sticky-panel, .forge-steps-blur-bg { display: none !important; }
+  .forge-step-mobile-img, .forge-service-mobile-img { display: block !important; }
+  .forge-steps-articles-col { grid-column: 2 / 12 !important; }
+  .forge-services-split { grid-template-columns: 1fr !important; }
+  .forge-service-card { height: auto !important; min-height: auto !important; padding: 3rem 1.5rem !important; }
 }
 
 html.lenis:has(.forge-body),
@@ -462,7 +489,7 @@ html.lenis:has(.forge-body) body {
   font-size: clamp(2.4rem, 4.8vw, 4.4rem);
   font-weight: 500;
   color: var(--brand-bc5);
-  letter-spacing: -0.02rem;
+  letter-spacing: 0;
   text-transform: uppercase;
   line-height: 1;
   transition: color 0.3s ease;
@@ -1033,10 +1060,10 @@ html.lenis:has(.forge-body) body {
 
 .forge-hero-title {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(3.2rem, 7.5vw, 8.5rem);
   line-height: 1.05;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   color: var(--brand-bc5);
   margin: 0;
   text-wrap: balance;
@@ -1057,10 +1084,10 @@ html.lenis:has(.forge-body) body {
 
 .forge-hero-center-title {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(2.4rem, 5.5vw, 6.8rem);
   line-height: 1.15;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   color: var(--brand-bc5);
   margin: 0;
   text-wrap: balance;
@@ -1089,12 +1116,12 @@ html.lenis:has(.forge-body) body {
 .forge-hero-desc {
   font-family: var(--font-body);
   font-size: clamp(0.95rem, 1.2vw, 1.15rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.4;
   color: rgba(228, 231, 235, 0.82);
   margin: 0 auto;
   max-width: 42rem;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   text-wrap: balance;
 }
 
@@ -1187,10 +1214,10 @@ html.lenis:has(.forge-body) body {
 
 .forge-approach-title {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(3.2rem, 6.8vw, 7.8rem);
   line-height: 1.1;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   color: var(--global-white);
   margin: 0;
 }
@@ -1308,7 +1335,7 @@ html.lenis:has(.forge-body) body {
 .forge-approach-desc {
   font-family: var(--font-body);
   font-size: clamp(1rem, 1.25vw, 1.2rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.85);
   margin: 0;
@@ -1454,7 +1481,7 @@ html.lenis:has(.forge-body) body {
 .forge-step-indicator {
   font-family: var(--font-heading);
   font-size: 1.5rem;
-  font-weight: 300;
+  font-weight: 400;
   color: var(--color-road-blue);
   margin-bottom: 1.5rem;
 }
@@ -1465,10 +1492,10 @@ html.lenis:has(.forge-body) body {
 
 .forge-step-heading {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(3.4rem, 6vw, 6.8rem);
   line-height: 1.05;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   margin: 0 0 1.75rem 0;
   color: var(--brand-bc5);
 }
@@ -1476,7 +1503,7 @@ html.lenis:has(.forge-body) body {
 .forge-step-desc {
   font-family: var(--font-body);
   font-size: clamp(1rem, 1.25vw, 1.2rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.6;
   color: rgba(228, 231, 235, 0.82);
   margin: 0 0 2.5rem 0;
@@ -1568,10 +1595,10 @@ html.lenis:has(.forge-body) body {
 
 .forge-statement-quote {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(2.8rem, 5.2vw, 6.2rem);
   line-height: 1.15;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   color: #ffffff;
   margin: 0 0 3rem 0;
   text-wrap: balance;
@@ -1588,7 +1615,7 @@ html.lenis:has(.forge-body) body {
 .forge-statement-copy {
   font-family: var(--font-body);
   font-size: clamp(1rem, 1.25vw, 1.2rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.6;
   color: rgba(228, 231, 235, 0.78);
   margin: 0;
@@ -1667,17 +1694,17 @@ html.lenis:has(.forge-body) body {
 
 .forge-service-title {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(2.8rem, 5vw, 5.2rem);
   line-height: 1.1;
-  letter-spacing: -0.05rem;
+  letter-spacing: 0;
   color: var(--brand-bc5);
   margin: 0 0 1.5rem 0;
 }
 
 .forge-service-desc {
   font-size: clamp(1rem, 1.25vw, 1.2rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.6;
   color: rgba(228, 231, 235, 0.82);
   margin: 0 0 2.5rem 0;
@@ -1764,10 +1791,10 @@ html.lenis:has(.forge-body) body {
 
 .forge-ordinary-top-title {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(3.5rem, 9vw, 8.5rem);
   line-height: 1;
-  letter-spacing: -0.1rem;
+  letter-spacing: 0;
   color: var(--brand-bc5);
   text-align: center;
   margin: 0;
@@ -1881,10 +1908,10 @@ html.lenis:has(.forge-body) body {
 
 .forge-ordinary-bottom-title {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(3.5rem, 9vw, 8.5rem);
   line-height: 1;
-  letter-spacing: -0.1rem;
+  letter-spacing: 0;
   color: var(--brand-bc5);
   text-align: center;
   margin: 0 0 1.5rem 0;
@@ -1892,7 +1919,7 @@ html.lenis:has(.forge-body) body {
 
 .forge-ordinary-copy {
   font-size: clamp(1rem, 1.3vw, 1.25rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.6;
   color: rgba(228, 231, 235, 0.82);
   text-align: center;
@@ -1949,17 +1976,17 @@ html.lenis:has(.forge-body) body {
 
 .forge-full-banner-title {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(3rem, 6.5vw, 6.2rem);
   line-height: 1.1;
-  letter-spacing: -0.06rem;
+  letter-spacing: 0;
   color: var(--brand-bc5);
   margin: 0;
 }
 
 .forge-full-banner-desc {
   font-size: clamp(1rem, 1.3vw, 1.25rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.6;
   color: rgba(228, 231, 235, 0.82);
   margin: 0 0 1.5rem 0;
@@ -2024,10 +2051,10 @@ html.lenis:has(.forge-body) body {
 
 .forge-footer-title {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(3.4rem, 8vw, 7.5rem);
   line-height: 1.1;
-  letter-spacing: -0.08rem;
+  letter-spacing: 0;
   color: var(--brand-bc5);
   margin: 0 0 1.5rem 0;
 }
@@ -2191,3 +2218,19 @@ html.lenis:has(.forge-body) body {
   }
 }
 
+/* Keep the three bus classes visible on touch layouts. */
+@media (max-width: 1023px) {
+ .forge-car-main { width: 34vw; max-width: 13rem; }
+ .forge-car-side { display: block; position: absolute; width: 24vw; max-width: 9rem; top: 24%; }
+ .forge-car-side.left { left: 0; }
+ .forge-car-side.right { right: 0; }
+ .forge-ordinary-cars-container { min-height: 25rem; }
+ .forge-ordinary-section { padding-inline: 1rem; }
+}
+html.lenis:has(.forge-body) body[data-menu-open="true"] { overflow-y: hidden !important; }
+@media (prefers-reduced-motion: reduce) { .forge-approach-track { margin-top: 0 !important; } }
+.forge-btn { flex-shrink: 0; min-height: 3.5rem; max-width: 100%; }
+.forge-approach-bottom-row { overflow: visible; }
+.forge-approach-cta-col { min-width: 0; }
+.forge-approach-cta-col .forge-btn { padding-inline: 1.5rem; }
+.forge-approach-cta-col .forge-btn-label { letter-spacing: 0.12rem; white-space: normal; text-align: center; }

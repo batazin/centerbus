@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local browser profiles and review captures
+/.codex/
+/asset-audit.jpg
+/real-photos-audit.jpg
+/review/
+
+/asset-sources/
+/lint-report.txt
+
+/outputs/
