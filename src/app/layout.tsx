@@ -1,22 +1,15 @@
 import type { Metadata } from "next";
-import { Archivo_Narrow, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import "./home-rebrand.css";
 import "./product-catalog.css";
 import "./blog.css";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const archivoNarrow = Archivo_Narrow({
-  subsets: ["latin"],
-  variable: "--font-archivo-condensed",
-  display: "swap",
-  weight: ["500", "600", "700"],
+const inter = localFont({ src: "./fonts/Inter-Variable.ttf", variable: "--font-inter", display: "swap", weight: "100 900" });
+const archivoNarrow = localFont({
+  src: [{ path: "./fonts/ArchivoCondensed-Bold.ttf", weight: "700" }, { path: "./fonts/ArchivoCondensed-ExtraBold.ttf", weight: "800" }],
+  variable: "--font-archivo-condensed", display: "swap",
 });
 
 export const metadata: Metadata = {

@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import "./contact-form.css";
 
 const subjects = [
@@ -11,24 +12,32 @@ const subjects = [
 ] as const;
 
 export function ContactForm() {
-  const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setIsReady(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+  const [status, setStatus] = useState<"idle" | "prepared">("idle");
+  const [emailHref, setEmailHref] = useState("");
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("submitting");
-    setTimeout(() => {
-      setStatus("success");
-    }, 1800);
+    if (!formRef.current) return;
+    const fields = new FormData(formRef.current);
+    const subject = subjects.find(item => item.value === fields.get("subject"))?.label ?? "Solicitação de peças";
+    const body = `Nome / empresa: ${fields.get("name")}\nE-mail: ${fields.get("email")}\nTelefone: ${fields.get("phone")}\n\n${fields.get("message")}`;
+    const href = `mailto:contato@centeronibus.com.br?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setEmailHref(href);
+    setStatus("prepared");
   };
 
   const handleReset = () => {
     setStatus("idle");
-    formRef.current?.reset();
   };
 
-  const isDisabled = status === "submitting";
+  const isDisabled = !isReady;
 
   return (
     <section className="contact-form-section" id="formulario">
@@ -44,12 +53,12 @@ export function ContactForm() {
 
             <div className="contact-channels">
               <div className="contact-channel">
-                <span className="contact-channel-label">Telefone / WhatsApp</span>
-                <strong>(11) 2065-4620</strong>
+                <span className="contact-channel-label">Telefone</span>
+                <a href="tel:+551129673002"><strong>(11) 2967-3002</strong></a>
               </div>
               <div className="contact-channel">
                 <span className="contact-channel-label">E-mail comercial</span>
-                <strong>contato@centeronibus.com.br</strong>
+                <a href="mailto:contato@centeronibus.com.br"><strong>contato@centeronibus.com.br</strong></a>
               </div>
               <div className="contact-channel">
                 <span className="contact-channel-label">Horário</span>
@@ -70,29 +79,27 @@ export function ContactForm() {
 
         {/* ── Form ── */}
         <div className="contact-form-panel">
-          {status === "success" ? (
-            <div className="contact-form-success">
+          {status === "prepared" && (
+            <div className="contact-form-success" role="status">
               <div className="contact-success-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <strong>Solicitação recebida.</strong>
-              <p>O retorno é feito pela equipe técnica, com conferência de aplicação antes do orçamento.</p>
-              <div className="contact-success-meta">
-                <span>Prazo médio de resposta</span>
-                <strong>Até 4 horas úteis</strong>
-              </div>
+              <strong>Seu e-mail está preparado.</strong>
+              <p>Conclua o envio no seu aplicativo de e-mail. A solicitação ainda não foi recebida pela Center. Você pode anexar fotos da peça antes de enviar.</p>
+              <a href={emailHref} className="contact-btn contact-btn-primary">Abrir aplicativo de e-mail</a>
+              <Link href="/vendedores" className="contact-btn contact-btn-outline">Falar com um vendedor</Link>
               <button type="button" onClick={handleReset} className="contact-btn contact-btn-outline">
-                Enviar nova solicitação
+                Voltar ao formulário
               </button>
             </div>
-          ) : (
-            <>
+          )}
+          <div hidden={status === "prepared"}>
               <div className="contact-form-header">
                 <span className="contact-form-step">Formulário de contato</span>
                 <h3>Envie sua solicitação</h3>
-                <p>Quanto mais detalhes, mais rápido o retorno técnico.</p>
+                <p>Preencha os detalhes para preparar um e-mail. Você conclui o envio no seu aplicativo de e-mail.</p>
               </div>
 
               <form className="contact-form" ref={formRef} onSubmit={handleSubmit}>
@@ -101,6 +108,7 @@ export function ContactForm() {
                   <input
                     type="text"
                     id="contact-name"
+                    name="name"
                     required
                     placeholder="Ex: Viação São José"
                     disabled={isDisabled}
@@ -115,6 +123,7 @@ export function ContactForm() {
                     <input
                       type="email"
                       id="contact-email"
+                      name="email"
                       required
                       placeholder="contato@empresa.com.br"
                       disabled={isDisabled}
@@ -127,6 +136,7 @@ export function ContactForm() {
                     <input
                       type="tel"
                       id="contact-phone"
+                      name="phone"
                       required
                       placeholder="(11) 90000-0000"
                       disabled={isDisabled}
@@ -141,6 +151,7 @@ export function ContactForm() {
                   <div className="form-select-wrap">
                     <select
                       id="contact-subject"
+                      name="subject"
                       required
                       disabled={isDisabled}
                       defaultValue=""
@@ -162,6 +173,7 @@ export function ContactForm() {
                   <label htmlFor="contact-message">Detalhes da solicitação</label>
                   <textarea
                     id="contact-message"
+                    name="message"
                     rows={5}
                     required
                     placeholder="Informe o código da peça, carroceria (Caio Apache Vip, Marcopolo Paradiso...), quantidade e urgência."
@@ -180,10 +192,10 @@ export function ContactForm() {
                     {isDisabled ? (
                       <>
                         <span className="contact-btn-spinner" aria-hidden="true" />
-                        Enviando…
+                        Carregando formulário…
                       </>
                     ) : (
-                      "Enviar solicitação"
+                      "Preparar e-mail"
                     )}
                   </button>
                   <p className="contact-form-disclaimer">
@@ -191,8 +203,7 @@ export function ContactForm() {
                   </p>
                 </div>
               </form>
-            </>
-          )}
+          </div>
         </div>
       </div>
     </section>

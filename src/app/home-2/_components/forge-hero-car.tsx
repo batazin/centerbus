@@ -1,217 +1,89 @@
 "use client";
-
-import { useEffect, useRef, useState, useImperativeHandle, forwardRef, useCallback } from "react";
-
-export interface ForgeHeroCarHandle {
-  setFrame: (progress: number) => void;
-  isReady: boolean;
-}
-
-interface ForgeHeroCarProps {
-  className?: string;
-  onReady?: () => void;
-}
-
-// 31 Cinematic photorealistic forward-drive frames
-// Bus driving directly forward on the wet road towards the camera with beaming headlights
-const TOTAL_DRIVE_FRAMES = 31;
-const getFramePath = (idx: number) =>
-  `/sequences/bus/frame_${String(idx + 1).padStart(4, "0")}.webp`;
-
-export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, ForgeHeroCarProps>(
-  function ForgeHeroCar({ className = "", onReady }, ref) {
-    const containerRef = useRef<HTMLDivElement | null>(null);
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
-    const imagesCache = useRef<HTMLImageElement[]>([]);
-    const requestedProgressRef = useRef<number>(0);
-
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [hasPaintedFirstFrame, setHasPaintedFirstFrame] = useState(false);
-
-    // Exact cover scaling calculation matching Forge Automotive (Chunk 456393)
-    const drawCoverFrame = useCallback(
-      (
-        ctx: CanvasRenderingContext2D,
-        img: HTMLImageElement,
-        clientWidth: number,
-        clientHeight: number,
-        alpha: number = 1.0,
-        extraScale: number = 1.0
-      ) => {
-        const fw = img.naturalWidth || img.width || 1280;
-        const fh = img.naturalHeight || img.height || 720;
-        if (!clientWidth || !clientHeight || !fw || !fh) return;
-
-        const baseScale = Math.max(clientWidth / fw, clientHeight / fh);
-        const finalScale = baseScale * extraScale;
-        const drawW = fw * finalScale;
-        const drawH = fh * finalScale;
-        const drawX = (clientWidth - drawW) / 2;
-        const drawY = (clientHeight - drawH) / 2;
-
-        ctx.globalAlpha = alpha;
-        ctx.drawImage(img, drawX, drawY, drawW, drawH);
-      },
-      []
-    );
-
-    const renderProgress = useCallback(
-      (progress: number) => {
-        const ctx = ctxRef.current;
-        const container = containerRef.current;
-        if (!ctx || !container) return;
-
-        const clamped = Math.max(0, Math.min(1, progress));
-        const { clientWidth: w, clientHeight: h } = container;
-        if (!w || !h) return;
-
-        ctx.clearRect(0, 0, w, h);
-
-        const imgs = imagesCache.current;
-        const firstImg = imgs[0];
-        if (!firstImg || !firstImg.complete) return;
-
-        // Calculate smooth continuous frame index across the 31 driving frames
-        const frameProgress = clamped * (TOTAL_DRIVE_FRAMES - 1);
-        const baseIdx = Math.floor(frameProgress);
-        const nextIdx = Math.min(baseIdx + 1, TOTAL_DRIVE_FRAMES - 1);
-        const t = frameProgress - baseIdx;
-
-        // Subtle scale increase for maximum cinematic punch as bus advances
-        const currentScale = 1.0 + 0.12 * Math.pow(clamped, 1.2);
-
-        const baseImg = imgs[baseIdx] && imgs[baseIdx].complete ? imgs[baseIdx] : firstImg;
-        const nextImg = imgs[nextIdx] && imgs[nextIdx].complete ? imgs[nextIdx] : baseImg;
-
-        // Draw current driving frame
-        drawCoverFrame(ctx, baseImg, w, h, 1.0, currentScale);
-
-        // Sub-frame interpolation between adjacent video frames for ultra-smooth 60fps scrubbing
-        if (t > 0.02 && nextImg !== baseImg) {
-          drawCoverFrame(ctx, nextImg, w, h, t, currentScale);
-        }
-
-        // Atmospheric vignette and headlight bloom enhancement as bus approaches camera
-        if (clamped > 0.1) {
-          const bloomAlpha = Math.min(0.35, clamped * 0.45);
-          const cx = w * 0.5;
-          const cy = h * 0.62;
-          const r = Math.max(w, h) * 0.45;
-
-          const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, r);
-          grad.addColorStop(0, `rgba(255, 255, 255, ${bloomAlpha * 0.3})`);
-          grad.addColorStop(0.3, `rgba(200, 230, 255, ${bloomAlpha * 0.15})`);
-          grad.addColorStop(0.7, `rgba(46, 109, 164, ${bloomAlpha * 0.06})`);
-          grad.addColorStop(1, "rgba(0, 0, 0, 0)");
-
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, w, h);
-        }
-
-        ctx.globalAlpha = 1.0;
-
-        if (!hasPaintedFirstFrame) {
-          setHasPaintedFirstFrame(true);
-        }
-      },
-      [drawCoverFrame, hasPaintedFirstFrame]
-    );
-
-    // Expose setFrame method directly driven by ScrollTrigger progress [0, 1]
-    useImperativeHandle(
-      ref,
-      () => ({
-        isReady: isLoaded,
-        setFrame: (progress: number) => {
-          requestedProgressRef.current = progress;
-          renderProgress(progress);
-        },
-      }),
-      [isLoaded, renderProgress]
-    );
-
-    useEffect(() => {
-      let isMounted = true;
-
-      const updateCanvasSize = () => {
-        const canvas = canvasRef.current;
-        const container = containerRef.current;
-        if (!canvas || !container) return false;
-
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        const { clientWidth: w, clientHeight: h } = container;
-        if (!w || !h) return false;
-
-        canvas.width = Math.round(w * dpr);
-        canvas.height = Math.round(h * dpr);
-        canvas.style.width = `${w}px`;
-        canvas.style.height = `${h}px`;
-
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return false;
-        ctxRef.current = ctx;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-        renderProgress(requestedProgressRef.current);
-        return true;
-      };
-
-      updateCanvasSize();
-      window.addEventListener("resize", updateCanvasSize, { passive: true });
-
-      // Preload all 31 driving frames
-      const loadPromises = Array.from({ length: TOTAL_DRIVE_FRAMES }, (_, idx) => {
-        return new Promise<HTMLImageElement>((resolve) => {
-          const img = new Image();
-          img.src = getFramePath(idx);
-          img.onload = () => {
-            if (isMounted) {
-              imagesCache.current[idx] = img;
-              if (idx === 0) {
-                renderProgress(0);
-                setIsLoaded(true);
-                onReady?.();
-              }
-            }
-            resolve(img);
-          };
-          img.onerror = () => {
-            resolve(img);
-          };
-        });
-      });
-
-      Promise.all(loadPromises).then(() => {
-        if (!isMounted) return;
-        renderProgress(requestedProgressRef.current);
-        setIsLoaded(true);
-      });
-
-      return () => {
-        isMounted = false;
-        window.removeEventListener("resize", updateCanvasSize);
-        ctxRef.current = null;
-      };
-    }, [onReady, renderProgress]);
-
-    return (
-      <div ref={containerRef} className={`forge-hero-car-container ${className}`}>
-        {/* Hardware-accelerated canvas for photorealistic bus driving sequence */}
-        <canvas
-          ref={canvasRef}
-          className={`forge-hero-car-canvas ${hasPaintedFirstFrame ? "active" : ""}`}
-        />
-
-        {/* Fallback frame 1 poster if loading */}
-        {!hasPaintedFirstFrame && (
-          <img
-            src="/sequences/bus/frame_0001.webp"
-            alt="Center Ônibus - Operação e Rodagem de Carrocerias"
-            className="forge-hero-car-poster"
-          />
-        )}
-      </div>
-    );
-  }
+import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from "react";
+export interface ForgeHeroCarHandle { setFrame: (progress: number) => void; isReady: boolean; }
+const COUNT = 241;
+const path = (i: number) => `/sequences/bus-drive-v2/frame_${String(i + 1).padStart(4, "0")}.webp`;
+export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string; onReady?: () => void }>(
+ function ForgeHeroCar({ className = "", onReady }, ref) {
+  const box = useRef<HTMLDivElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const progress = useRef(0);
+  const update = useRef<() => void>(() => {});
+  const ready = useRef(onReady);
+  const [painted, setPainted] = useState(false);
+  ready.current = onReady;
+  useImperativeHandle(ref, () => ({ isReady: painted, setFrame(p) {
+   progress.current = Number.isFinite(p) ? Math.max(0, Math.min(1, p)) : 0;
+   update.current();
+  }}), [painted]);
+  useEffect(() => {
+   const el = box.current, cv = canvas.current, ctx = cv?.getContext("2d", { alpha: false });
+   if (!el || !cv || !ctx) return;
+   let disposed = false, first = true, active = 0, raf = 0, idleIndex = 0;
+   let timer: ReturnType<typeof setTimeout>;
+   const images = new Map<number, HTMLImageElement>();
+   const anchors = new Set([0, 60, 120, 180, 240]);
+   const cacheLimit = window.matchMedia("(max-width: 767px)").matches ? 16 : 32;
+   const requested = new Set<number>();
+   const queue: number[] = [0, 60, 120, 180, 240];
+   const target = () => Math.round(progress.current * (COUNT - 1));
+   const paint = () => {
+    raf = 0;
+    if (disposed || !images.size) return;
+    const n = target();
+    const nearest = images.has(n) ? n : Array.from(images.keys()).reduce((a, b) => Math.abs(b-n) < Math.abs(a-n) ? b : a);
+    const im = images.get(nearest)!;
+    const w = el.clientWidth, h = el.clientHeight;
+    if (!w || !h) return;
+    const s = Math.max(w/im.naturalWidth, h/im.naturalHeight);
+    const iw = im.naturalWidth*s, ih = im.naturalHeight*s;
+    ctx.fillStyle = "#101418"; ctx.fillRect(0,0,w,h);
+    // Never blend adjacent frames: blending creates duplicate headlights and bodywork.
+    ctx.drawImage(im,(w-iw)/2,(h-ih)/2,iw,ih);
+    if (first) { first = false; setPainted(true); ready.current?.(); }
+   };
+   const draw = () => { if (!raf) raf = requestAnimationFrame(paint); };
+   const pump = () => {
+    while (!disposed && active < 4 && queue.length) {
+     const n = queue.shift()!;
+     if (requested.has(n)) continue;
+     requested.add(n); active++;
+     const im = new Image(); im.decoding = "async";
+     im.onload = () => { if (!disposed) { images.set(n,im);
+       while (images.size > cacheLimit) {
+        const candidates = Array.from(images.keys()).filter(i => !anchors.has(i) && i !== target());
+        const farthest = candidates.sort((a,b) => Math.abs(b-target())-Math.abs(a-target()))[0];
+        if (farthest === undefined) break;
+        images.delete(farthest); requested.delete(farthest);
+       }
+       active--; draw(); pump(); } };
+     im.onerror = () => { if (!disposed) { active--; pump(); } };
+     im.src = path(n);
+    }
+   };
+   update.current = () => {
+    const n = target();
+    const nearby = Array.from({length:17},(_,i)=>n+i-8).filter(i=>i>=0&&i<COUNT&&!requested.has(i)).sort((a,b)=>Math.abs(a-n)-Math.abs(b-n));
+    queue.splice(0, queue.length, ...new Set([...nearby, ...queue]));
+    pump(); draw();
+   };
+   const resize = () => {
+    const dpr = Math.min(window.devicePixelRatio || 1,1.5);
+    cv.width = Math.round(el.clientWidth*dpr); cv.height = Math.round(el.clientHeight*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); draw();
+   };
+   const observer = new ResizeObserver(resize); observer.observe(el); resize(); pump();
+   const idle = () => {
+    if (disposed) return;
+    for (let c=0;c<8&&idleIndex<COUNT;c++,idleIndex++) if (!requested.has(idleIndex)) queue.push(idleIndex);
+    pump(); if (idleIndex<COUNT) timer=setTimeout(idle,120);
+   };
+   timer=setTimeout(idle,600);
+   return () => { disposed=true; clearTimeout(timer); cancelAnimationFrame(raf); observer.disconnect(); images.clear(); update.current=()=>{}; };
+  },[]);
+  return <div ref={box} className={`forge-hero-car-container ${className}`}>
+   <canvas ref={canvas} aria-hidden="true" className={`forge-hero-car-canvas ${painted ? "active" : ""}`} />
+   {!painted && <img src={path(0)} alt="Ã”nibus rodoviÃ¡rio em movimento na estrada" className="forge-hero-car-poster" />}
+  </div>;
+ }
 );

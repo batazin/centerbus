@@ -32,6 +32,7 @@ export function SmoothScrollProvider({
       touchMultiplier: 1,
       anchors: { offset: anchorOffset, duration: 0.95 },
       overscroll: true,
+      prevent: () => document.body.dataset.menuOpen === "true",
       stopInertiaOnNavigate: true,
       // The home depends on scrubbed scrolling; decorative motion still
       // respects reduced-motion in each section.

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const NAV_ITEMS = [
   {
@@ -15,7 +15,7 @@ const NAV_ITEMS = [
     num: "02",
     label: "Catálogo de Peças",
     href: "/produtos",
-    detail: "Mais de 30.000 itens em estoque técnico",
+    detail: "Componentes para carrocerias e consulta de aplicação",
   },
   {
     num: "03",
@@ -46,25 +46,34 @@ const NAV_ITEMS = [
 export function ForgeHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => setMenuOpen(false);
 
-  // Fecha o menu ao pressionar ESC e bloqueia o scroll de fundo
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenuOpen(false);
+    if (!menuOpen) return;
+    const trigger = triggerRef.current;
+    const previousOverflow = document.body.style.overflow;
+    document.body.dataset.menuOpen = "true";
+    document.body.style.overflow = "hidden";
+    const frame = requestAnimationFrame(() => menuRef.current?.querySelector<HTMLElement>("a")?.focus());
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); setMenuOpen(false); }
+      if (event.key !== "Tab") return;
+      const items = [triggerRef.current, ...Array.from(menuRef.current?.querySelectorAll<HTMLElement>("a, button") ?? [])].filter(Boolean) as HTMLElement[];
+      const index = items.indexOf(document.activeElement as HTMLElement);
+      event.preventDefault();
+      items[(index + (event.shiftKey ? -1 : 1) + items.length) % items.length]?.focus();
     };
-
-    if (menuOpen) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
-    } else {
-      document.body.style.overflow = "";
-    }
-
+    window.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.body.style.overflow = "";
+      cancelAnimationFrame(frame);
+      document.body.style.overflow = previousOverflow;
+      delete document.body.dataset.menuOpen;
       window.removeEventListener("keydown", handleKeyDown);
+      trigger?.focus();
     };
   }, [menuOpen]);
 
@@ -74,7 +83,7 @@ export function ForgeHeader() {
         {/* Social Links (Desktop) */}
         <nav aria-label="Social media" className="forge-header-socials">
           <a
-            href="https://www.linkedin.com/company/centeronibus/"
+            href="https://www.linkedin.com/company/auto-pe%C3%A7as-center-%C3%B4nibus/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn Center Ônibus"
@@ -126,6 +135,7 @@ export function ForgeHeader() {
           aria-label={menuOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"}
           aria-expanded={menuOpen}
           aria-controls="site-menu"
+          ref={triggerRef}
           className="forge-menu-trigger"
           onClick={toggleMenu}
         >
@@ -139,7 +149,7 @@ export function ForgeHeader() {
       </header>
 
       {/* Fullscreen Navigation Modal - Atelier Forge Design */}
-      <div id="site-menu" className={`forge-nav-overlay ${menuOpen ? "open" : ""}`}>
+      <div id="site-menu" ref={menuRef} role="dialog" aria-modal={menuOpen ? true : undefined} aria-label="Navegação Center Ônibus" aria-hidden={!menuOpen} inert={!menuOpen} data-lenis-prevent className={`forge-nav-overlay ${menuOpen ? "open" : ""}`}>
         <div className="forge-nav-wrap">
           {/* Central Editorial Navigation List */}
           <div className="forge-nav-body">
