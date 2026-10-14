@@ -11,6 +11,7 @@ import "./center-refinement.css";
 import "./center-mobile.css";
 import { CenterPhoto } from "../_components/center-photo";
 import { CenterTeam } from "./_components/center-team";
+import { InstitutionalFooter } from "../_components/institutional-footer";
 
 // Principais marcas e encarroçadoras atendidas pela Center Ônibus
 const MARQUEE_BRANDS = ["Busscar", "Comil", "Caio", "Mascarello"];
@@ -870,6 +871,7 @@ export default function Home2() {
         </section>
 
       </div>
+      <InstitutionalFooter />
     </SmoothScrollProvider>
   );
 }

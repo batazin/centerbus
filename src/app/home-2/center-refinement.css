@@ -1,10 +1,5 @@
 /* Center identity; motion structure follows the retained Forge source. */
 .forge-body { --global-black: #122B4A; --brand-bc1: #122B4A; --brand-bc2: #16355B; }
-.forge-header-logo-wrap { background: transparent; padding: 14px 22px; border-radius: 0; mix-blend-mode: normal; }
-.forge-header-logo-wrap img { width: 150px !important; height: auto !important; }
-.forge-header.is-light-surface:not(.is-menu-open) { background: #F4F4F4; box-shadow: none; border-bottom: 1px solid #E4E7EB; }
-.forge-header-logo-wrap { top: 18px; }
-.forge-header { padding-block: 24px; }
 .center-team { scroll-margin-top: 100px; }
 .forge-hero-bg-texture { background: url('/brand/center-route-pattern.svg') repeat; background-size: 240px; opacity: .65; }
 .forge-hero-vignette { background: linear-gradient(180deg,rgba(18,43,74,.72),rgba(18,43,74,.12) 33%,transparent 48%,transparent 65%,rgba(18,43,74,.72)); }
@@ -75,8 +70,6 @@
 .center-team :is(button,a,[tabindex]):focus-visible { outline: 2px solid #C8102E; outline-offset: 4px; }
 @media(max-width:1023px) { .center-team-track { grid-auto-columns: calc((100% - 1rem)/2); } }
 @media(max-width:600px) {
- .forge-header-logo-wrap { padding: 10px 14px; }
- .forge-header-logo-wrap img { width: 108px !important; }
  .center-team-heading { grid-template-columns: 1fr; gap: 1.25rem; }
  .center-team-track { grid-auto-columns: 82%; }
  .center-team-toolbar { align-items: flex-start; }

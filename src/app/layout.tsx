@@ -5,6 +5,8 @@ import "./globals.css";
 import "./home-rebrand.css";
 import "./product-catalog.css";
 import "./blog.css";
+import "./_components/center-site-header.css";
+import "./site-consistency.css";
 
 const inter = localFont({ src: "./fonts/Inter-Variable.woff2", variable: "--font-inter", display: "swap", weight: "100 900" });
 const archivoNarrow = localFont({

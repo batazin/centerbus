@@ -1,11 +1,4 @@
 /* A touch layout with its own reading rhythm, assets and bounded motion. */
-.forge-header { box-shadow: none !important; filter: none; }
-.forge-header:not(.is-menu-open),.forge-header.is-light-surface:not(.is-menu-open) { background: transparent !important; border: 0; box-shadow: none !important; backdrop-filter: none; }
-.forge-header:not(.is-menu-open) :is(.forge-social-link,.forge-header-phone,.forge-menu-trigger) { color: #F4F4F4; }
-.forge-header:not(.is-menu-open) .forge-menu-icon span { background: #F4F4F4; }
-.forge-header.is-left-light:not(.is-menu-open) :is(.forge-social-link,.forge-header-phone) { color: #122B4A; }
-.forge-header.is-right-light:not(.is-menu-open) .forge-menu-trigger { color: #122B4A; }
-.forge-header.is-right-light:not(.is-menu-open) .forge-menu-icon span { background: #122B4A; }
 .center-statement-word { display: inline; }
 .center-catalog-links { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 2.5rem; }
 .center-catalog-links a { color: #E4E7EB; font-size: .75rem; text-underline-offset: 4px; }
@@ -25,15 +18,6 @@
 @media(max-width:1023px), (pointer:coarse) {
  .forge-body { -webkit-tap-highlight-color: rgba(46,109,164,.12); }
  .forge-body :is(a,button) { touch-action: manipulation; }
- .forge-header { min-height: 68px; padding: calc(12px + env(safe-area-inset-top)) 16px 12px; align-items: center; background: #122B4A; box-sizing: border-box; }
- .forge-header-logo-wrap { top: calc(24px + env(safe-area-inset-top)); padding: 0; }
- .forge-header-logo-wrap img { width: 124px !important; }
- .forge-header-phone,.forge-menu-trigger { min-width: 44px; min-height: 44px; padding: 8px; }
- .forge-menu-label,.forge-header-socials { display: none; }
- .forge-nav-overlay { padding-top: calc(84px + env(safe-area-inset-top)); }
- .forge-nav-title { font-size: clamp(1.6rem,6vw,2.6rem); line-height: 1.1; }
- .forge-nav-row { padding-block: .65rem; }
- .forge-nav-detail { display: none; }
  .forge-hero-pin-wrapper { height: 190svh; }
  .forge-hero-section { height: 100svh; }
  .forge-hero-car-poster { object-position: 78% center; }

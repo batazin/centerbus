@@ -19,9 +19,10 @@ try{
    const header=document.querySelector('.forge-header');
    const style=getComputedStyle(header);
    const slot=getComputedStyle(document.querySelector('.forge-approach-aperture-slot'));
-   return {last:[...document.querySelectorAll('.forge-body>section')].at(-1)?.id,removed:!!document.querySelector('#stock,#contact,.forge-footer-section'),clip:slot.clipPath,position:slot.position,shadow:style.boxShadow,background:style.backgroundImage};
+   return {last:[...document.querySelectorAll('.forge-body>section')].at(-1)?.id,footerCount:document.querySelectorAll('.institutional-footer').length,removed:!!document.querySelector('#stock,#contact,.forge-footer-section'),clip:slot.clipPath,position:slot.position,shadow:style.boxShadow,background:style.backgroundImage};
   });
   assert.equal(state.last,'builds');assert.equal(state.removed,false);assert.equal(state.clip,'none');assert.equal(state.position,'relative');assert.equal(state.shadow,'none');assert.equal(state.background,'none');
+  assert.equal(state.footerCount,1);
   assert.equal(errors.length,0);assert.equal(requests.some(url=>url.includes('/bus-drive-flow-v5/')),false);
   assert.ok(requests.some(url=>url.includes('/bus-drive-flow-mobile-v5/')));
   for(const route of ['/produtos','/vendedores','/fale-conosco']){

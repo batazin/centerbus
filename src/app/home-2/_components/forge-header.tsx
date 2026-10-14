@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { aboutLinks } from "../../_components/institutional-nav";
 
 const NAV_ITEMS = [
   {
@@ -44,15 +46,25 @@ const NAV_ITEMS = [
 ];
 
 export function ForgeHeader() {
+  const pathname = usePathname();
+  const [hydrated, setHydrated] = useState(false);
+  const [overFooter, setOverFooter] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [lightSurface, setLightSurface] = useState(false);
-  const [lightControls, setLightControls] = useState({left:false,right:false});
+  const initiallyLight = /^\/(produtos|blog)\//.test(pathname);
+  const [lightSurface, setLightSurface] = useState(initiallyLight);
+  const [lightControls, setLightControls] = useState({left:initiallyLight,right:initiallyLight});
   useEffect(() => {
+    setHydrated(true);
+    setMenuOpen(false);
     let frame = 0;
     const update = () => {
       frame = 0;
+      const footer = document.querySelector('.institutional-footer')?.getBoundingClientRect();
+      setOverFooter(!!footer && footer.top<=0 && footer.bottom>0);
       const contains = (selector:string,x:number,y:number) => Array.from(document.querySelectorAll(selector)).some(el=>{const b=el.getBoundingClientRect();return b.left<=x&&b.right>x&&b.top<=y&&b.bottom>y;});
       const lightAt = (x:number,y:number) => {
+        if(contains('.institutional-footer,.institutional-hero,.catalog-hero,.blog-hero,.contact-sidebar',x,y))return false;
+        if(contains('.institutional-shell',x,y))return true;
         if(contains('#builds .forge-full-banner-bg',x,y))return true;
         if(contains('#builds,.forge-ordinary-cars-container',x,y))return false;
         if(contains('#services',x,y))return !matchMedia('(max-width:1023px), (pointer:coarse)').matches && contains('.forge-services-sticky-panel',x,y);
@@ -66,7 +78,7 @@ export function ForgeHeader() {
     const scroll = () => { if (!frame) frame = requestAnimationFrame(update); };
     addEventListener("scroll", scroll, { passive: true }); addEventListener('resize',scroll); update();
     return () => { removeEventListener("scroll", scroll); removeEventListener('resize',scroll); cancelAnimationFrame(frame); };
-  }, []);
+  }, [pathname]);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -101,7 +113,7 @@ export function ForgeHeader() {
 
   return (
     <>
-      <header className={`forge-header ${menuOpen ? "is-menu-open" : ""} ${lightSurface ? "is-light-surface" : ""} ${lightControls.left?'is-left-light':''} ${lightControls.right?'is-right-light':''}`}>
+      <header className={`forge-header ${menuOpen ? "is-menu-open" : ""} ${lightSurface ? "is-light-surface" : ""} ${lightControls.left?'is-left-light':''} ${lightControls.right?'is-right-light':''} ${overFooter?'is-over-footer':''}`}>
         {/* Social Links (Desktop) */}
         <nav aria-label="Social media" className="forge-header-socials">
           <a
@@ -154,6 +166,7 @@ export function ForgeHeader() {
         {/* Right Navigate / Close Button */}
         <button
           type="button"
+          disabled={!hydrated}
           aria-label={menuOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"}
           aria-expanded={menuOpen}
           aria-controls="site-menu"
@@ -182,6 +195,7 @@ export function ForgeHeader() {
                     <Link
                       href={item.href}
                       className="forge-nav-anchor"
+                      aria-current={pathname===item.href?"page":item.href!=="/"&&pathname.startsWith(item.href.startsWith('/sobre')?'/sobre':item.href)?"location":undefined}
                       onClick={closeMenu}
                     >
                       <span className="forge-nav-index">{item.num}</span>
@@ -193,6 +207,10 @@ export function ForgeHeader() {
               </ul>
             </nav>
           </div>
+
+          <nav className="center-nav-about" aria-label="Mais sobre a Center">
+            {aboutLinks.map(link=><Link key={link.href} href={link.href} onClick={closeMenu} aria-current={pathname===link.href?'page':undefined}>{link.label}</Link>)}
+          </nav>
 
           {/* Bottom Operational Bar */}
           <footer className="forge-nav-bottom">
