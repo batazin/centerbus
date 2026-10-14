@@ -20,9 +20,9 @@
 - Ônibus aéreos sem zoom que alterava a percepção de distância, sem cones de luz artificiais, com deslocamento paralelo por faixas e gatilho estável na seção. Três veículos permanecem visíveis no celular.
 - Equipe comercial com fotos e contatos reais, seleção SP/BA/RJ, carrossel por toque/teclado e cartões de contato. RJ com composição fotográfica da equipe e atendimento da filial.
 
-## Limite ainda existente
+## Entrada substituída em 14/10/2026
 
-O hero permanece baseado na fonte de 854 × 480 já existente. O vídeo disponível no projeto tem a mesma resolução; os modelos GLB disponíveis não têm animação de rodas. A sequência preserva 241 arquivos, mas a ampliação/interpolação não equivale a filmagem nativa de alta definição. A revisão de movimento não deve ser descrita como substituição dessa fonte por nova filmagem.
+A antiga fonte de 854 × 480 foi preservada e substituída na entrada por uma tomada exclusiva gerada no Google Flow, Omni 1.1 Flash. O original é 720p e a exportação aprimorada pelo Flow é 1080p, 24 fps, 8 segundos. Há duas sequências novas com 241 arquivos, controle por rolagem e carregamento por proximidade. Nenhum movimento intermediário foi inventado por interpolação óptica. Proveniência, dimensões e limitações em `docs/center-flow-v5.md`.
 
 ## Prévia
 

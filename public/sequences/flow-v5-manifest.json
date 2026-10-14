@@ -1,0 +1,27 @@
+{
+  "source": "Google Flow / Omni 1.1 Flash",
+  "scene": "cf054867-d6b6-41b5-a623-5c2d99ab2de9",
+  "sourceSha256": "598182cc0365f304875eff0bc5817175fa66310dae3252e481ba05764c527a1c",
+  "durationSeconds": 8,
+  "nativeFps": 24,
+  "nativeResolution": "1280x720",
+  "exportResolution": "1920x1080 enhanced by Flow",
+  "sequenceFrames": 241,
+  "sampling": "30 fps with nearest native-frame sampling; final frame held once. No optical interpolation.",
+  "variants": [
+    {
+      "name": "bus-drive-flow-v5",
+      "width": 1920,
+      "height": 1080,
+      "quality": 78,
+      "bytes": 36457262
+    },
+    {
+      "name": "bus-drive-flow-mobile-v5",
+      "width": 960,
+      "height": 540,
+      "quality": 72,
+      "bytes": 12389104
+    }
+  ]
+}

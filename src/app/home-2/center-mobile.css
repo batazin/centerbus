@@ -36,6 +36,7 @@
  .forge-nav-detail { display: none; }
  .forge-hero-pin-wrapper { height: 190svh; }
  .forge-hero-section { height: 100svh; }
+ .forge-hero-car-poster { object-position: 78% center; }
  .forge-hero-top { top: calc(98px + env(safe-area-inset-top)); padding-inline: 20px; }
  .forge-hero-title { font-size: clamp(2.4rem,9.5vw,4rem); line-height: 1.02; text-wrap: balance; }
  .forge-hero-bottom { bottom: calc(24px + env(safe-area-inset-bottom)); gap: 16px; }

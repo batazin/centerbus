@@ -7,7 +7,7 @@
 .forge-header { padding-block: 24px; }
 .center-team { scroll-margin-top: 100px; }
 .forge-hero-bg-texture { background: url('/brand/center-route-pattern.svg') repeat; background-size: 240px; opacity: .65; }
-.forge-hero-vignette { background: linear-gradient(180deg,rgba(18,43,74,.42),transparent 35%,transparent 68%,rgba(18,43,74,.5)); }
+.forge-hero-vignette { background: linear-gradient(180deg,rgba(18,43,74,.72),rgba(18,43,74,.12) 33%,transparent 48%,transparent 65%,rgba(18,43,74,.72)); }
 .forge-approach-track { background: transparent; height: 200dvh; }
 .forge-approach-track::before { background: #E4E7EB url('/brand/center-route-pattern-light.svg') repeat; background-size: 320px; opacity: 1; }
 .forge-approach-aperture-slot { box-shadow: none; }

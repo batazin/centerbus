@@ -29,13 +29,13 @@ import sharp from 'sharp';
  if(logo[3]>10||Object.values(colors).some(count=>count<100))throw Error('The supplied partial-negative logo must retain white, red, blue and transparency');
  let bytes=0;
  for(let index=1;index<=241;index++){
-  const file=`public/sequences/bus-drive-v2/frame_${String(index).padStart(4,'0')}.webp`;
+  const file=`public/sequences/bus-drive-flow-v5/frame_${String(index).padStart(4,'0')}.webp`;
   const meta=await sharp(file).metadata();if(meta.width!==1920||meta.height!==1080)throw Error(file);
   const size=fs.statSync(file).size;if(size>180*1024)throw Error('Frame too large: '+file);bytes+=size;
  }
  let mobileBytes=0;
  for(let index=1;index<=241;index++){
-  const file=`public/sequences/bus-drive-mobile-v4/frame_${String(index).padStart(4,'0')}.webp`;
+  const file=`public/sequences/bus-drive-flow-mobile-v5/frame_${String(index).padStart(4,'0')}.webp`;
   const meta=await sharp(file).metadata();
   if(meta.width!==960||meta.height!==540)throw Error('Mobile dimensions: '+file);
   const size=fs.statSync(file).size;if(size>60*1024)throw Error('Mobile frame budget: '+file);mobileBytes+=size;

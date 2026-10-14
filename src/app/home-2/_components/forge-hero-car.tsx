@@ -5,7 +5,7 @@ const COUNT = 241;
 
 export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string; onReady?: () => void }>(
  function ForgeHeroCar({ className = "", onReady }, ref) {
-  const sourceRoot = useRef("/sequences/bus-drive-v2");
+  const sourceRoot = useRef("/sequences/bus-drive-flow-v5");
   const path = (i: number) => `${sourceRoot.current}/frame_${String(i + 1).padStart(4, "0")}.webp`;
   const box = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -22,9 +22,8 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string;
    const el = box.current, cv = canvas.current, ctx = cv?.getContext("2d", { alpha: false });
    if (!el || !cv || !ctx) return;
    const mobile = window.matchMedia("(max-width: 1023px)").matches;
-   sourceRoot.current = mobile ? "/sequences/bus-drive-mobile-v4" : "/sequences/bus-drive-v2";
-   let disposed = false, first = true, active = 0, raf = 0, idleIndex = 0;
-   let timer: ReturnType<typeof setTimeout>;
+   sourceRoot.current = mobile ? "/sequences/bus-drive-flow-mobile-v5" : "/sequences/bus-drive-flow-v5";
+   let disposed = false, first = true, active = 0, raf = 0, previousTarget = 0;
    const images = new Map<number, HTMLImageElement>();
    const anchors = new Set([0, 60, 120, 180, 240]);
    const cacheLimit = mobile ? 16 : 32;
@@ -43,7 +42,9 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string;
     const iw = im.naturalWidth*s, ih = im.naturalHeight*s;
     ctx.fillStyle = "#101418"; ctx.fillRect(0,0,w,h);
     // Never blend adjacent frames: blending creates duplicate headlights and bodywork.
-    ctx.drawImage(im,(w-iw)/2,(h-ih)/2,iw,ih);
+    const focalX = mobile ? .71 + progress.current * .07 : .5;
+    const offsetX = Math.min(0,Math.max(w-iw,w/2-iw*focalX));
+    ctx.drawImage(im,offsetX,(h-ih)/2,iw,ih);
     if (first) { first = false; setPainted(true); ready.current?.(); }
    };
    const draw = () => { if (!raf) raf = requestAnimationFrame(paint); };
@@ -67,8 +68,10 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string;
    };
    update.current = () => {
     const n = target();
-    const nearby = Array.from({length:17},(_,i)=>n+i-8).filter(i=>i>=0&&i<COUNT&&!requested.has(i)).sort((a,b)=>Math.abs(a-n)-Math.abs(b-n));
-    queue.splice(0, queue.length, ...new Set([...nearby, ...queue]));
+    const direction=n>=previousTarget?1:-1;previousTarget=n;
+    const behind=mobile?2:6,ahead=mobile?8:18;
+    const nearby=Array.from({length:behind+ahead+1},(_,i)=>n+(i-behind)*direction).filter(i=>i>=0&&i<COUNT&&!requested.has(i)).sort((a,b)=>Math.abs(a-n)-Math.abs(b-n));
+    queue.splice(0,queue.length,...new Set([...nearby,...Array.from(anchors).filter(i=>!requested.has(i))]));
     pump(); draw();
    };
    const resize = () => {
@@ -77,17 +80,11 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string;
     ctx.setTransform(dpr,0,0,dpr,0,0); draw();
    };
    const observer = new ResizeObserver(resize); observer.observe(el); resize(); pump();
-   const idle = () => {
-    if (disposed) return;
-    for (let c=0;c<8&&idleIndex<COUNT;c++,idleIndex++) if (!requested.has(idleIndex)) queue.push(idleIndex);
-    pump(); if (idleIndex<COUNT) timer=setTimeout(idle,120);
-   };
-   timer=setTimeout(idle,600);
-   return () => { disposed=true; clearTimeout(timer); cancelAnimationFrame(raf); observer.disconnect(); images.clear(); update.current=()=>{}; };
+   return () => { disposed=true; cancelAnimationFrame(raf); observer.disconnect(); images.clear(); update.current=()=>{}; };
   },[]);
   return <div ref={box} className={`forge-hero-car-container ${className}`}>
    <canvas ref={canvas} aria-hidden="true" className={`forge-hero-car-canvas ${painted ? "active" : ""}`} />
-   {!painted && <picture><source media="(max-width: 1023px)" srcSet="/sequences/bus-drive-mobile-v4/frame_0001.webp" /><img src="/sequences/bus-drive-v2/frame_0001.webp" alt="Ônibus rodoviário em movimento na estrada" className="forge-hero-car-poster" /></picture>}
+   {!painted && <picture><source media="(max-width: 1023px)" srcSet="/sequences/bus-drive-flow-mobile-v5/frame_0001.webp" /><img src="/sequences/bus-drive-flow-v5/frame_0001.webp" alt="Ônibus rodoviário em movimento na estrada" className="forge-hero-car-poster" /></picture>}
   </div>;
  }
 );
