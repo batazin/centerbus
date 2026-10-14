@@ -18,6 +18,15 @@ import sharp from 'sharp';
   const {data}=await sharp(file).ensureAlpha().raw().toBuffer({resolveWithObject:true});
   if(!meta.hasAlpha||data[3]>10)throw Error('Manufacturer background must be transparent: '+name);
  }
+ const {data:logo}=await sharp('public/brand/center-onibus-logo-partial-negative.png').ensureAlpha().raw().toBuffer({resolveWithObject:true});
+ const colors={white:0,red:0,blue:0};
+ for(let i=0;i<logo.length;i+=4){
+  if(logo[i+3]<200)continue;
+  if(logo[i]>220&&logo[i+1]>220&&logo[i+2]>220)colors.white++;
+  if(logo[i]>150&&logo[i+1]<70&&logo[i+2]<100)colors.red++;
+  if(logo[i]<100&&logo[i+1]>70&&logo[i+2]>120)colors.blue++;
+ }
+ if(logo[3]>10||Object.values(colors).some(count=>count<100))throw Error('The supplied partial-negative logo must retain white, red, blue and transparency');
  let bytes=0;
  for(let index=1;index<=241;index++){
   const file=`public/sequences/bus-drive-v2/frame_${String(index).padStart(4,'0')}.webp`;
