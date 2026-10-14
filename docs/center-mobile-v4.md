@@ -1,6 +1,6 @@
 # Revisão móvel e assets v4
 
-- Cabeçalho claro sólido, sem sombra nem degradê.
+- Cabeçalho transparente, sem faixa, borda, sombra ou degradê; logo e controles laterais alternam contraste separadamente conforme o fundo.
 - Layout móvel com leitura em fluxo normal nas seções de apresentação, etapas e serviços; cartões e áreas de toque próprios.
 - Catálogo técnico como última seção. Removidas as seções posteriores de estoque e orçamento.
 - Nova imagem simples de farol e carroceria no catálogo, com texto separado da fotografia.

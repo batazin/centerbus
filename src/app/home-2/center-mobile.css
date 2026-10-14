@@ -1,10 +1,15 @@
 /* A touch layout with its own reading rhythm, assets and bounded motion. */
 .forge-header { box-shadow: none !important; filter: none; }
-.forge-header.is-light-surface:not(.is-menu-open) { background: #F4F4F4; box-shadow: none !important; backdrop-filter: none; }
+.forge-header:not(.is-menu-open),.forge-header.is-light-surface:not(.is-menu-open) { background: transparent !important; border: 0; box-shadow: none !important; backdrop-filter: none; }
+.forge-header:not(.is-menu-open) :is(.forge-social-link,.forge-header-phone,.forge-menu-trigger) { color: #F4F4F4; }
+.forge-header:not(.is-menu-open) .forge-menu-icon span { background: #F4F4F4; }
+.forge-header.is-left-light:not(.is-menu-open) :is(.forge-social-link,.forge-header-phone) { color: #122B4A; }
+.forge-header.is-right-light:not(.is-menu-open) .forge-menu-trigger { color: #122B4A; }
+.forge-header.is-right-light:not(.is-menu-open) .forge-menu-icon span { background: #122B4A; }
 .center-statement-word { display: inline; }
 .center-catalog-links { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 2.5rem; }
 .center-catalog-links a { color: #E4E7EB; font-size: .75rem; text-underline-offset: 4px; }
-#builds { min-height: 90svh; background: #122B4A; justify-content: flex-start; }
+#builds { min-height: 100svh; background: #122B4A; justify-content: flex-start; }
 #builds .forge-full-banner-bg { left: 48%; }
 #builds .forge-full-banner-bg img { object-position: 65% center; }
 #builds .forge-full-banner-overlay { background: none; }

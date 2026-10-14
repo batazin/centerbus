@@ -46,12 +46,26 @@ const NAV_ITEMS = [
 export function ForgeHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [lightSurface, setLightSurface] = useState(false);
+  const [lightControls, setLightControls] = useState({left:false,right:false});
   useEffect(() => {
     let frame = 0;
-    const update = () => { frame = 0; setLightSurface(Array.from(document.querySelectorAll("#steps, .forge-statement-section, #equipe, #ordinary, .forge-approach-track, #services, .forge-full-banner, .forge-footer-section")).some(el => { const box = el.getBoundingClientRect(); return box.top <= 80 && box.bottom > 80; })); };
+    const update = () => {
+      frame = 0;
+      const contains = (selector:string,x:number,y:number) => Array.from(document.querySelectorAll(selector)).some(el=>{const b=el.getBoundingClientRect();return b.left<=x&&b.right>x&&b.top<=y&&b.bottom>y;});
+      const lightAt = (x:number,y:number) => {
+        if(contains('#builds .forge-full-banner-bg',x,y))return true;
+        if(contains('#builds,.forge-ordinary-cars-container',x,y))return false;
+        if(contains('#services',x,y))return !matchMedia('(max-width:1023px), (pointer:coarse)').matches && contains('.forge-services-sticky-panel',x,y);
+        return contains('#steps,.forge-statement-section,#equipe,#ordinary',x,y);
+      };
+      const header=document.querySelector('.forge-header');
+      const center=(selector:string,fallback:number)=>{const b=Array.from(header?.querySelectorAll(selector)??[]).map(el=>el.getBoundingClientRect()).find(b=>b.width>0&&b.height>0);return b?{x:b.left+b.width/2,y:b.top+b.height/2}:{x:fallback,y:40};};
+      const logo=center('.forge-header-logo-wrap',innerWidth/2),left=center('.forge-header-socials,.forge-header-phone',30),right=center('.forge-menu-trigger',innerWidth-30);
+      setLightSurface(lightAt(logo.x,logo.y));setLightControls({left:lightAt(left.x,left.y),right:lightAt(right.x,right.y)});
+    };
     const scroll = () => { if (!frame) frame = requestAnimationFrame(update); };
-    addEventListener("scroll", scroll, { passive: true }); update();
-    return () => { removeEventListener("scroll", scroll); cancelAnimationFrame(frame); };
+    addEventListener("scroll", scroll, { passive: true }); addEventListener('resize',scroll); update();
+    return () => { removeEventListener("scroll", scroll); removeEventListener('resize',scroll); cancelAnimationFrame(frame); };
   }, []);
 
   const menuRef = useRef<HTMLDivElement>(null);
@@ -87,7 +101,7 @@ export function ForgeHeader() {
 
   return (
     <>
-      <header className={`forge-header ${menuOpen ? "is-menu-open" : ""} ${lightSurface ? "is-light-surface" : ""}`}>
+      <header className={`forge-header ${menuOpen ? "is-menu-open" : ""} ${lightSurface ? "is-light-surface" : ""} ${lightControls.left?'is-left-light':''} ${lightControls.right?'is-right-light':''}`}>
         {/* Social Links (Desktop) */}
         <nav aria-label="Social media" className="forge-header-socials">
           <a
