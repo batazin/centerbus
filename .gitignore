@@ -50,3 +50,6 @@ next-env.d.ts
 /lint-report.txt
 
 /outputs/
+
+sites/
+out/

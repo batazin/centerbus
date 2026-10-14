@@ -45,6 +45,14 @@ const NAV_ITEMS = [
 
 export function ForgeHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [lightSurface, setLightSurface] = useState(false);
+  useEffect(() => {
+    let frame = 0;
+    const update = () => { frame = 0; setLightSurface(Array.from(document.querySelectorAll("#steps, .forge-statement-section, #equipe, #ordinary, .forge-approach-track")).some(el => { const box = el.getBoundingClientRect(); return box.top <= 80 && box.bottom > 80; })); };
+    const scroll = () => { if (!frame) frame = requestAnimationFrame(update); };
+    addEventListener("scroll", scroll, { passive: true }); update();
+    return () => { removeEventListener("scroll", scroll); cancelAnimationFrame(frame); };
+  }, []);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -79,7 +87,7 @@ export function ForgeHeader() {
 
   return (
     <>
-      <header className={`forge-header ${menuOpen ? "is-menu-open" : ""}`}>
+      <header className={`forge-header ${menuOpen ? "is-menu-open" : ""} ${lightSurface ? "is-light-surface" : ""}`}>
         {/* Social Links (Desktop) */}
         <nav aria-label="Social media" className="forge-header-socials">
           <a
@@ -120,12 +128,12 @@ export function ForgeHeader() {
         {/* Center Official Brand Logo */}
         <Link href="/" className="forge-header-logo-wrap" aria-label="Center Ônibus Início" onClick={closeMenu}>
           <Image
-            src="/brand/center-onibus-logo-negative.png"
+            src={lightSurface && !menuOpen ? "/brand/center-onibus-logo-reduced-color.png" : "/brand/center-onibus-logo-reduced-negative.png"}
             alt="Center Ônibus"
             width={160}
             height={42}
             priority
-            style={{ width: "auto", height: "30px", objectFit: "contain" }}
+            style={{ width: "auto", height: "32px", objectFit: "contain" }}
           />
         </Link>
 

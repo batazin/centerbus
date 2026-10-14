@@ -83,7 +83,7 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string;
   },[]);
   return <div ref={box} className={`forge-hero-car-container ${className}`}>
    <canvas ref={canvas} aria-hidden="true" className={`forge-hero-car-canvas ${painted ? "active" : ""}`} />
-   {!painted && <img src={path(0)} alt="Ã”nibus rodoviÃ¡rio em movimento na estrada" className="forge-hero-car-poster" />}
+   {!painted && <img src={path(0)} alt="Ônibus rodoviário em movimento na estrada" className="forge-hero-car-poster" />}
   </div>;
  }
 );
