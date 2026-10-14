@@ -1,0 +1,83 @@
+[
+  {
+    "file": "/images/center-v3/service-carroceria.webp",
+    "origin": "AI conceptual category photograph, daylight industrial workshop; no specific SKU or compatibility claim",
+    "master": "asset-sources/v3/service-carroceria.png",
+    "width": 1600,
+    "height": 1200,
+    "bytes": 217490,
+    "quality": 90
+  },
+  {
+    "file": "/images/center-v3/service-iluminacao.webp",
+    "origin": "AI conceptual category photograph, daylight industrial workshop; no specific SKU or compatibility claim",
+    "master": "asset-sources/v3/service-iluminacao.png",
+    "width": 1600,
+    "height": 1200,
+    "bytes": 257198,
+    "quality": 82
+  },
+  {
+    "file": "/images/center-v3/service-retrovisores.webp",
+    "origin": "AI conceptual category photograph, daylight industrial workshop; no specific SKU or compatibility claim",
+    "master": "asset-sources/v3/service-retrovisores.png",
+    "width": 1600,
+    "height": 1200,
+    "bytes": 214610,
+    "quality": 90
+  },
+  {
+    "file": "/images/center-v3/service-vidros.webp",
+    "origin": "AI conceptual category photograph, daylight industrial workshop; no specific SKU or compatibility claim",
+    "master": "asset-sources/v3/service-vidros.png",
+    "width": 1600,
+    "height": 1200,
+    "bytes": 275254,
+    "quality": 90
+  },
+  {
+    "file": "/images/center-v3/service-climatizacao.webp",
+    "origin": "AI conceptual category photograph, daylight industrial workshop; no specific SKU or compatibility claim",
+    "master": "asset-sources/v3/service-climatizacao.png",
+    "width": 1600,
+    "height": 1200,
+    "bytes": 198808,
+    "quality": 90
+  },
+  {
+    "file": "/images/center-v3/service-parachoques.webp",
+    "origin": "AI conceptual category photograph, daylight industrial workshop; no specific SKU or compatibility claim",
+    "master": "asset-sources/v3/service-parachoques.png",
+    "width": 1600,
+    "height": 1200,
+    "bytes": 193252,
+    "quality": 90
+  },
+  {
+    "file": "/images/center-v3/step-identification.webp",
+    "origin": "Real Center Ônibus photograph",
+    "master": "asset-sources/v3/step-identification.jpg",
+    "width": 1200,
+    "height": 1200,
+    "bytes": 248188,
+    "quality": 86
+  },
+  {
+    "file": "/images/center-v3/step-dispatch.webp",
+    "origin": "Real Center Ônibus photograph",
+    "master": "asset-sources/v3/step-dispatch.jpg",
+    "width": 1200,
+    "height": 1200,
+    "bytes": 234676,
+    "quality": 86
+  },
+  {
+    "file": "/images/center-v3/equipe-rj.webp",
+    "origin": "Real Center Ônibus RJ team photograph, RJ-40.jpg",
+    "master": "asset-sources/v3/equipe-rj.jpg",
+    "width": 1200,
+    "height": 800,
+    "bytes": 148554,
+    "quality": 90
+  }
+]

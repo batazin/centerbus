@@ -59,7 +59,7 @@ export function WebGpuLabView() {
         }
 
         const adapter = await navigator.gpu.requestAdapter();
-        const adapterAny = adapter as any;
+        const adapterAny = adapter as (typeof adapter & { requestAdapterInfo?: () => Promise<{ description?: string; vendor?: string; architecture?: string }> });
         const adapterInfo = adapterAny?.info || (await adapterAny?.requestAdapterInfo?.().catch(() => null));
         setDeviceInfo(adapterInfo?.description || adapterInfo?.vendor || adapterInfo?.architecture || "WebGPU Hardware Acelerado");
 
@@ -205,7 +205,7 @@ fn fs_main(@location(0) uv_in: vec2f) -> @location(0) vec4f {
       const context = ctx;
 
       let animId: number;
-      let startTime = performance.now();
+      const startTime = performance.now();
 
       function render(now: number) {
         if (disposed) return;

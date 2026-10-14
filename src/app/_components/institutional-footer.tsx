@@ -40,7 +40,7 @@ export function InstitutionalFooter() {
       <div className="institutional-footer-inner">
         <section className="footer-brand" aria-label="Center Ônibus">
           <Image
-            src="/brand/center-onibus-logo-negative.png"
+            src="/brand/center-onibus-logo-partial-negative.png"
             alt="Center Ônibus"
             width={1143}
             height={299}
@@ -80,9 +80,7 @@ export function InstitutionalFooter() {
               <span>{office.city}</span>
               <span>{office.address}</span>
               <span>{office.cep}</span>
-              <a href={`tel:+55${office.phone.split(" ")[0]}${office.phone.split(" ")[1]?.replace("-", "") ?? ""}`}>
-                {office.phone}
-              </a>
+              {office.phone.split("|").map(phone=><a key={phone} href={`tel:+55${phone.replace(/\D/g,"")}`}>{phone.trim()}</a>)}
             </address>
           ))}
         </section>

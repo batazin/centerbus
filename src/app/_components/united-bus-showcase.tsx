@@ -188,11 +188,6 @@ export function UnitedBusShowcase() {
     activeIdxRef.current = activeIdx;
   }, [activeIdx]);
 
-  useEffect(() => {
-    renderModeRef.current = renderMode;
-    applyRenderMode(renderMode);
-  }, [renderMode]);
-
   const applyRenderMode = (mode: RenderMode) => {
     const currentModel = modelsMapRef.current.get(activeIdxRef.current);
     if (!currentModel) return;
@@ -210,6 +205,11 @@ export function UnitedBusShowcase() {
       }
     });
   };
+
+  useEffect(() => {
+    renderModeRef.current = renderMode;
+    applyRenderMode(renderMode);
+  }, [renderMode]);
 
   const switchChapter = (nextIdx: number) => {
     if (nextIdx === activeIdxRef.current) return;

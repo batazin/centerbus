@@ -185,3 +185,20 @@ Impacto cinematográfico widescreen.
 - [ ] Imagens otimizadas (sem arquivos brutos de 20MB; manter compressão web de alta fidelidade).
 - [ ] Sequência de frames do Hero (`frame_0001` a `frame_0031`) com mesma dimensão, enquadramento e sem oscilação de luz brusca.
 - [ ] As 3 vistas aéreas (`bus-aerial-*.png`) estritamente recortadas com transparência (canal alfa) sem halos brancos ao redor.
+
+
+## Entrega implementada em 09/10/2026
+
+- [x] 17 imagens finais em `public/images/center-v2/`, com os nomes-base desta spec e extensão WebP.
+- [x] Dimensões e limites de peso conferidos por `scripts/verify-center-assets.mjs`.
+- [x] Vistas aéreas de 800 × 1600 com canal alpha, verificadas sobre fundo Azul Center.
+- [x] Fotos reais da Center para estoque, expedição e retrato de conferência; sem equipe fictícia.
+- [x] Logo oficial em `public/brand/center-onibus-logo.svg`, versão negativa em SVG e PNG; fontes oficiais locais.
+- [x] Manifesto de origem e prompts em `public/images/center-v2/manifest.json`.
+- [x] Sequência ativa com 241 quadros em `public/sequences/bus-drive-v2/`, mantendo intactos os 241 originais.
+
+A sequência ativa é interpolada a partir dos 31 quadros contínuos de pista, com ampliação de 854 × 480 para 1920 × 1080 e sustentação final. A resolução de saída não deve ser confundida com captação nativa Full HD. A especificação de avançar sem cortes para hangar, raio-x ou cabine prevalece na narrativa de `/home-2`; os arquivos anteriores permanecem preservados.
+
+As seis imagens de componentes são ilustrações conceituais de categorias, não fotografias de SKU. A compatibilidade comercial de uma peça deve ser conferida no atendimento e no catálogo real.
+
+Revisão, origem dos materiais e reprodução: `docs/center-assets-review.md`.

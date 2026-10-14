@@ -2,11 +2,12 @@
 
 import React, { useState, useMemo } from "react";
 import Image from "next/image";
+import { CenterRJTeam } from "../_components/center-rj-team";
 import { sellersList } from "./sellers-data";
 import "./vendedores.css";
 
 export function SellersView() {
-  const [selectedState, setSelectedState] = useState<"ALL" | "SP" | "BA">("ALL");
+  const [selectedState, setSelectedState] = useState<"ALL" | "SP" | "BA" | "RJ">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
 
   // Counts
@@ -110,6 +111,7 @@ export function SellersView() {
           >
             Bahia — Filial <span className="tab-pill-count">{baCount}</span>
           </button>
+          <button type="button" role="tab" aria-selected={selectedState === "RJ"} className={`state-tab-btn ${selectedState === "RJ" ? "is-active" : ""}`} onClick={() => setSelectedState("RJ")}>Rio de Janeiro — Filial</button>
         </div>
 
         <div className="sellers-search-box">
@@ -128,8 +130,10 @@ export function SellersView() {
         </div>
       </div>
 
+      {(selectedState === "ALL" || selectedState === "RJ") && <CenterRJTeam />}
+
       {/* Sellers Grid */}
-      {filteredSellers.length > 0 ? (
+      {selectedState === "RJ" ? null : filteredSellers.length > 0 ? (
         <div className="sellers-grid">
           {filteredSellers.map((seller) => {
             const isSp = seller.state === "SP";

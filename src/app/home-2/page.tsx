@@ -1,50 +1,45 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { gsap, ScrollTrigger } from "../_lib/gsap";
 import { SmoothScrollProvider } from "../_components/smooth-scroll-provider";
 import { ForgeHeroCar, ForgeHeroCarHandle } from "./_components/forge-hero-car";
 import { ForgeHeader } from "./_components/forge-header";
 import "./forge.css";
+import "./center-refinement.css";
+import "./center-mobile.css";
+import { CenterPhoto } from "../_components/center-photo";
+import { CenterTeam } from "./_components/center-team";
+import { InstitutionalFooter } from "../_components/institutional-footer";
 
 // Principais marcas e encarroçadoras atendidas pela Center Ônibus
-const MARQUEE_BRANDS = [
-  "Marcopolo",
-  "Caio Induscar",
-  "Comil Ônibus",
-  "Neobus",
-  "Busscar",
-  "Mascarello",
-  "Irizar",
-  "Volare",
-  "Spheros Climatização",
-  "Valeo Thermal",
-];
+const MARQUEE_BRANDS = ["Busscar", "Comil", "Caio", "Mascarello"];
 
 const STEPS_DATA = [
   {
     num: "01",
     total: "03",
     title: "Identificação Precisa",
-    desc: "Diagnóstico ágil por modelo, chassi ou código CO. Nossa equipe técnica entende a realidade da carroceria antes mesmo de abrir o catálogo.",
-    image: "/images/center/step-01-identidade-dark.jpg?v=3",
-    alt: "Center Ônibus: Grade e Emblema Aerodinâmico",
+    desc: "Identificação por código, modelo e foto da peça. Nossa equipe confere os detalhes da carroceria antes de consultar o catálogo.",
+    image: "/images/center-v3/step-identification.webp",
+    alt: "Conferência real de peças pela equipe da Center Ônibus",
   },
   {
     num: "02",
     total: "03",
     title: "Estoque em Pronta-Entrega",
-    desc: "Mais de 15.000 itens disponíveis para Marcopolo, Caio, Comil e Neobus. Estoque real com conferência rigorosa de encaixe técnico.",
-    image: "/images/center/step-02-precisao-dark.jpg?v=3",
-    alt: "Center Ônibus: Inspeção e Encaixe Técnico de Painel",
+    desc: "Peças para diferentes carrocerias, com conferência de aplicação e disponibilidade antes do orçamento.",
+    image: "/images/center-v2/step-02-precisao-dark.webp",
+    alt: "Estoque real da Center Ônibus em São Paulo",
   },
   {
     num: "03",
     total: "03",
     title: "O Ônibus Volta pra Rua",
-    desc: "Despacho prioritário e logística rápida para todo o Brasil. A peça certa, na primeira vez, mantendo sua frota em movimento constante.",
-    image: "/images/center/step-03-rodagem-dark.jpg?v=3",
-    alt: "Center Ônibus: Traseira Aerodinâmica, Difusor e Iluminação LED",
+    desc: "Da consulta à expedição, conferimos a aplicação e combinamos o prazo de entrega com você. A peça certa para o ônibus voltar à operação.",
+    image: "/images/center-v3/step-dispatch.webp",
+    alt: "Expedição real de peças na Center Ônibus",
   },
 ];
 
@@ -53,56 +48,56 @@ const SERVICES_DATA = [
     id: "carrocerias",
     tag: "Componentes",
     title: "Carrocerias & Lataria",
-    desc: "Painéis estruturais, saias, tampas traseiras e aerodinâmica para Marcopolo, Caio, Comil e Neobus. A peça certa, com encaixe perfeito na primeira vez.",
-    image: "/images/center/service-carroceria.jpg",
+    desc: "Painéis, saias e tampas para reposição de carroceria. Envie modelo, ano e foto para conferir o componente e os pontos de fixação.",
+    image: "/images/center-v3/service-carroceria.webp",
     alt: "Center Ônibus: Carrocerias e Lataria",
   },
   {
     id: "iluminacao",
     tag: "Sistemas",
     title: "Iluminação & Elétrica",
-    desc: "Faróis em LED, conjuntos ópticos modulares, lanternas traseiras e chicotes dedicados que garantem visibilidade e segurança operacional em rota.",
-    image: "/images/center/service-iluminacao.jpg",
+    desc: "Faróis, lanternas, lentes e componentes elétricos para carrocerias de ônibus. Informe código, lado e modelo para conferir a aplicação.",
+    image: "/images/center-v3/service-iluminacao.webp",
     alt: "Center Ônibus: Iluminação e Lanternas",
   },
   {
     id: "retrovisores",
     tag: "Segurança",
     title: "Retrovisores Técnicos",
-    desc: "Braços mecânicos e elétricos com espelhos bi-partidos e eliminação de pontos cegos. Robustez com fixação antivibração para frotas rodoviárias e urbanas.",
-    image: "/images/center/service-retrovisores.jpg",
+    desc: "Espelhos, braços e conjuntos para ônibus urbanos e rodoviários. Confira lado, fixação e aplicação com nossa equipe antes de solicitar a peça.",
+    image: "/images/center-v3/service-retrovisores.webp",
     alt: "Center Ônibus: Retrovisores Técnicos",
   },
   {
     id: "vidros",
     tag: "Estrutural",
     title: "Vidros & Para-brisas",
-    desc: "Para-brisas laminados panorâmicos, borrachas guarnição de alta vedação e vidros laterais colados que suportam as torções reais de rodagem.",
-    image: "/images/center/service-vidros.jpg",
+    desc: "Para-brisas, vidros laterais e guarnições. Para o orçamento, informe dimensões, modelo e ano da carroceria.",
+    image: "/images/center-v3/service-vidros.webp",
     alt: "Center Ônibus: Vidros e Para-brisas",
   },
   {
     id: "climatizacao",
     tag: "Operação",
     title: "Climatização & Filtros",
-    desc: "Filtros antipólen homologados CO 11084, condensadores e componentes Spheros e Valeo. Ar limpo e controle térmico no tempo da sua operação.",
-    image: "/images/center/service-climatizacao.jpg",
+    desc: "Filtros e componentes de climatização. Envie o código e o modelo do equipamento para conferir aplicação, medidas e disponibilidade.",
+    image: "/images/center-v3/service-climatizacao.webp",
     alt: "Center Ônibus: Climatização e Filtros de Ar",
   },
   {
     id: "protecao",
     tag: "Acabamento",
     title: "Para-choques & Proteção",
-    desc: "Para-choques modulares reforçados, almas de impacto estruturais e frisos de absorção que protegem o veículo e mantêm seu ônibus na rua.",
-    image: "/images/center/service-parachoques.jpg",
+    desc: "Para-choques, saias, frisos e suportes de fixação para reposição de carroceria. Nossa equipe confere a aplicação com você.",
+    image: "/images/center-v3/service-parachoques.webp",
     alt: "Center Ônibus: Para-choques e Proteção",
   },
 ];
 
 // Helper button with moving neon border & character roll
-function ForgeButton({ text, href = "#contact", className = "" }: { text: string; href?: string; className?: string }) {
+function ForgeButton({ text, href = "/fale-conosco", className = "" }: { text: string; href?: string; className?: string }) {
   return (
-    <a href={href} className={`forge-btn ${className}`.trim()} aria-label={text}>
+    <Link href={href} className={`forge-btn ${className}`.trim()} aria-label={text}>
       <span className="forge-btn-border-glow" aria-hidden="true" />
       <span className="forge-btn-border-beam" aria-hidden="true" />
       <span className="forge-btn-inner" aria-hidden="true" />
@@ -117,7 +112,7 @@ function ForgeButton({ text, href = "#contact", className = "" }: { text: string
           </span>
         ))}
       </span>
-    </a>
+    </Link>
   );
 }
 
@@ -125,7 +120,7 @@ export default function Home2() {
   const [isPreloaderLoaded, setIsPreloaderLoaded] = useState(false);
   const [progressBarActive, setProgressBarActive] = useState(false);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const [activeServiceIndex, setActiveServiceIndex] = useState(0);
+  const [brandsPaused, setBrandsPaused] = useState(false);
 
   const heroCarRef = useRef<ForgeHeroCarHandle>(null);
   const heroPinWrapperRef = useRef<HTMLDivElement>(null);
@@ -168,6 +163,9 @@ export default function Home2() {
 
   // GSAP Animations (Hero pinned narrative, Steps sticky visual, Services sticky panel, Aerial cars parallax)
   useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const compact = window.matchMedia("(max-width: 1023px), (pointer: coarse)").matches;
+    let removePointerListeners = () => {};
     const ctx = gsap.context(() => {
       // 1. Hero interactive mouse 3D tilt
       const hero = heroSectionRef.current;
@@ -197,9 +195,18 @@ export default function Home2() {
         });
       };
 
-      if (hero) {
+      if (hero && !reducedMotion && window.matchMedia("(hover: hover)").matches) {
         hero.addEventListener("mousemove", handleHeroMouseMove, { passive: true });
         hero.addEventListener("mouseleave", handleHeroMouseLeave);
+        removePointerListeners = () => {
+          hero.removeEventListener("mousemove", handleHeroMouseMove);
+          hero.removeEventListener("mouseleave", handleHeroMouseLeave);
+        };
+      }
+
+      if (reducedMotion) {
+        ScrollTrigger.create({ trigger: heroPinWrapperRef.current, start: "top top", end: "bottom bottom", onUpdate: self => heroCarRef.current?.setFrame(self.progress) });
+        return;
       }
 
       // 2. Hero Scroll-driven narrative (pinned over the heroPinWrapper)
@@ -267,14 +274,14 @@ export default function Home2() {
       }
 
       // 2.5 Approach Aperture Transition (Hero -> Approach 1:1 Forge Aperture Reveal)
-      if (approachTrackRef.current && approachApertureSlotRef.current) {
+      if (!compact && approachTrackRef.current && approachApertureSlotRef.current) {
         const slot = approachApertureSlotRef.current;
         const bgImg = slot.querySelector<HTMLImageElement>(".forge-approach-bg img");
 
         const approachTl = gsap.timeline({
           scrollTrigger: {
             trigger: approachTrackRef.current,
-            start: "top top",
+            start: "top bottom",
             end: "bottom bottom",
             scrub: 0.3,
           },
@@ -328,8 +335,8 @@ export default function Home2() {
             ease: "none",
             scrollTrigger: {
               trigger: article1,
-              start: "top 85%",
-              end: "center center",
+              start: "top bottom",
+              end: "top top",
               scrub: true,
             },
           }
@@ -347,13 +354,22 @@ export default function Home2() {
             ease: "none",
             scrollTrigger: {
               trigger: article2,
-              start: "top 85%",
-              end: "center center",
+              start: "top bottom",
+              end: "top top",
               scrub: true,
             },
           }
         );
       }
+
+      const stepMotion = gsap.matchMedia();
+      stepMotion.add("(min-width: 1024px)", () => {
+        gsap.fromTo(".forge-steps-visual", { yPercent: -15 }, { yPercent: 15, ease: "none", scrollTrigger: { trigger: stepsRef.current, start: "top bottom", end: "bottom top", scrub: true } });
+        stepArticleRefs.current.forEach((article, index) => {
+          if (!article || index === STEPS_DATA.length - 1) return;
+          gsap.to(article.children, { opacity: 0, y: -30, ease: "none", scrollTrigger: { trigger: article, start: "bottom 65%", end: "bottom 10%", scrub: true } });
+        });
+      });
 
       // Step articles active indicator tracking & background blur switcher
       stepArticleRefs.current.forEach((el, idx) => {
@@ -372,8 +388,15 @@ export default function Home2() {
         });
       });
 
+      if (!compact && statementQuoteRef.current) {
+        gsap.fromTo(statementQuoteRef.current.querySelectorAll(".center-statement-word"), { opacity: .25 }, { opacity: 1, stagger: .08, ease: "none", scrollTrigger: { trigger: statementQuoteRef.current, start: "top 80%", end: "bottom 35%", scrub: true } });
+      }
+      gsap.utils.toArray<HTMLElement>(compact ? ".no-parallax-on-mobile" : ".forge-full-banner").forEach(section => {
+        gsap.fromTo(section.querySelector("img"), { yPercent: -10, scale: 1.15 }, { yPercent: 10, scale: 1.15, ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true } });
+      });
+
       // 4. Statement Craftsman Parallax
-      if (craftsmanImgRef.current) {
+      if (!compact && craftsmanImgRef.current) {
         gsap.fromTo(
           craftsmanImgRef.current,
           { y: -30, scale: 1.08 },
@@ -408,8 +431,8 @@ export default function Home2() {
                 ease: "none",
                 scrollTrigger: {
                   trigger: contentEl,
-                  start: "top 95%",
-                  end: "top 10%",
+                  start: "top bottom",
+                  end: "top top",
                   scrub: true,
                 },
               }
@@ -446,8 +469,8 @@ export default function Home2() {
               ease: "none",
               scrollTrigger: {
                 trigger: contentEl,
-                start: "center 35%",
-                end: "bottom 5%",
+                start: "center 30%",
+                end: "bottom 0%",
                 scrub: true,
               },
             });
@@ -460,16 +483,15 @@ export default function Home2() {
         // Center Coach Bus: Accelerates forward powerfully along its lane, overtaking side traffic
         gsap.fromTo(
           carMainRef.current,
-          { y: 220, scale: 0.9 },
+          { yPercent: 36 },
           {
-            y: -300,
-            scale: 1.08,
+            yPercent: -36,
             ease: "none",
             scrollTrigger: {
-              trigger: carMainRef.current,
+              trigger: "#ordinary",
               start: "top 95%",
               end: "bottom 5%",
-              scrub: 1.2,
+              scrub: 0.2,
             },
           }
         );
@@ -477,15 +499,15 @@ export default function Home2() {
         // Left Urban Bus: Cruising at steady speed along the left lane
         gsap.fromTo(
           carLeftRef.current,
-          { y: 110 },
+          { yPercent: 20 },
           {
-            y: -150,
+            yPercent: -20,
             ease: "none",
             scrollTrigger: {
-              trigger: carLeftRef.current,
+              trigger: "#ordinary",
               start: "top 95%",
               end: "bottom 5%",
-              scrub: 1.5,
+              scrub: 0.2,
             },
           }
         );
@@ -493,27 +515,24 @@ export default function Home2() {
         // Right Minibus: Cruising along the right lane
         gsap.fromTo(
           carRightRef.current,
-          { y: 140 },
+          { yPercent: 28 },
           {
-            y: -90,
+            yPercent: -28,
             ease: "none",
             scrollTrigger: {
-              trigger: carRightRef.current,
+              trigger: "#ordinary",
               start: "top 95%",
               end: "bottom 5%",
-              scrub: 1.8,
+              scrub: 0.2,
             },
           }
         );
       }
     });
 
-    return () => ctx.revert();
+    return () => { removePointerListeners(); ctx.revert(); };
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   return (
     <SmoothScrollProvider anchorOffset={0} lerp={0.09} wheelMultiplier={0.82}>
@@ -550,7 +569,7 @@ export default function Home2() {
             </div>
 
             {/* Center Reveal Text (Hidden at start, reveals during scroll) */}
-            <div ref={heroCenterRevealRef} className="forge-hero-center-reveal" style={{ opacity: 0 }}>
+            <div ref={heroCenterRevealRef} className="forge-hero-center-reveal" >
               <h2 className="forge-hero-center-title">
                 A peça certa, na primeira vez
                 <br />
@@ -563,7 +582,7 @@ export default function Home2() {
               <p className="forge-hero-desc">
                 Especialistas técnicos em componentes e carrocerias. Manter o Brasil em movimento.
               </p>
-              <ForgeButton text="Falar com a Equipe" href="#contact" />
+              <ForgeButton text="Falar com a Equipe" href="/fale-conosco" />
             </div>
           </section>
         </div>
@@ -573,9 +592,9 @@ export default function Home2() {
           <div ref={approachApertureSlotRef} className="forge-approach-aperture-slot">
             <section id="approach" className="forge-approach-section">
               <div className="forge-approach-bg" aria-hidden="true">
-                <img
-                  src="/images/center/approach-precision-v2.jpg?v=3"
-                  alt="Ajuste técnico de precisão em componentes e carroceria Center Ônibus"
+                <CenterPhoto
+                  src="/images/center-v2/approach-precision-v2.webp"
+                  alt="Equipe da Center Ônibus conferindo uma peça na expedição"
                   loading="lazy"
                 />
               </div>
@@ -592,29 +611,21 @@ export default function Home2() {
               {/* Bottom Row: Marquee on Left (Col 1-8), Copy & Button on Right (Col 9-12) */}
               <div className="forge-approach-bottom-row">
                 <div className="forge-grid-12">
-                  <div className="forge-approach-marquee-col" aria-hidden="true">
-                    <div className="forge-marquee-wrap">
-                      <div className="forge-marquee-track">
-                        {MARQUEE_BRANDS.concat(MARQUEE_BRANDS).map((brand, idx) => (
-                          <div key={idx} className="forge-marquee-item">
-                            <span className="forge-marquee-item-text">
-                              {brand}
-                              <span className="marquee-dot" aria-hidden="true">
-                                •
-                              </span>
-                            </span>
-                          </div>
-                        ))}
+                  <div className="forge-approach-marquee-col">
+                    <p className="center-manufacturer-label">Carrocerias que fazem parte da nossa operação</p>
+                    <div className={`forge-marquee-wrap center-manufacturer-wrap ${brandsPaused ? "is-paused" : ""}`}>
+                      <div className="forge-marquee-track" aria-hidden="true">
+                        {[0,1].map(group => <div className="center-manufacturer-group" key={group}>{MARQUEE_BRANDS.map(brand => <div className="forge-marquee-item" key={brand}><CenterPhoto src={`/brand/manufacturers/${brand.toLowerCase()}.png`} alt="" width="160" height="50" /></div>)}</div>)}
                       </div>
                     </div>
+                    <div className="center-manufacturer-access"><span className="sr-only">Busscar, Comil, Caio e Mascarello.</span><button aria-pressed={brandsPaused} onClick={() => setBrandsPaused(value => !value)}>{brandsPaused ? "Retomar marcas" : "Pausar marcas"}</button></div>
                   </div>
 
                   <div className="forge-approach-cta-col">
                     <p className="forge-approach-desc">
-                      Atendemos quem vive a rotina da estrada e da frota. Diagnóstico preciso, peças originais
-                      e estoque imediato para que o ônibus volte para a rua sem surpresas.
+                      Atendemos quem vive a rotina da estrada e da frota. Identificação da aplicação e consulta de disponibilidade para que o ônibus volte para a rua sem surpresas.
                     </p>
-                    <ForgeButton text="Falar com Especialista" href="#contact" />
+                    <ForgeButton text="Falar com Especialista" href="/fale-conosco" />
                   </div>
                 </div>
               </div>
@@ -628,10 +639,11 @@ export default function Home2() {
           <aside className="forge-steps-blur-bg" aria-hidden="true">
             <div className="forge-steps-blur-panel">
               {STEPS_DATA.map((step, idx) => (
-                <img
+                <CenterPhoto
                   key={step.title}
                   src={step.image}
                   alt=""
+                  loading="lazy"
                   className={`forge-steps-blur-img ${activeStepIndex === idx ? "active" : ""}`}
                 />
               ))}
@@ -657,7 +669,7 @@ export default function Home2() {
                           clipPath: idx === 0 ? "inset(0% 0% 0% 0%)" : "inset(50% 50% 50% 50%)",
                         }}
                       >
-                        <img
+                        <CenterPhoto
                           src={step.image}
                           alt={step.alt}
                           className="forge-steps-image"
@@ -684,10 +696,10 @@ export default function Home2() {
                     </div>
                     <h3 className="forge-step-heading">{step.title}</h3>
                     <p className="forge-step-desc">{step.desc}</p>
-                    <ForgeButton text="Consultar Peça" href="#contact" />
+                    <ForgeButton text="Consultar Peça" href="/fale-conosco" />
 
                     {/* Mobile inline image */}
-                    <img
+                    <CenterPhoto
                       src={step.image}
                       alt={step.alt}
                       className="forge-step-mobile-img"
@@ -706,23 +718,23 @@ export default function Home2() {
             {/* Left Content (Columns 2 to 8) */}
             <div className="forge-statement-content-col">
               <h2 ref={statementQuoteRef} className="forge-statement-quote">
-                Cada hora com o ônibus parado na garagem custa caro. Conhecimento técnico é o que garante a peça certa, na primeira vez.
+                {"Cada hora com o ônibus parado na garagem custa caro. Conhecimento técnico faz a diferença na hora de encontrar a peça certa.".split(" ").map((word, index) => <span className="center-statement-word" key={index}>{word}{" "}</span>)}
               </h2>
               <div className="forge-statement-copy-wrap">
                 <p className="forge-statement-copy">
-                  Com mais de duas décadas de experiência direta em oficinas e pátios de frotas rodoviárias e urbanas, atendemos quem precisa de agilidade. Do para-brisa ao compressor de ar-condicionado, nosso compromisso é uma palavra que se cumpre: resposta rápida para o ônibus voltar pra rua.
+                  Conhecer a aplicação faz parte do atendimento. Código, medidas, modelo e foto ajudam nossa equipe a conferir o que sua operação precisa. Da identificação à expedição, trabalhamos para que o ônibus volte pra rua.
                 </p>
-                <ForgeButton text="Falar com a Equipe Técnica" href="#contact" />
+                <ForgeButton text="Falar com a Equipe Técnica" href="/fale-conosco" />
               </div>
             </div>
 
             {/* Right Side: Tall 2/3 Portrait of Craftsman (Columns 9 to 12) */}
             <aside className="forge-statement-portrait-col" aria-hidden="true">
               <div className="forge-statement-portrait-wrap">
-                <img
+                <CenterPhoto
                   ref={craftsmanImgRef}
-                  src="/images/center/statement-craftsman.jpg?v=1"
-                  alt="Especialista técnico em carrocerias e componentes Center Ônibus"
+                  src="/images/center-v2/statement-craftsman.webp"
+                  alt="Conferência de peças pela equipe da Center Ônibus em São Paulo"
                   className="forge-statement-portrait-img"
                   loading="lazy"
                 />
@@ -730,6 +742,8 @@ export default function Home2() {
             </aside>
           </div>
         </section>
+
+        <CenterTeam />
 
         {/* 7. Sticky Services Split (6 Services) - Confirmed as correct by user */}
         <section id="services" className="forge-services-section">
@@ -748,10 +762,10 @@ export default function Home2() {
                   <span className="forge-service-tag">{srv.tag}</span>
                   <h3 className="forge-service-title">{srv.title}</h3>
                   <p className="forge-service-desc">{srv.desc}</p>
-                  <ForgeButton text="Consultar Disponibilidade" href="#contact" />
+                  <ForgeButton text="Consultar Disponibilidade" href="/fale-conosco" />
 
                   {/* Mobile inline image */}
-                  <img
+                  <CenterPhoto
                     src={srv.image}
                     alt={srv.alt}
                     className="forge-service-mobile-img"
@@ -775,10 +789,10 @@ export default function Home2() {
                     clipPath: idx === 0 ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)",
                   }}
                 >
-                  <img
+                  <CenterPhoto
                     src={srv.image}
                     alt={srv.alt}
-                    loading={idx === 0 ? "eager" : "lazy"}
+                    loading="lazy"
                   />
                 </div>
               ))}
@@ -800,8 +814,8 @@ export default function Home2() {
             {/* Left Bus: Transit Urban Bus */}
             <div ref={carLeftRef} className="forge-car-eagle-eye forge-car-side left">
               <div className="forge-headlight-beam" />
-              <img
-                src="/images/center/bus-aerial-transit.png?v=3"
+              <CenterPhoto
+                src="/images/center-v4/bus-aerial-urban.webp"
                 alt="Ônibus Urbano e Metropolitano vista aérea superior"
                 loading="lazy"
               />
@@ -810,8 +824,8 @@ export default function Home2() {
             {/* Center Main Bus: Luxury Coach Bus */}
             <div ref={carMainRef} className="forge-car-eagle-eye forge-car-main">
               <div className="forge-headlight-beam main-beam" />
-              <img
-                src="/images/center/bus-aerial-main.png?v=3"
+              <CenterPhoto
+                src="/images/center-v4/bus-aerial-coach.webp"
                 alt="Ônibus Rodoviário de Alta Categoria Center Ônibus vista aérea superior"
                 loading="lazy"
               />
@@ -820,8 +834,8 @@ export default function Home2() {
             {/* Right Bus: Executive Minibus */}
             <div ref={carRightRef} className="forge-car-eagle-eye forge-car-side right">
               <div className="forge-headlight-beam" />
-              <img
-                src="/images/center/bus-aerial-minibus.png?v=3"
+              <CenterPhoto
+                src="/images/center-v4/bus-aerial-mini.webp"
                 alt="Micro-ônibus Executivo e Turismo vista aérea superior"
                 loading="lazy"
               />
@@ -830,17 +844,17 @@ export default function Home2() {
 
           <h2 className="forge-ordinary-bottom-title">Volta pra Rua</h2>
           <p className="forge-ordinary-copy">
-            Do rodoviário de alta categoria ao transporte urbano diário: disponibilidade imediata,
-            especificações homologadas e suporte técnico dedicado a cada quilômetro da sua frota.
+            Do rodoviário de alta categoria ao transporte urbano diário: consulta de disponibilidade,
+            conferência de aplicação e suporte técnico dedicado a cada quilômetro da sua frota.
           </p>
         </section>
 
         {/* 9. Catálogo Técnico Especializado Full Monumental Card */}
         <section id="builds" className="forge-full-banner">
           <div className="forge-full-banner-bg" aria-hidden="true">
-            <img
-              src="/images/center/banner-previous-builds.jpg?v=1"
-              alt="Conjunto óptico Full LED e faróis de precisão em carroceria de ônibus Center Ônibus"
+            <CenterPhoto
+              src="/images/center-v4/catalog-detail.webp"
+              alt="Detalhe de farol e painel de carroceria de ônibus"
               loading="lazy"
             />
           </div>
@@ -848,75 +862,16 @@ export default function Home2() {
           <div className="forge-full-banner-content">
             <h2 className="forge-full-banner-title">Catálogo Técnico Especializado</h2>
             <p className="forge-full-banner-desc">
-              Linha completa de componentes de reposição homologados para as principais encarroçadoras e
+              Linha completa de componentes de reposição para as principais encarroçadoras e
               montadoras do Brasil.
             </p>
-            <ForgeButton text="Acessar Catálogo" href="#contact" />
+            <ForgeButton text="Acessar Catálogo" href="/produtos" />
+            <nav className="center-catalog-links" aria-label="Informações da Center"><Link href="/sobre/a-center-onibus">A Center</Link><Link href="/vendedores">Atendimento</Link><Link href="/sobre/politica-de-privacidade">Privacidade</Link></nav>
           </div>
         </section>
 
-        {/* 10. Estoque em Pronta-Entrega Full Monumental Card */}
-        <section id="stock" className="forge-full-banner">
-          <div className="forge-full-banner-bg" aria-hidden="true">
-            <img
-              src="/images/center/banner-available-stock.jpg?v=1"
-              alt="Frota de ônibus rodoviários, urbanos e executivos alinhados em hangar técnico Center Ônibus"
-              loading="lazy"
-            />
-          </div>
-          <div className="forge-full-banner-overlay" />
-          <div className="forge-full-banner-content">
-            <h2 className="forge-full-banner-title">Estoque em Pronta-Entrega</h2>
-            <p className="forge-full-banner-desc">
-              Agilidade logística para frotistas, mecânicos e garagens com despacho diário para todo o
-              Brasil. Se roda, a gente tem.
-            </p>
-            <ForgeButton text="Consultar Estoque" href="#contact" />
-          </div>
-        </section>
-
-        {/* 11. Footer & Final CTA ("Refuse Ordinary") */}
-        <footer id="contact" className="forge-footer-section">
-          <div className="forge-footer-bg" aria-hidden="true">
-            <img
-              src="/images/center/footer-buses-rear.jpg?v=1"
-              alt="Três ônibus rodoviários modernos vistos pela traseira com iluminação LED vermelha e difusores Center Ônibus"
-              loading="lazy"
-            />
-          </div>
-          <div className="forge-footer-overlay" />
-
-          <div className="forge-footer-cta-box">
-            <p className="forge-footer-kicker">Resposta no tempo da sua operação</p>
-            <h2 className="forge-footer-title">O Ônibus Volta pra Rua</h2>
-            <ForgeButton text="Solicitar Orçamento" href="#contact" />
-          </div>
-
-          <div className="forge-footer-bottom-bar">
-            <button
-              type="button"
-              onClick={scrollToTop}
-              className="forge-back-to-top"
-              aria-label="Voltar ao Topo"
-            >
-              <span>
-                {"Voltar ao Topo".split("").map((char, i) => (
-                  <span key={i} style={{ transitionDelay: `${i * 0.02}s` }}>
-                    {char === " " ? "\u00A0" : char}
-                  </span>
-                ))}
-              </span>
-              <span aria-hidden="true">↑</span>
-            </button>
-
-            <div className="forge-footer-legals">
-              <a href="#hero">Privacidade</a>
-              <a href="#hero">Termos</a>
-              <a href="#contact">Atendimento</a>
-            </div>
-          </div>
-        </footer>
       </div>
+      <InstitutionalFooter />
     </SmoothScrollProvider>
   );
 }
