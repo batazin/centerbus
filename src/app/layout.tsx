@@ -6,9 +6,9 @@ import "./home-rebrand.css";
 import "./product-catalog.css";
 import "./blog.css";
 
-const inter = localFont({ src: "./fonts/Inter-Variable.ttf", variable: "--font-inter", display: "swap", weight: "100 900" });
+const inter = localFont({ src: "./fonts/Inter-Variable.woff2", variable: "--font-inter", display: "swap", weight: "100 900" });
 const archivoNarrow = localFont({
-  src: [{ path: "./fonts/ArchivoCondensed-Bold.ttf", weight: "700" }, { path: "./fonts/ArchivoCondensed-ExtraBold.ttf", weight: "800" }],
+  src: [{ path: "./fonts/ArchivoCondensed-Bold.woff2", weight: "700" }, { path: "./fonts/ArchivoCondensed-ExtraBold.woff2", weight: "800" }],
   variable: "--font-archivo-condensed", display: "swap",
 });
 

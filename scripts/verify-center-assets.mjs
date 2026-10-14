@@ -3,7 +3,7 @@ import sharp from 'sharp';
 (async()=>{
  const legacy=JSON.parse(fs.readFileSync('public/images/center-v2/manifest.json','utf8'));
  const source=fs.readFileSync('src/app/home-2/page.tsx','utf8')+fs.readFileSync('src/app/_components/center-rj-team.tsx','utf8');
- const active=[...new Set([...source.matchAll(/\/images\/center-v[23]\/[^"\s]+\.webp/g)].map(match=>match[0]))];
+ const active=[...new Set([...source.matchAll(/\/images\/center-v[234]\/[^"\s]+\.webp/g)].map(match=>match[0]))];
  const list=await Promise.all(active.map(async file=>{const prior=legacy.find(row=>row.file===file);if(prior)return prior;const meta=await sharp('public'+file).metadata();return {file,width:meta.width,height:meta.height};}));
  if(!active.some(file=>file.includes('center-v3/service-')))throw Error('Missing daylight service photographs');
  for(const row of list){
@@ -33,5 +33,17 @@ import sharp from 'sharp';
   const meta=await sharp(file).metadata();if(meta.width!==1920||meta.height!==1080)throw Error(file);
   const size=fs.statSync(file).size;if(size>180*1024)throw Error('Frame too large: '+file);bytes+=size;
  }
- console.log(`Validated ${list.length} images, alpha cutouts and 241 continuous frames (${(bytes/1048576).toFixed(2)} MB).`);
+ let mobileBytes=0;
+ for(let index=1;index<=241;index++){
+  const file=`public/sequences/bus-drive-mobile-v4/frame_${String(index).padStart(4,'0')}.webp`;
+  const meta=await sharp(file).metadata();
+  if(meta.width!==960||meta.height!==540)throw Error('Mobile dimensions: '+file);
+  const size=fs.statSync(file).size;if(size>60*1024)throw Error('Mobile frame budget: '+file);mobileBytes+=size;
+ }
+ if(mobileBytes>=bytes)throw Error('Mobile sequence must be lighter');
+ for(const file of active.filter(file=>!file.includes('equipe-rj'))){
+  const mobile='public/images/mobile-v4/'+file.split('/').pop();
+  const meta=await sharp(mobile).metadata();if(meta.width>960)throw Error('Mobile image too wide: '+file);
+ }
+ console.log(`Validated ${list.length} images, transparent cutouts, 241 desktop frames (${(bytes/1048576).toFixed(2)} MB) and 241 mobile frames (${(mobileBytes/1048576).toFixed(2)} MB).`);
 })().catch(e=>{console.error(e);process.exit(1)});

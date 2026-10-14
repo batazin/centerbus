@@ -15,6 +15,7 @@ try {
   await page.evaluate(y=>window.scrollTo(0,y),top+innerSafe(viewport.height));
   await page.waitForTimeout(900);
   const clip=await page.locator('.forge-approach-aperture-slot').evaluate(el=>getComputedStyle(el).clipPath);
+  await page.locator('.center-manufacturer-group').first().locator('img').evaluateAll(async imgs=>{await Promise.all(imgs.map(async im=>{im.loading='eager';await im.decode();}));});
   const logos=await page.locator('.center-manufacturer-group').first().locator('img').evaluateAll(imgs=>imgs.map(im=>({src:im.getAttribute('src'),valid:im.complete&&im.naturalWidth>0})));
   await page.getByRole('button',{name:'Pausar marcas'}).click();
   const paused=await page.locator('.forge-marquee-track').evaluate(el=>getComputedStyle(el).animationPlayState==='paused');
@@ -38,6 +39,6 @@ try {
  }
  fs.writeFileSync('review/refinement-results.json',JSON.stringify(results,null,2));
  console.log(JSON.stringify(results,null,2));
- if(results.some(r=>r.errors.length||r.overflow||!r.rj||!r.paused||r.sp!==12||r.ba!==2||r.logos.length!==4||r.logos.some(l=>!l.valid||!l.src.endsWith('.png'))||r.clip!=='inset(0%)'||!r.initialLogo.includes('partial-negative')||!r.lightLogo.includes('color')||!r.serviceLogo.includes('color')))throw Error('Refinement verification failed');
+ if(results.some(r=>r.errors.length||r.overflow||!r.rj||!r.paused||r.sp!==12||r.ba!==2||r.logos.length!==4||r.logos.some(l=>!l.valid||!l.src.endsWith('.png'))||r.clip!==(r.viewport.width<1024?'none':'inset(0%)')||!r.initialLogo.includes('partial-negative')||!r.lightLogo.includes('color')||!r.serviceLogo.includes('color')))throw Error('Refinement verification failed');
 } finally {await browser.close();}
 function innerSafe(height){return height*.55;}

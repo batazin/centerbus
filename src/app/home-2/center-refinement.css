@@ -2,7 +2,7 @@
 .forge-body { --global-black: #122B4A; --brand-bc1: #122B4A; --brand-bc2: #16355B; }
 .forge-header-logo-wrap { background: transparent; padding: 14px 22px; border-radius: 0; mix-blend-mode: normal; }
 .forge-header-logo-wrap img { width: 150px !important; height: auto !important; }
-.forge-header.is-light-surface:not(.is-menu-open) { background: linear-gradient(#F4F4F4 60%,transparent); }
+.forge-header.is-light-surface:not(.is-menu-open) { background: #F4F4F4; box-shadow: none; border-bottom: 1px solid #E4E7EB; }
 .forge-header.is-light-surface:not(.is-menu-open) :is(.forge-menu-trigger,.forge-social-link,.forge-header-phone) { color: #122B4A; }
 .forge-header.is-light-surface:not(.is-menu-open) .forge-menu-icon span { background: #122B4A; }
 .forge-header-logo-wrap { top: 18px; }

@@ -1,0 +1,38 @@
+{
+  "assets": [
+    {
+      "file": "/images/center-v4/bus-aerial-coach.webp",
+      "width": 427,
+      "height": 1495,
+      "hasAlpha": true,
+      "master": "asset-sources/v4/bus-aerial-coach.png",
+      "origin": "New AI concept photograph; no real fleet or SKU claim"
+    },
+    {
+      "file": "/images/center-v4/bus-aerial-urban.webp",
+      "width": 455,
+      "height": 1517,
+      "hasAlpha": true,
+      "master": "asset-sources/v4/bus-aerial-urban.png",
+      "origin": "New AI concept photograph; no real fleet or SKU claim"
+    },
+    {
+      "file": "/images/center-v4/bus-aerial-mini.webp",
+      "width": 503,
+      "height": 1376,
+      "hasAlpha": true,
+      "master": "asset-sources/v4/bus-aerial-mini.png",
+      "origin": "New AI concept photograph; no real fleet or SKU claim"
+    },
+    {
+      "file": "/images/center-v4/catalog-detail.webp",
+      "width": 1920,
+      "height": 1080,
+      "hasAlpha": false,
+      "master": "asset-sources/v4/catalog-detail.png",
+      "origin": "New AI concept photograph; no real fleet or SKU claim"
+    }
+  ],
+  "mobileImages": 15,
+  "mobileFrameBytes": 1987700
+}

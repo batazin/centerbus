@@ -8,6 +8,8 @@ import { ForgeHeroCar, ForgeHeroCarHandle } from "./_components/forge-hero-car";
 import { ForgeHeader } from "./_components/forge-header";
 import "./forge.css";
 import "./center-refinement.css";
+import "./center-mobile.css";
+import { CenterPhoto } from "../_components/center-photo";
 import { CenterTeam } from "./_components/center-team";
 
 // Principais marcas e encarroçadoras atendidas pela Center Ônibus
@@ -161,6 +163,7 @@ export default function Home2() {
   // GSAP Animations (Hero pinned narrative, Steps sticky visual, Services sticky panel, Aerial cars parallax)
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const compact = window.matchMedia("(max-width: 1023px), (pointer: coarse)").matches;
     let removePointerListeners = () => {};
     const ctx = gsap.context(() => {
       // 1. Hero interactive mouse 3D tilt
@@ -270,7 +273,7 @@ export default function Home2() {
       }
 
       // 2.5 Approach Aperture Transition (Hero -> Approach 1:1 Forge Aperture Reveal)
-      if (approachTrackRef.current && approachApertureSlotRef.current) {
+      if (!compact && approachTrackRef.current && approachApertureSlotRef.current) {
         const slot = approachApertureSlotRef.current;
         const bgImg = slot.querySelector<HTMLImageElement>(".forge-approach-bg img");
 
@@ -384,15 +387,15 @@ export default function Home2() {
         });
       });
 
-      if (statementQuoteRef.current) {
+      if (!compact && statementQuoteRef.current) {
         gsap.fromTo(statementQuoteRef.current.querySelectorAll(".center-statement-word"), { opacity: .25 }, { opacity: 1, stagger: .08, ease: "none", scrollTrigger: { trigger: statementQuoteRef.current, start: "top 80%", end: "bottom 35%", scrub: true } });
       }
-      gsap.utils.toArray<HTMLElement>(".forge-full-banner").forEach(section => {
+      gsap.utils.toArray<HTMLElement>(compact ? ".no-parallax-on-mobile" : ".forge-full-banner").forEach(section => {
         gsap.fromTo(section.querySelector("img"), { yPercent: -10, scale: 1.15 }, { yPercent: 10, scale: 1.15, ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true } });
       });
 
       // 4. Statement Craftsman Parallax
-      if (craftsmanImgRef.current) {
+      if (!compact && craftsmanImgRef.current) {
         gsap.fromTo(
           craftsmanImgRef.current,
           { y: -30, scale: 1.08 },
@@ -529,9 +532,6 @@ export default function Home2() {
     return () => { removePointerListeners(); ctx.revert(); };
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
-  };
 
   return (
     <SmoothScrollProvider anchorOffset={0} lerp={0.09} wheelMultiplier={0.82}>
@@ -591,7 +591,7 @@ export default function Home2() {
           <div ref={approachApertureSlotRef} className="forge-approach-aperture-slot">
             <section id="approach" className="forge-approach-section">
               <div className="forge-approach-bg" aria-hidden="true">
-                <img
+                <CenterPhoto
                   src="/images/center-v2/approach-precision-v2.webp"
                   alt="Equipe da Center Ônibus conferindo uma peça na expedição"
                   loading="lazy"
@@ -614,7 +614,7 @@ export default function Home2() {
                     <p className="center-manufacturer-label">Carrocerias que fazem parte da nossa operação</p>
                     <div className={`forge-marquee-wrap center-manufacturer-wrap ${brandsPaused ? "is-paused" : ""}`}>
                       <div className="forge-marquee-track" aria-hidden="true">
-                        {[0,1].map(group => <div className="center-manufacturer-group" key={group}>{MARQUEE_BRANDS.map(brand => <div className="forge-marquee-item" key={brand}><img src={`/brand/manufacturers/${brand.toLowerCase()}.png`} alt="" width="160" height="50" /></div>)}</div>)}
+                        {[0,1].map(group => <div className="center-manufacturer-group" key={group}>{MARQUEE_BRANDS.map(brand => <div className="forge-marquee-item" key={brand}><CenterPhoto src={`/brand/manufacturers/${brand.toLowerCase()}.png`} alt="" width="160" height="50" /></div>)}</div>)}
                       </div>
                     </div>
                     <div className="center-manufacturer-access"><span className="sr-only">Busscar, Comil, Caio e Mascarello.</span><button aria-pressed={brandsPaused} onClick={() => setBrandsPaused(value => !value)}>{brandsPaused ? "Retomar marcas" : "Pausar marcas"}</button></div>
@@ -638,10 +638,11 @@ export default function Home2() {
           <aside className="forge-steps-blur-bg" aria-hidden="true">
             <div className="forge-steps-blur-panel">
               {STEPS_DATA.map((step, idx) => (
-                <img
+                <CenterPhoto
                   key={step.title}
                   src={step.image}
                   alt=""
+                  loading="lazy"
                   className={`forge-steps-blur-img ${activeStepIndex === idx ? "active" : ""}`}
                 />
               ))}
@@ -667,7 +668,7 @@ export default function Home2() {
                           clipPath: idx === 0 ? "inset(0% 0% 0% 0%)" : "inset(50% 50% 50% 50%)",
                         }}
                       >
-                        <img
+                        <CenterPhoto
                           src={step.image}
                           alt={step.alt}
                           className="forge-steps-image"
@@ -697,7 +698,7 @@ export default function Home2() {
                     <ForgeButton text="Consultar Peça" href="/fale-conosco" />
 
                     {/* Mobile inline image */}
-                    <img
+                    <CenterPhoto
                       src={step.image}
                       alt={step.alt}
                       className="forge-step-mobile-img"
@@ -729,7 +730,7 @@ export default function Home2() {
             {/* Right Side: Tall 2/3 Portrait of Craftsman (Columns 9 to 12) */}
             <aside className="forge-statement-portrait-col" aria-hidden="true">
               <div className="forge-statement-portrait-wrap">
-                <img
+                <CenterPhoto
                   ref={craftsmanImgRef}
                   src="/images/center-v2/statement-craftsman.webp"
                   alt="Conferência de peças pela equipe da Center Ônibus em São Paulo"
@@ -763,7 +764,7 @@ export default function Home2() {
                   <ForgeButton text="Consultar Disponibilidade" href="/fale-conosco" />
 
                   {/* Mobile inline image */}
-                  <img
+                  <CenterPhoto
                     src={srv.image}
                     alt={srv.alt}
                     className="forge-service-mobile-img"
@@ -787,10 +788,10 @@ export default function Home2() {
                     clipPath: idx === 0 ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)",
                   }}
                 >
-                  <img
+                  <CenterPhoto
                     src={srv.image}
                     alt={srv.alt}
-                    loading={idx === 0 ? "eager" : "lazy"}
+                    loading="lazy"
                   />
                 </div>
               ))}
@@ -812,8 +813,8 @@ export default function Home2() {
             {/* Left Bus: Transit Urban Bus */}
             <div ref={carLeftRef} className="forge-car-eagle-eye forge-car-side left">
               <div className="forge-headlight-beam" />
-              <img
-                src="/images/center-v2/bus-aerial-transit.webp"
+              <CenterPhoto
+                src="/images/center-v4/bus-aerial-urban.webp"
                 alt="Ônibus Urbano e Metropolitano vista aérea superior"
                 loading="lazy"
               />
@@ -822,8 +823,8 @@ export default function Home2() {
             {/* Center Main Bus: Luxury Coach Bus */}
             <div ref={carMainRef} className="forge-car-eagle-eye forge-car-main">
               <div className="forge-headlight-beam main-beam" />
-              <img
-                src="/images/center-v2/bus-aerial-main.webp"
+              <CenterPhoto
+                src="/images/center-v4/bus-aerial-coach.webp"
                 alt="Ônibus Rodoviário de Alta Categoria Center Ônibus vista aérea superior"
                 loading="lazy"
               />
@@ -832,8 +833,8 @@ export default function Home2() {
             {/* Right Bus: Executive Minibus */}
             <div ref={carRightRef} className="forge-car-eagle-eye forge-car-side right">
               <div className="forge-headlight-beam" />
-              <img
-                src="/images/center-v2/bus-aerial-minibus.webp"
+              <CenterPhoto
+                src="/images/center-v4/bus-aerial-mini.webp"
                 alt="Micro-ônibus Executivo e Turismo vista aérea superior"
                 loading="lazy"
               />
@@ -850,9 +851,9 @@ export default function Home2() {
         {/* 9. Catálogo Técnico Especializado Full Monumental Card */}
         <section id="builds" className="forge-full-banner">
           <div className="forge-full-banner-bg" aria-hidden="true">
-            <img
-              src="/images/center-v3/service-iluminacao.webp"
-              alt="Conjunto óptico Full LED e faróis de precisão em carroceria de ônibus Center Ônibus"
+            <CenterPhoto
+              src="/images/center-v4/catalog-detail.webp"
+              alt="Detalhe de farol e painel de carroceria de ônibus"
               loading="lazy"
             />
           </div>
@@ -864,70 +865,10 @@ export default function Home2() {
               montadoras do Brasil.
             </p>
             <ForgeButton text="Acessar Catálogo" href="/produtos" />
+            <nav className="center-catalog-links" aria-label="Informações da Center"><Link href="/sobre/a-center-onibus">A Center</Link><Link href="/vendedores">Atendimento</Link><Link href="/sobre/politica-de-privacidade">Privacidade</Link></nav>
           </div>
         </section>
 
-        {/* 10. Estoque em Pronta-Entrega Full Monumental Card */}
-        <section id="stock" className="forge-full-banner">
-          <div className="forge-full-banner-bg" aria-hidden="true">
-            <img
-              src="/images/center-v2/banner-available-stock.webp"
-              alt="Estoque real de peças de carroceria na Center Ônibus em São Paulo"
-              loading="lazy"
-            />
-          </div>
-          <div className="forge-full-banner-overlay" />
-          <div className="forge-full-banner-content">
-            <h2 className="forge-full-banner-title">Estoque em Pronta-Entrega</h2>
-            <p className="forge-full-banner-desc">
-              Peças para frotistas, oficinas e garagens. Consulte a disponibilidade, a aplicação e as
-              opções de envio com nossa equipe.
-            </p>
-            <ForgeButton text="Consultar Estoque" href="/fale-conosco" />
-          </div>
-        </section>
-
-        {/* 11. Footer & Final CTA ("Refuse Ordinary") */}
-        <footer id="contact" className="forge-footer-section">
-          <div className="forge-footer-bg" aria-hidden="true">
-            <img
-              src="/images/center-v2/approach-precision-v2.webp"
-              alt="Equipe real da Center Ônibus na expedição de peças"
-              loading="lazy"
-            />
-          </div>
-          <div className="forge-footer-overlay" />
-
-          <div className="forge-footer-cta-box">
-            <p className="forge-footer-kicker">Resposta no tempo da sua operação</p>
-            <h2 className="forge-footer-title">O Ônibus Volta pra Rua</h2>
-            <ForgeButton text="Solicitar Orçamento" href="/fale-conosco" />
-          </div>
-
-          <div className="forge-footer-bottom-bar">
-            <button
-              type="button"
-              onClick={scrollToTop}
-              className="forge-back-to-top"
-              aria-label="Voltar ao Topo"
-            >
-              <span>
-                {"Voltar ao Topo".split("").map((char, i) => (
-                  <span key={i} style={{ transitionDelay: `${i * 0.02}s` }}>
-                    {char === " " ? "\u00A0" : char}
-                  </span>
-                ))}
-              </span>
-              <span aria-hidden="true">↑</span>
-            </button>
-
-            <div className="forge-footer-legals">
-              <Link href="/sobre/politica-de-privacidade">Privacidade</Link>
-              <Link href="/sobre/a-center-onibus">A Center Ônibus</Link>
-              <Link href="/fale-conosco">Atendimento</Link>
-            </div>
-          </div>
-        </footer>
       </div>
     </SmoothScrollProvider>
   );

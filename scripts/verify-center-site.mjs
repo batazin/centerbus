@@ -1,6 +1,7 @@
 import { createRequire } from 'node:module';
 const load = createRequire(import.meta.url);
 const {chromium}=load(process.env.CENTER_PLAYWRIGHT_MODULE || 'playwright');
+const base=process.env.CENTER_PREVIEW_URL || 'http://localhost:3100';
 import fs from 'node:fs';
 (async()=>{
  const browser=await chromium.launch({headless:true,channel:"msedge"});
@@ -8,7 +9,7 @@ import fs from 'node:fs';
  for(const config of [{name:'desktop',width:1440,height:900},{name:'mobile',width:390,height:844},{name:'reduced',width:1280,height:800,reducedMotion:'reduce'}]){
   const page=await browser.newPage({viewport:{width:config.width,height:config.height},reducedMotion:config.reducedMotion??'no-preference'});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('http://localhost:3100',{waitUntil:'domcontentloaded',timeout:120000});
+  await page.goto(base,{waitUntil:'domcontentloaded',timeout:120000});
   await page.locator('.forge-preloader.loaded').waitFor({state:'attached',timeout:120000}); await page.waitForTimeout(300);
   await page.screenshot({path:`review/${config.name}-hero.png`});
   const overflow=[];
@@ -17,7 +18,7 @@ import fs from 'node:fs';
   await page.waitForTimeout(700);
   // Explicitly decode lazy images, including inactive service panels.
   const broken=await page.locator('img').evaluateAll(async imgs=>{const failed=[];await Promise.all(imgs.map(async im=>{im.loading='eager';try{await im.decode();if(!im.naturalWidth)failed.push(im.src);}catch{failed.push(im.src);}}));return failed;});
-  for(const id of ['approach','steps','services','ordinary','stock','contact']){
+  for(const id of ['approach','steps','services','ordinary','equipe','builds']){
    await page.locator(`#${id}`).scrollIntoViewIfNeeded(); await page.waitForTimeout(450);
    await page.screenshot({path:`review/${config.name}-${id}.png`});
   }
@@ -30,7 +31,7 @@ import fs from 'node:fs';
  }
  const page=await browser.newPage();
  for(const route of ['/produtos','/sobre/a-center-onibus','/sobre/politica-de-privacidade','/vendedores','/blog','/fale-conosco']){
-  const response=await page.goto(`http://localhost:3100${route}`,{waitUntil:'domcontentloaded',timeout:120000});results.push({route,status:response.status(),overflow:await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)});
+  const response=await page.goto(`${base}${route}`,{waitUntil:'domcontentloaded',timeout:120000});results.push({route,status:response.status(),overflow:await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)});
  }
  await page.getByRole('button',{name:'Preparar e-mail'}).waitFor();
  await page.getByLabel('Nome ou empresa').fill('Teste de validação');await page.getByLabel('E-mail',{exact:true}).fill('teste@example.com');await page.getByLabel('Telefone / WhatsApp').fill('11999999999');await page.getByLabel('Motivo do contato').selectOption('identificacao');await page.getByLabel('Detalhes da solicitação').fill('Código CO, modelo e quantidade.');

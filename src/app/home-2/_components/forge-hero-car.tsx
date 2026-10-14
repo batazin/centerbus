@@ -2,9 +2,11 @@
 import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from "react";
 export interface ForgeHeroCarHandle { setFrame: (progress: number) => void; isReady: boolean; }
 const COUNT = 241;
-const path = (i: number) => `/sequences/bus-drive-v2/frame_${String(i + 1).padStart(4, "0")}.webp`;
+
 export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string; onReady?: () => void }>(
  function ForgeHeroCar({ className = "", onReady }, ref) {
+  const sourceRoot = useRef("/sequences/bus-drive-v2");
+  const path = (i: number) => `${sourceRoot.current}/frame_${String(i + 1).padStart(4, "0")}.webp`;
   const box = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const progress = useRef(0);
@@ -19,11 +21,13 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string;
   useEffect(() => {
    const el = box.current, cv = canvas.current, ctx = cv?.getContext("2d", { alpha: false });
    if (!el || !cv || !ctx) return;
+   const mobile = window.matchMedia("(max-width: 1023px)").matches;
+   sourceRoot.current = mobile ? "/sequences/bus-drive-mobile-v4" : "/sequences/bus-drive-v2";
    let disposed = false, first = true, active = 0, raf = 0, idleIndex = 0;
    let timer: ReturnType<typeof setTimeout>;
    const images = new Map<number, HTMLImageElement>();
    const anchors = new Set([0, 60, 120, 180, 240]);
-   const cacheLimit = window.matchMedia("(max-width: 767px)").matches ? 16 : 32;
+   const cacheLimit = mobile ? 16 : 32;
    const requested = new Set<number>();
    const queue: number[] = [0, 60, 120, 180, 240];
    const target = () => Math.round(progress.current * (COUNT - 1));
@@ -83,7 +87,7 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string;
   },[]);
   return <div ref={box} className={`forge-hero-car-container ${className}`}>
    <canvas ref={canvas} aria-hidden="true" className={`forge-hero-car-canvas ${painted ? "active" : ""}`} />
-   {!painted && <img src={path(0)} alt="Ônibus rodoviário em movimento na estrada" className="forge-hero-car-poster" />}
+   {!painted && <picture><source media="(max-width: 1023px)" srcSet="/sequences/bus-drive-mobile-v4/frame_0001.webp" /><img src="/sequences/bus-drive-v2/frame_0001.webp" alt="Ônibus rodoviário em movimento na estrada" className="forge-hero-car-poster" /></picture>}
   </div>;
  }
 );
