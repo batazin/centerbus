@@ -30,11 +30,14 @@ try {
   const sp=await page.locator('.center-team-card').count();
   await page.getByRole('button',{name:'Bahia · Filial'}).click();
   const ba=await page.locator('.center-team-card').count();
-  results.push({viewport,errors,initialLogo,lightLogo,clip,logos,paused,rj,rjWhatsApp,overflow,sp,ba});
+  await page.locator('#services').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(400);
+  const serviceLogo=await page.getByRole('link',{name:'Center Ônibus Início'}).locator('img').getAttribute('src');
+  results.push({viewport,errors,initialLogo,lightLogo,serviceLogo,clip,logos,paused,rj,rjWhatsApp,overflow,sp,ba});
   await page.close();
  }
  fs.writeFileSync('review/refinement-results.json',JSON.stringify(results,null,2));
  console.log(JSON.stringify(results,null,2));
- if(results.some(r=>r.errors.length||r.overflow||!r.rj||!r.paused||r.sp!==12||r.ba!==2||r.logos.length!==4||r.logos.some(l=>!l.valid||!l.src.endsWith('.png'))||r.clip!=='inset(0%)'||!r.initialLogo.includes('negative')||!r.lightLogo.includes('color')))throw Error('Refinement verification failed');
+ if(results.some(r=>r.errors.length||r.overflow||!r.rj||!r.paused||r.sp!==12||r.ba!==2||r.logos.length!==4||r.logos.some(l=>!l.valid||!l.src.endsWith('.png'))||r.clip!=='inset(0%)'||!r.initialLogo.includes('partial-negative')||!r.lightLogo.includes('color')||!r.serviceLogo.includes('color')))throw Error('Refinement verification failed');
 } finally {await browser.close();}
 function innerSafe(height){return height*.55;}

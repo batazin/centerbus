@@ -33,3 +33,7 @@ Sites é usado para uma prévia privada compilada. O repositório batazin/center
 Export de produção aprovado: 29 páginas. A versão compilada foi testada em Edge desktop (1440 × 900), celular (390 × 844) e redução de movimento. Sem erros de execução, imagens quebradas ou overflow horizontal; seis rotas internas, menu por teclado e preparação do formulário aprovados. Nenhuma mensagem foi enviada.
 
 Verificação específica: abertura chega a inset(0%), quatro PNGs de montadoras carregam, pausa funciona, assinatura clara/colorida alterna, SP possui 12 contatos, BA possui 2 e RJ exibe a foto coletiva e o WhatsApp oficial. Aprovação em desktop e celular. Integridade dos 16 arquivos fotográficos ativos, alpha dos logotipos e dos três ônibus e 241 frames aprovada.
+
+## Logo clara final fornecida pelo usuário
+
+A versão clara ativa é o SVG Design sem nome (1).svg enviado por Rafa durante a revisão, preservado em public/brand/center-onibus-logo-partial-negative.svg. O PNG foi renderizado desse SVG sem redesenho ou recoloração; seu fundo é transparente. A primeira faixa e o lettering são brancos, com as outras faixas em vermelho e azul. Substitui a antiga variante totalmente branca. A navegação também usa a assinatura colorida sobre as fotos claras de serviços e banners.
