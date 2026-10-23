@@ -1,0 +1,81 @@
+/* October revision: real people, visible identity and direct branch service. */
+.forge-header-logo-wrap img{width:210px!important;}
+.forge-header.is-over-footer:not(.is-menu-open){opacity:0;visibility:hidden;pointer-events:none;}
+.institutional-footer .footer-brand img{width:min(390px,100%);max-width:100%;height:auto;}
+.institutional-footer .footer-office{overflow:hidden;padding:22px;gap:9px;align-content:start;}
+.institutional-footer .footer-office>span:nth-of-type(2){min-height:3.3em;}
+.office-map{height:240px;margin-top:14px;background:#122B4A;border-top:3px solid #2E6DA4;overflow:hidden;position:relative;}
+.office-map iframe{display:block;width:100%;height:100%;border:0;}
+.center-map-canvas{width:100%;height:100%;}
+.center-map-status{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:#122B4A;color:#CBD9E6;font-size:.75rem;text-align:center;pointer-events:none;}
+.center-map-caption{position:absolute;left:10px;top:10px;right:48px;background:#122B4AEF;color:#F4F4F4;padding:7px 9px;display:flex;align-items:center;gap:7px;font:600 .6rem/1.4 var(--font-inter),sans-serif;pointer-events:none;}
+.center-map-caption-dot{width:5px;height:5px;flex-shrink:0;background:#C8102E;}
+.center-map-pin{width:26px;height:34px;position:relative;}
+.center-map-pin>span{position:absolute;left:2px;top:1px;width:24px;height:24px;border-radius:50% 50% 50% 0;background:#C8102E;border:3px solid #F4F4F4;transform:rotate(-45deg);box-shadow:0 3px 8px #10141840;}
+.center-map-pin>span:after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:#F4F4F4;left:6px;top:6px;}
+.center-map .maplibregl-ctrl-group{background:#F4F4F4;border-radius:0;box-shadow:none;}.center-map .maplibregl-ctrl-group button{width:30px;height:30px;}.center-map .maplibregl-ctrl-attrib{font-size:9px;line-height:14px;background:#F4F4F4DD;color:#122B4A;}.center-map .maplibregl-ctrl-attrib a{color:#122B4A;min-height:0;display:inline;font-size:9px;}
+.office-map-open{display:flex;align-items:center;justify-content:center;gap:18px;width:100%;height:100%;border:0;background:#122B4A url('/brand/center-route-pattern.svg') center/200px;color:#F4F4F4;cursor:pointer;text-align:left;padding:20px;}
+.office-map-open>span{font:400 .75rem/1.5 var(--font-inter),sans-serif;}.office-map-open strong{display:block!important;font:700 1.5rem/1.4 var(--font-archivo-condensed),sans-serif!important;}.office-map-open:hover{background-color:#1C3C60;}.office-map-open:focus-visible{outline:3px solid #C8102E;outline-offset:-4px;}
+.institutional-footer .office-whatsapp{color:#fff;line-height:1.6;}
+.institutional-footer .office-directions{font-size:.78rem;letter-spacing:.02em;text-decoration:underline;text-underline-offset:4px;}
+.branch-whatsapp{position:fixed;right:max(24px,env(safe-area-inset-right));bottom:calc(24px + env(safe-area-inset-bottom));z-index:11000;font-family:var(--font-inter),sans-serif;color:#122B4A;}
+.branch-whatsapp-toggle{display:flex;align-items:center;justify-content:center;width:60px;height:60px;padding:0;background:#122B4A;color:white;border:1px solid #7697B3;border-radius:50%;box-shadow:0 5px 20px #10141826;cursor:pointer;}
+.branch-whatsapp-toggle span{display:none;}.branch-whatsapp-toggle svg{width:29px;height:29px;}
+.branch-whatsapp-toggle:hover{background:#2E6DA4;}
+.branch-whatsapp-panel{width:350px;max-width:calc(100vw - 40px);max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;margin-bottom:12px;background:#F4F4F4;box-shadow:0 8px 32px #10141830;border:1px solid #a9b8c9;}
+.branch-whatsapp-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;background:#122B4A;color:white;padding:22px;}
+.branch-whatsapp-heading span{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:#AFC9DF;}
+.branch-whatsapp-heading h2{font:700 1.7rem/1.1 var(--font-archivo-condensed),sans-serif;margin:8px 0 0;}
+.branch-whatsapp-heading button{background:none;color:white;border:0;font-size:1.7rem;min-width:36px;min-height:36px;cursor:pointer;}
+.branch-whatsapp-panel>a{display:flex;align-items:center;gap:14px;min-height:88px;padding:18px 22px;border-bottom:1px solid #D1D9E2;text-decoration:none;color:#122B4A;}
+.branch-whatsapp-panel>a:hover{background:#E4E7EB;}
+.branch-whatsapp-panel>a>span:last-child{margin-left:auto;}
+.branch-whatsapp-panel strong,.branch-whatsapp-panel small{display:block;line-height:1.6;}
+.branch-whatsapp-panel strong{font-size:.88rem;}.branch-whatsapp-panel small{font-size:.8rem;color:#435E7A;}
+.branch-whatsapp-state{font:700 1.4rem var(--font-archivo-condensed),sans-serif;color:#2E6DA4;}
+.branch-whatsapp :is(button,a):focus-visible{outline:3px solid #C8102E;outline-offset:3px;}
+body:has(.forge-header.is-menu-open) .branch-whatsapp{visibility:hidden;}
+.sellers-branches-strip{grid-template-columns:repeat(3,minmax(0,1fr));}
+.sellers-result-count{font-size:.85rem;color:#536577;margin-bottom:20px;}
+.sellers-grid .seller-profile{display:flex;flex-direction:column;align-items:stretch;padding:0;gap:0;}
+.sellers-grid .seller-avatar-frame{width:100%;height:auto;aspect-ratio:4/4.5;overflow:hidden;border:0;padding:0;box-shadow:none;background:#E4E7EB;}
+.sellers-grid .seller-avatar-img{width:100%;height:100%;object-fit:cover;object-position:center 26%;border-radius:0;}
+.sellers-grid .seller-profile-titles{padding:24px 24px 12px;}
+.sellers-grid .seller-name{font-size:2rem;line-height:1.1;margin-bottom:8px;}
+.sellers-grid .seller-role{line-height:1.5;font-size:.78rem;}
+.sellers-grid .seller-card-header{padding:12px 24px;}
+.sellers-grid .seller-contact-item{overflow-wrap:anywhere;flex-wrap:wrap;}
+.sellers-grid .seller-card-actions{margin-top:auto;}
+.contact-channels .contact-channel a{display:block;margin:6px 0;}
+.forge-body .forge-hero-title{font-size:clamp(3rem,5.8vw,6.6rem);line-height:1;}
+.forge-body .forge-hero-title>span{font-size:.55em;line-height:1.5;}
+.forge-body .forge-hero-bottom{gap:16px;bottom:30px;}
+.center-hero-brands{width:min(640px,100%);min-width:0;pointer-events:auto;margin-top:4px;}
+.center-hero-brands .center-manufacturer-label{font-size:.58rem;margin-bottom:12px;opacity:.8;}
+.center-hero-brands .center-manufacturer-wrap{width:100%;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);}
+.center-hero-brands .center-manufacturer-group{gap:32px;padding-right:32px;}
+.center-hero-brands .forge-marquee-item{width:112px;flex:0 0 112px;}
+.center-hero-brands .forge-marquee-item img{width:112px;height:34px;}
+.center-hero-brands .center-manufacturer-access{margin-top:2px;}
+.center-hero-brands .center-manufacturer-access button{min-height:30px;font-size:.58rem;}
+.forge-body .forge-hero-top{top:clamp(125px,17vh,180px);}
+@media(max-width:1023px){
+ .forge-header-logo-wrap img{width:164px!important;}
+ .sellers-branches-strip{grid-template-columns:1fr;}
+ .branch-whatsapp{right:16px;bottom:calc(16px + env(safe-area-inset-bottom));}
+ .branch-whatsapp-toggle{padding:12px 16px;min-height:50px;}
+ .forge-body .forge-hero-top{top:110px;}
+ .forge-body .forge-hero-title{font-size:clamp(2.2rem,8.5vw,4rem);}
+ .forge-body .forge-hero-bottom{gap:12px;bottom:20px;}
+ .forge-body .forge-hero-desc{font-size:.85rem;max-width:34ch;}
+ .center-hero-brands{max-width:360px;}
+ .center-hero-brands .forge-marquee-item{width:90px;flex-basis:90px;}
+ .center-hero-brands .forge-marquee-item img{width:90px;height:28px;}
+ .center-hero-brands .center-manufacturer-label{margin-bottom:8px;}
+ .center-hero-brands .center-manufacturer-access button{min-height:36px;}
+ .institutional-footer .footer-copy{padding-bottom:64px;}
+}
+@media(max-width:380px){.forge-header-logo-wrap img{width:146px!important;}.branch-whatsapp-toggle span{display:none;}.branch-whatsapp-toggle{padding:13px;}.sellers-grid .seller-profile-titles{padding:20px;}}
+@media(max-width:767px){.branch-whatsapp-toggle span{display:none;}.branch-whatsapp-toggle{padding:13px;}}
+@media(max-height:600px) and (orientation:landscape){.forge-body .forge-hero-top{top:85px;}.forge-body .forge-hero-title{font-size:2.4rem;}.forge-body .forge-hero-bottom{bottom:12px;gap:6px;}.forge-body .forge-hero-desc{display:none;}.center-hero-brands .center-manufacturer-label{display:none;}.center-hero-brands{max-width:320px;}}
+@media(prefers-reduced-motion:reduce){.center-hero-brands .forge-marquee-track{animation:none;}}

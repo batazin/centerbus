@@ -7,6 +7,9 @@ import "./product-catalog.css";
 import "./blog.css";
 import "./_components/center-site-header.css";
 import "./site-consistency.css";
+import "maplibre-gl/dist/maplibre-gl.css";
+import "./center-october.css";
+import { BranchWhatsapp } from "./_components/branch-whatsapp";
 
 const inter = localFont({ src: "./fonts/Inter-Variable.woff2", variable: "--font-inter", display: "swap", weight: "100 900" });
 const archivoNarrow = localFont({
@@ -30,7 +33,7 @@ export default function RootLayout({
       lang="pt-BR"
       className={`h-full antialiased ${inter.variable} ${archivoNarrow.variable}`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">{children}<BranchWhatsapp /></body>
     </html>
   );
 }
