@@ -120,7 +120,6 @@ export default function Home2() {
   const [isPreloaderLoaded, setIsPreloaderLoaded] = useState(false);
   const [progressBarActive, setProgressBarActive] = useState(false);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const [brandsPaused, setBrandsPaused] = useState(false);
 
   const heroCarRef = useRef<ForgeHeroCarHandle>(null);
   const heroPinWrapperRef = useRef<HTMLDivElement>(null);
@@ -511,12 +510,12 @@ export default function Home2() {
               </p>
               <ForgeButton text="Falar com a Equipe" href="/fale-conosco" />
               <div className="center-hero-brands">                    <p className="center-manufacturer-label">Peças para as principais carrocerias</p>
-                    <div className={`forge-marquee-wrap center-manufacturer-wrap ${brandsPaused ? "is-paused" : ""}`}>
+                    <div className="forge-marquee-wrap center-manufacturer-wrap" tabIndex={0} aria-label="Busscar, Comil, Caio e Mascarello">
                       <div className="forge-marquee-track" aria-hidden="true">
                         {[0,1].map(group => <div className="center-manufacturer-group" key={group}>{MARQUEE_BRANDS.map(brand => <div className="forge-marquee-item" key={brand}><CenterPhoto src={`/brand/manufacturers/${brand.toLowerCase()}.png`} alt="" width="160" height="50" /></div>)}</div>)}
                       </div>
                     </div>
-                    <div className="center-manufacturer-access"><span className="sr-only">Busscar, Comil, Caio e Mascarello.</span><button aria-pressed={brandsPaused} onClick={() => setBrandsPaused(value => !value)}>{brandsPaused ? "Retomar marcas" : "Pausar marcas"}</button></div></div>
+                    </div>
             </div>
           </section>
         </div>
@@ -547,12 +546,12 @@ export default function Home2() {
                 <div className="forge-grid-12">
                   <div className="forge-approach-marquee-col">
                     <p className="center-manufacturer-label">Carrocerias que fazem parte da nossa operação</p>
-                    <div className={`forge-marquee-wrap center-manufacturer-wrap ${brandsPaused ? "is-paused" : ""}`}>
+                    <div className="forge-marquee-wrap center-manufacturer-wrap" tabIndex={0} aria-label="Busscar, Comil, Caio e Mascarello">
                       <div className="forge-marquee-track" aria-hidden="true">
                         {[0,1].map(group => <div className="center-manufacturer-group" key={group}>{MARQUEE_BRANDS.map(brand => <div className="forge-marquee-item" key={brand}><CenterPhoto src={`/brand/manufacturers/${brand.toLowerCase()}.png`} alt="" width="160" height="50" /></div>)}</div>)}
                       </div>
                     </div>
-                    <div className="center-manufacturer-access"><span className="sr-only">Busscar, Comil, Caio e Mascarello.</span><button aria-pressed={brandsPaused} onClick={() => setBrandsPaused(value => !value)}>{brandsPaused ? "Retomar marcas" : "Pausar marcas"}</button></div>
+
                   </div>
 
                   <div className="forge-approach-cta-col">

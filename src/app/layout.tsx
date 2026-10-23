@@ -7,7 +7,6 @@ import "./product-catalog.css";
 import "./blog.css";
 import "./_components/center-site-header.css";
 import "./site-consistency.css";
-import "maplibre-gl/dist/maplibre-gl.css";
 import "./center-october.css";
 import { BranchWhatsapp } from "./_components/branch-whatsapp";
 

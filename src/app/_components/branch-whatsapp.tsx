@@ -24,7 +24,7 @@ export function BranchWhatsapp() {
       {branches.map(branch => <a key={branch.state} href={branchWhatsapp(branch)} target="_blank" rel="noopener noreferrer"><span className="branch-whatsapp-state">{branch.state}</span><span><strong>{branch.name}</strong><small>{branch.phone}</small></span><span aria-hidden="true">↗</span></a>)}
     </section>}
     <button ref={toggle} className="branch-whatsapp-toggle" aria-label="WhatsApp: escolher unidade" aria-expanded={open} aria-controls="branch-whatsapp-panel" onClick={() => setOpen(value => !value)}>
-      <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M21 11.5a9 9 0 0 1-13.4 7.9L3 21l1.5-4.5A9 9 0 1 1 21 11.5Z"/><path d="M8 7.5c0 4 2.5 6.5 6.5 7l1-2-2-1-1 1c-1.5-.5-2.5-1.5-3-3l1-1-1-2Z"/></svg><span>WhatsApp</span>
+      <img src="/brand/whatsapp.svg" width="29" height="29" alt="" aria-hidden="true" className="whatsapp-brand-icon" /><span>WhatsApp</span>
     </button>
   </div>;
 }

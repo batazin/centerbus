@@ -33,13 +33,13 @@ try{
     assert.match(await page.locator('h1').innerText(),/Com a Center,[\s\S]*o ônibus nunca para/);
     assert.equal(await page.locator('#ordinary,.forge-statement-section').count(),0);
     assert.equal(await page.locator('#hero .center-manufacturer-group').count(),2);
-    const pause=page.locator('#hero .center-manufacturer-access button');await pause.click();assert.equal(await pause.getAttribute('aria-pressed'),'true');await pause.click();
+    assert.equal(await page.getByRole('button',{name:/Pausar marcas|Retomar marcas/}).count(),0);
     await page.screenshot({path:`review/october/${width}-home.png`,caret:'initial'});
     await page.locator('#equipe').scrollIntoViewIfNeeded();await page.locator('.center-team-units button').filter({hasText:'Rio de Janeiro'}).click();
     assert.equal(await page.locator('.center-team-card').count(),4);
     await page.screenshot({path:`review/october/${width}-team-rj.png`,caret:'initial'});
     await page.locator('.institutional-footer').scrollIntoViewIfNeeded();await page.waitForTimeout(300);
-    if(width===1440){await page.waitForFunction(()=>document.querySelectorAll('.center-map.is-ready').length===3,{},{timeout:60000});assert.equal(await page.locator('.center-map-pin').count(),3);}
+    assert.equal(await page.locator('.google-branch-map iframe[src^="https://maps.google.com/maps?"]').count(),3);
     await page.screenshot({path:`review/october/${width}-footer.png`,caret:'initial'});
    }
    if(route==='/vendedores'){
