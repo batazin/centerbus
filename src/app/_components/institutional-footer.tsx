@@ -1,29 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { BranchMap } from "./branch-map";
 
-const offices = [
-  {
-    title: "Matriz",
-    city: "São Paulo - SP",
-    address: "Rua Dias da Silva, 348",
-    cep: "CEP: 02114-000",
-    phone: "11 2967-3002",
-  },
-  {
-    title: "Filial: Bahia",
-    city: "Lauro de Freitas - BA",
-    address: "Rua Pelicano, 495",
-    cep: "CEP: 42701-340",
-    phone: "71 3377-0770 | 71 3252-5933",
-  },
-  {
-    title: "Filial: Rio de Janeiro",
-    city: "Vargem Grande - RJ",
-    address: "Est. Bandeirantes, 28.501",
-    cep: "CEP: 22785-276",
-    phone: "21 2391-1182 | 21 97201-2525",
-  },
-];
+import { branches, branchWhatsapp } from "../_content/branches";
 
 const footerLinks = [
   { href: "/sobre/a-center-onibus", label: "A Center Ônibus" },
@@ -64,8 +43,8 @@ export function InstitutionalFooter() {
         <section className="footer-service" aria-labelledby="footer-service-title">
           <h2 id="footer-service-title">Atendimento</h2>
           <p>Fale com nossa equipe para orçamento, identificação de peças e suporte comercial.</p>
-          <a className="footer-action" href="tel:+551129673002">
-            Ligar para SP
+          <a className="footer-action" href={branchWhatsapp(branches[0])} target="_blank" rel="noopener noreferrer">
+            WhatsApp · São Paulo
           </a>
           <div className="footer-privacy">
             <span>Data Protection Officer</span>
@@ -74,13 +53,15 @@ export function InstitutionalFooter() {
         </section>
 
         <section className="footer-locations" aria-label="Unidades">
-          {offices.map((office) => (
+          {branches.map((office) => (
             <address key={office.title} className="footer-office">
               <strong>{office.title}</strong>
               <span>{office.city}</span>
               <span>{office.address}</span>
-              <span>{office.cep}</span>
-              {office.phone.split("|").map(phone=><a key={phone} href={`tel:+55${phone.replace(/\D/g,"")}`}>{phone.trim()}</a>)}
+              <span>CEP: {office.cep}</span>
+              <a className="office-whatsapp" href={branchWhatsapp(office)} target="_blank" rel="noopener noreferrer">WhatsApp · {office.phone} ↗</a>
+              <BranchMap branch={office} />
+              <a className="office-directions" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${office.address}, ${office.city}, ${office.cep}`)}`} target="_blank" rel="noopener noreferrer">Ver rota até a unidade ↗</a>
             </address>
           ))}
         </section>
