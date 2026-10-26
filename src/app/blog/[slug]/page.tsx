@@ -4,9 +4,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { InstitutionalFooter } from "../../_components/institutional-footer";
 import { InstitutionalHeader } from "../../_components/institutional-header";
-import { blogPosts, getBlogPost, getRelatedBlogPosts } from "../../_content/blog-posts";
+import { blogPosts } from "../../_content/blog-posts";
+import { listBlogPosts } from "../../_content/ecosystem";
 
-export const dynamicParams = false;
+export const dynamicParams = true;
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
@@ -14,7 +16,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const post = (await listBlogPosts()).find(p => p.slug === slug);
 
   if (!post) {
     return {};
@@ -28,13 +30,14 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
 
 export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">) {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const allPosts = await listBlogPosts();
+  const post = allPosts.find(p => p.slug === slug);
 
   if (!post) {
     notFound();
   }
 
-  const relatedPosts = getRelatedBlogPosts(post);
+  const relatedPosts = allPosts.filter(p => p.slug !== slug).slice(0, 3);
 
   return (
     <div className="institutional-shell blog-shell">
@@ -107,6 +110,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
                 </section>
               ))}
 
+              {!!post.sources?.length && <section><h2>Fontes da pesquisa</h2><ul>{post.sources.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noopener noreferrer">{source.title || source.url}</a></li>)}</ul></section>}
               <blockquote>{post.callout}</blockquote>
 
               <div className="article-help">

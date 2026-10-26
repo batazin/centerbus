@@ -3,7 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { InstitutionalFooter } from "../_components/institutional-footer";
 import { InstitutionalHeader } from "../_components/institutional-header";
-import { blogPosts } from "../_content/blog-posts";
+import { listBlogPosts } from "../_content/ecosystem";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Blog técnico | Center Ônibus",
@@ -11,9 +13,8 @@ export const metadata: Metadata = {
     "Guias sobre identificação, aplicação e manutenção de peças para carrocerias de ônibus. Informação prática para manter a frota em operação.",
 };
 
-const [featuredPost, ...otherPosts] = blogPosts;
-
-export default function BlogPage() {
+export default async function BlogPage() {
+  const [featuredPost, ...otherPosts] = await listBlogPosts();
   return (
     <div className="institutional-shell blog-shell">
       <InstitutionalHeader />
@@ -38,7 +39,7 @@ export default function BlogPage() {
                 <p className="blog-kicker">Leitura recomendada</p>
                 <h2 id="blog-featured-title">Destaque</h2>
               </div>
-              <span>Atualizado em agosto de 2026</span>
+              <span>Atualizado em {featuredPost.publishedLabel}</span>
             </div>
 
             <Link className="blog-featured-card" href={`/blog/${featuredPost.slug}`}>
