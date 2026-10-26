@@ -3,6 +3,9 @@ import Link from "next/link";
 import { ProductCatalog } from "../_components/product-catalog";
 import { InstitutionalFooter } from "../_components/institutional-footer";
 import { InstitutionalHeader } from "../_components/institutional-header";
+import { listProducts } from "../_content/ecosystem";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Catálogo de peças | Center Ônibus",
@@ -16,7 +19,8 @@ const catalogSteps = [
   ["03", "Consulte", "A equipe valida aplicação e disponibilidade."],
 ] as const;
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const products = await listProducts();
   return (
     <div className="institutional-shell product-catalog-shell">
       <InstitutionalHeader />
@@ -66,7 +70,7 @@ export default function ProductsPage() {
         </section>
 
         <div id="catalogo" className="catalog-container">
-          <ProductCatalog />
+          <ProductCatalog products={products} />
         </div>
 
         <section className="catalog-support">

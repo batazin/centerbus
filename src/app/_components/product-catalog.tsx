@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { productCategories, products } from "../_content/products";
+import { productCategories, type Product } from "../_content/products";
 import { ProductTechnicalVisual } from "./product-technical-visual";
 
 function normalize(value: string) {
@@ -12,7 +12,7 @@ function normalize(value: string) {
     .toLocaleLowerCase("pt-BR");
 }
 
-export function ProductCatalog() {
+export function ProductCatalog({ products }: { products: readonly Product[] }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("todos");
 
@@ -34,7 +34,7 @@ export function ProductCatalog() {
 
       return matchesCategory && (!normalizedQuery || searchable.includes(normalizedQuery));
     });
-  }, [category, query]);
+  }, [category, query, products]);
 
   return (
     <section className="catalog-section" aria-labelledby="catalog-heading">
