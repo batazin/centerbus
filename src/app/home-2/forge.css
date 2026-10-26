@@ -949,6 +949,10 @@ html.lenis:has(.forge-body) body {
   grid-column: 1 / -1;
 }
 
+.forge-steps-carousel-nav {
+  display: none;
+}
+
 @media (min-width: 1024px) {
   .forge-steps-articles-col {
     grid-column: 8 / 12;
@@ -1009,6 +1013,191 @@ html.lenis:has(.forge-body) body {
 @media (min-width: 1024px) {
   .forge-step-mobile-img {
     display: none;
+  }
+}
+
+/* Compact step carousel shared by desktop and mobile. */
+.forge-steps-section {
+  padding-block: clamp(3rem, 6vw, 6rem);
+  overflow: hidden;
+}
+
+.forge-steps-foreground .forge-grid-12 {
+  min-width: 0;
+}
+
+.forge-steps-articles-col {
+  grid-column: 2 / 12;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  width: 100%;
+  min-width: 0;
+  gap: clamp(1rem, 2vw, 2rem);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+
+.forge-steps-articles-col::-webkit-scrollbar {
+  display: none;
+}
+
+.forge-steps-articles-col.is-programmatic-scroll {
+  scroll-snap-type: none;
+}
+
+.forge-step-article {
+  min-height: clamp(30rem, 48vw, 38rem);
+  display: grid;
+  grid-template-columns: minmax(17rem, .78fr) minmax(0, 1.22fr);
+  grid-template-rows: auto auto 1fr auto;
+  align-items: start;
+  column-gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(2rem, 4vw, 4rem);
+  background: rgba(244, 244, 244, .92);
+  border: 1px solid #C6CED8;
+  opacity: .62;
+  transform: scale(.975);
+  transform-origin: center;
+  transition: opacity .42s ease, transform .55s cubic-bezier(.22, 1, .36, 1);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.forge-step-article.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.forge-step-article > :not(.forge-step-mobile-img) {
+  grid-column: 1;
+}
+
+.forge-step-indicator {
+  grid-row: 1;
+  margin-bottom: 1.25rem;
+}
+
+.forge-step-heading {
+  grid-row: 2;
+  max-width: 9ch;
+  margin-bottom: 1.25rem;
+  font-size: clamp(3rem, 5vw, 5.4rem);
+}
+
+.forge-step-desc {
+  grid-row: 3;
+  margin-bottom: 2rem;
+}
+
+.forge-step-article > .forge-btn {
+  grid-row: 4;
+  align-self: end;
+  justify-self: start;
+}
+
+.forge-step-mobile-img {
+  grid-column: 2;
+  grid-row: 1 / 5;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  aspect-ratio: auto;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.forge-steps-carousel-nav {
+  grid-column: 2 / 12;
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.forge-steps-carousel-nav > button {
+  width: 52px;
+  height: 52px;
+  border: 1px solid #AEB9C5;
+  background: #F4F4F4;
+  color: #122B4A;
+  cursor: pointer;
+  font: 600 1.35rem/1 var(--font-body);
+}
+
+.forge-steps-carousel-nav > button:disabled {
+  cursor: default;
+  opacity: .32;
+}
+
+.forge-steps-carousel-nav > button:focus-visible,
+.forge-steps-carousel-dots button:focus-visible {
+  outline: 2px solid #C8102E;
+  outline-offset: 3px;
+}
+
+.forge-steps-carousel-dots {
+  --step-dot-width: 40px;
+  --step-dot-gap: 10px;
+  --step-active-width: 64px;
+  --step-active-start: -82px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--step-dot-gap);
+}
+
+.forge-steps-carousel-dots button {
+  position: relative;
+  z-index: 1;
+  width: var(--step-dot-width);
+  height: 4px;
+  padding: 0;
+  border: 0;
+  background: #AEB9C5;
+  cursor: pointer;
+}
+
+.forge-steps-carousel-dots::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  margin-left: var(--step-active-start);
+  width: var(--step-active-width);
+  height: 4px;
+  pointer-events: none;
+  background: #C8102E;
+  transform: translateX(0);
+  transition: transform .52s cubic-bezier(.22, 1, .36, 1);
+}
+
+.forge-steps-carousel-dots[data-active-step="1"]::after {
+  transform: translateX(calc(var(--step-dot-width) + var(--step-dot-gap)));
+}
+
+.forge-steps-carousel-dots[data-active-step="2"]::after {
+  transform: translateX(calc(var(--step-dot-width) + var(--step-dot-gap) + var(--step-dot-width) + var(--step-dot-gap)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .forge-steps-articles-col {
+    scroll-behavior: auto;
+  }
+
+  .forge-step-article,
+  .forge-steps-carousel-dots::after {
+    transition: none;
   }
 }
 
@@ -1250,6 +1439,184 @@ html.lenis:has(.forge-body) body {
 @media (min-width: 1024px) {
   .forge-service-mobile-img {
     display: none;
+  }
+}
+
+/* Compact services carousel shared by desktop and mobile. */
+.forge-services-section {
+  padding-block: clamp(3rem, 6vw, 6rem);
+  overflow: hidden;
+}
+
+.forge-services-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: min(100%, 90rem);
+  min-width: 0;
+  margin-inline: auto;
+  padding-inline: clamp(1.5rem, 5vw, 5rem);
+}
+
+.forge-services-list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  width: 100%;
+  min-width: 0;
+  gap: clamp(1rem, 2vw, 2rem);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+
+.forge-services-list::-webkit-scrollbar {
+  display: none;
+}
+
+.forge-services-list.is-programmatic-scroll {
+  scroll-snap-type: none;
+}
+
+.forge-service-card {
+  min-height: clamp(30rem, 48vw, 38rem);
+  height: auto;
+  display: grid;
+  grid-template-columns: minmax(17rem, .78fr) minmax(0, 1.22fr);
+  grid-template-rows: auto auto 1fr auto;
+  align-items: start;
+  column-gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(2rem, 4vw, 4rem);
+  border: 1px solid rgba(228, 231, 235, .18);
+  background: rgba(16, 31, 49, .72);
+  opacity: .62;
+  transform: scale(.975);
+  transform-origin: center;
+  transition: opacity .42s ease, transform .55s cubic-bezier(.22, 1, .36, 1);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.forge-service-card.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.forge-service-card > :not(.forge-service-mobile-img) {
+  grid-column: 1;
+}
+
+.forge-service-tag {
+  grid-row: 1;
+}
+
+.forge-service-title {
+  grid-row: 2;
+  max-width: 10ch;
+}
+
+.forge-service-desc {
+  grid-row: 3;
+}
+
+.forge-service-card > .forge-btn {
+  grid-row: 4;
+  align-self: end;
+  justify-self: start;
+}
+
+.forge-service-mobile-img {
+  grid-column: 2;
+  grid-row: 1 / 5;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  aspect-ratio: auto;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.forge-services-carousel-nav {
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.forge-services-carousel-nav > button {
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(228, 231, 235, .35);
+  background: #122B4A;
+  color: #F4F4F4;
+  cursor: pointer;
+  font: 600 1.35rem/1 var(--font-body);
+}
+
+.forge-services-carousel-nav > button:disabled {
+  cursor: default;
+  opacity: .32;
+}
+
+.forge-services-carousel-nav > button:focus-visible,
+.forge-services-carousel-dots button:focus-visible {
+  outline: 2px solid #C8102E;
+  outline-offset: 3px;
+}
+
+.forge-services-carousel-dots {
+  --service-dot-width: 28px;
+  --service-dot-gap: 8px;
+  --service-active-width: 44px;
+  --service-active-start: -112px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--service-dot-gap);
+}
+
+.forge-services-carousel-dots button {
+  position: relative;
+  z-index: 1;
+  width: var(--service-dot-width);
+  height: 4px;
+  padding: 0;
+  border: 0;
+  background: rgba(228, 231, 235, .38);
+  cursor: pointer;
+}
+
+.forge-services-carousel-dots::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  margin-left: var(--service-active-start);
+  width: var(--service-active-width);
+  height: 4px;
+  pointer-events: none;
+  background: #C8102E;
+  transform: translateX(0);
+  transition: transform .52s cubic-bezier(.22, 1, .36, 1);
+}
+
+.forge-services-carousel-dots[data-active-service="1"]::after { transform: translateX(36px); }
+.forge-services-carousel-dots[data-active-service="2"]::after { transform: translateX(72px); }
+.forge-services-carousel-dots[data-active-service="3"]::after { transform: translateX(108px); }
+.forge-services-carousel-dots[data-active-service="4"]::after { transform: translateX(144px); }
+.forge-services-carousel-dots[data-active-service="5"]::after { transform: translateX(180px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .forge-service-card,
+  .forge-services-carousel-dots::after {
+    transition: none;
   }
 }
 
@@ -1720,3 +2087,77 @@ html.lenis:has(.forge-body) body[data-menu-open="true"] { overflow-y: hidden !im
 .forge-approach-cta-col { min-width: 0; }
 .forge-approach-cta-col .forge-btn { padding-inline: 1.5rem; }
 .forge-approach-cta-col .forge-btn-label { letter-spacing: 0.12rem; white-space: normal; text-align: center; }
+
+/* Compact horizontal steps carousel on every viewport. */
+.forge-steps-section { padding-block: clamp(3rem,6vw,6rem); overflow: hidden; }
+.forge-steps-blur-bg,.forge-steps-sticky-col { display: none !important; }
+.forge-steps-foreground,.forge-steps-foreground .forge-grid-12 { min-width: 0; }
+.forge-steps-articles-col {
+  grid-column: 2 / 12 !important;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  width: 100%;
+  min-width: 0;
+  gap: clamp(16px,2vw,28px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+.forge-steps-articles-col::-webkit-scrollbar { display: none; }
+.forge-step-article {
+  min-height: clamp(34rem,68vh,45rem);
+  padding: clamp(2rem,4vw,4rem);
+  display: grid;
+  grid-template-columns: minmax(0,.8fr) minmax(22rem,1.2fr);
+  grid-template-rows: auto auto 1fr auto;
+  column-gap: clamp(2rem,5vw,5rem);
+  align-items: start;
+  justify-content: initial;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  background: rgba(244,244,244,.72);
+  border: 1px solid #C6CED8;
+}
+.forge-step-article .forge-step-indicator { grid-column: 1; grid-row: 1; }
+.forge-step-article .forge-step-heading { grid-column: 1; grid-row: 2; font-size: clamp(3rem,5vw,5.6rem); }
+.forge-step-article .forge-step-desc { grid-column: 1; grid-row: 3; }
+.forge-step-article > .forge-btn { grid-column: 1; grid-row: 4; align-self: end; justify-self: start; }
+.forge-step-article .forge-step-mobile-img {
+  display: block;
+  grid-column: 2;
+  grid-row: 1 / 5;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  object-fit: cover;
+}
+.forge-steps-carousel-nav {
+  grid-column: 2 / 12;
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+.forge-steps-carousel-nav > button {
+  width: 52px;
+  height: 52px;
+  border: 1px solid #AEB9C5;
+  background: #F4F4F4;
+  color: #122B4A;
+  cursor: pointer;
+  font: 600 1.3rem/1 var(--font-body);
+}
+.forge-steps-carousel-nav > button:disabled { opacity: .32; cursor: default; }
+.forge-steps-carousel-nav > button:focus-visible,.forge-steps-carousel-dots button:focus-visible { outline: 2px solid #C8102E; outline-offset: 3px; }
+.forge-steps-carousel-dots { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.forge-steps-carousel-dots button { width: 42px; height: 4px; padding: 0; border: 0; background: #AEB9C5; cursor: pointer; transition: background-color .25s ease,width .25s ease; }
+.forge-steps-carousel-dots button.is-active { width: 64px; background: #C8102E; }
+@media(prefers-reduced-motion:reduce){.forge-steps-articles-col{scroll-behavior:auto;}.forge-steps-carousel-dots button{transition:none;}}

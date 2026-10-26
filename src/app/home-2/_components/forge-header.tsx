@@ -47,6 +47,7 @@ const NAV_ITEMS = [
 
 export function ForgeHeader() {
   const pathname = usePathname();
+  const isHome = pathname === "/" || pathname === "/home-2";
   const [hydrated, setHydrated] = useState(false);
   const [overFooter, setOverFooter] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -71,6 +72,17 @@ export function ForgeHeader() {
         return contains('#steps,.forge-statement-section,#equipe,#ordinary',x,y);
       };
       const header=document.querySelector('.forge-header');
+      if (header instanceof HTMLElement) {
+        if (isHome) {
+          const mobile = matchMedia('(max-width:1023px)').matches;
+          const progress = Math.min(Math.max(window.scrollY / 320, 0), 1);
+          const start = mobile ? 240 : 420;
+          const end = mobile ? 124 : 150;
+          header.style.setProperty('--header-logo-width', `${start + (end - start) * progress}px`);
+        } else {
+          header.style.removeProperty('--header-logo-width');
+        }
+      }
       const center=(selector:string,fallback:number)=>{const b=Array.from(header?.querySelectorAll(selector)??[]).map(el=>el.getBoundingClientRect()).find(b=>b.width>0&&b.height>0);return b?{x:b.left+b.width/2,y:b.top+b.height/2}:{x:fallback,y:40};};
       const logo=center('.forge-header-logo-wrap',innerWidth/2),left=center('.forge-header-socials,.forge-header-phone',30),right=center('.forge-menu-trigger',innerWidth-30);
       setLightSurface(lightAt(logo.x,logo.y));setLightControls({left:lightAt(left.x,left.y),right:lightAt(right.x,right.y)});
@@ -113,7 +125,7 @@ export function ForgeHeader() {
 
   return (
     <>
-      <header className={`forge-header ${menuOpen ? "is-menu-open" : ""} ${lightSurface ? "is-light-surface" : ""} ${lightControls.left?'is-left-light':''} ${lightControls.right?'is-right-light':''} ${overFooter?'is-over-footer':''}`}>
+      <header className={`forge-header ${menuOpen ? "is-menu-open" : ""} ${lightSurface ? "is-light-surface" : ""} ${lightControls.left?'is-left-light':''} ${lightControls.right?'is-right-light':''} ${overFooter?'is-over-footer':''} ${isHome ? 'is-home' : ''}`}>
         {/* Social Links (Desktop) */}
         <nav aria-label="Social media" className="forge-header-socials">
           <a
@@ -156,10 +168,10 @@ export function ForgeHeader() {
           <Image
             src={lightSurface && !menuOpen ? "/brand/center-onibus-logo-reduced-color.png" : "/brand/center-onibus-logo-partial-negative.png"}
             alt="Center Ônibus"
-            width={160}
-            height={42}
+            width={480}
+            height={104}
+            className="forge-header-brand-image"
             priority
-            style={{ width: "auto", height: "32px", objectFit: "contain" }}
           />
         </Link>
 

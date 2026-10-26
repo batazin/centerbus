@@ -9,8 +9,10 @@ import { ForgeHeader } from "./_components/forge-header";
 import "./forge.css";
 import "./center-refinement.css";
 import "./center-mobile.css";
+import "./center-locations.css";
 import { CenterPhoto } from "../_components/center-photo";
 import { CenterTeam } from "./_components/center-team";
+import { CenterLocations } from "./_components/center-locations";
 import { InstitutionalFooter } from "../_components/institutional-footer";
 
 // Principais marcas e encarroçadoras atendidas pela Center Ônibus
@@ -119,7 +121,8 @@ function ForgeButton({ text, href = "/fale-conosco", className = "" }: { text: s
 export default function Home2() {
   const [isPreloaderLoaded, setIsPreloaderLoaded] = useState(false);
   const [progressBarActive, setProgressBarActive] = useState(false);
-  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [mobileStepIndex, setMobileStepIndex] = useState(0);
+  const [activeServiceIndex, setActiveServiceIndex] = useState(0);
   const [brandsPaused, setBrandsPaused] = useState(false);
 
   const heroCarRef = useRef<ForgeHeroCarHandle>(null);
@@ -133,10 +136,8 @@ export default function Home2() {
   const approachTrackRef = useRef<HTMLDivElement>(null);
   const approachApertureSlotRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
-  const stepArticleRefs = useRef<(HTMLElement | null)[]>([]);
-  const stepClippedRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const serviceRefs = useRef<(HTMLElement | null)[]>([]);
-  const serviceImgRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const mobileStepsTrackRef = useRef<HTMLDivElement>(null);
+  const servicesTrackRef = useRef<HTMLDivElement>(null);
 
   const statementQuoteRef = useRef<HTMLHeadingElement>(null);
   const craftsmanImgRef = useRef<HTMLImageElement>(null);
@@ -144,6 +145,58 @@ export default function Home2() {
   const carLeftRef = useRef<HTMLDivElement>(null);
   const carMainRef = useRef<HTMLDivElement>(null);
   const carRightRef = useRef<HTMLDivElement>(null);
+
+  const goToMobileStep = (index: number) => {
+    const nextIndex = Math.max(0, Math.min(STEPS_DATA.length - 1, index));
+    const track = mobileStepsTrackRef.current;
+    const slide = track?.children[nextIndex] as HTMLElement | undefined;
+    if (!track || !slide) return;
+    const targetLeft = slide.offsetLeft - track.offsetLeft;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      track.scrollLeft = targetLeft;
+      setMobileStepIndex(nextIndex);
+      return;
+    }
+    gsap.killTweensOf(track, "scrollLeft");
+    track.classList.add("is-programmatic-scroll");
+    gsap.to(track, {
+      scrollLeft: targetLeft,
+      duration: 0.85,
+      ease: "power3.inOut",
+      overwrite: true,
+      onComplete: () => {
+        track.classList.remove("is-programmatic-scroll");
+        setMobileStepIndex(nextIndex);
+      },
+      onInterrupt: () => track.classList.remove("is-programmatic-scroll"),
+    });
+  };
+
+  const goToService = (index: number) => {
+    const nextIndex = Math.max(0, Math.min(SERVICES_DATA.length - 1, index));
+    const track = servicesTrackRef.current;
+    const slide = track?.children[nextIndex] as HTMLElement | undefined;
+    if (!track || !slide) return;
+    const targetLeft = slide.offsetLeft - track.offsetLeft;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      track.scrollLeft = targetLeft;
+      setActiveServiceIndex(nextIndex);
+      return;
+    }
+    gsap.killTweensOf(track, "scrollLeft");
+    track.classList.add("is-programmatic-scroll");
+    gsap.to(track, {
+      scrollLeft: targetLeft,
+      duration: 0.85,
+      ease: "power3.inOut",
+      overwrite: true,
+      onComplete: () => {
+        track.classList.remove("is-programmatic-scroll");
+        setActiveServiceIndex(nextIndex);
+      },
+      onInterrupt: () => track.classList.remove("is-programmatic-scroll"),
+    });
+  };
 
   // Preloader animation
   useEffect(() => {
@@ -318,76 +371,6 @@ export default function Home2() {
         approachTl.to(slot, { duration: 0.35 }, 0.65);
       }
 
-      // 3. Step articles scroll-driven expanding clip-path reveal (1:1 Forge Automotive)
-      // Step 0 starts fully open
-      if (stepClippedRefs.current[0]) {
-        gsap.set(stepClippedRefs.current[0], { clipPath: "inset(0% 0% 0% 0%)" });
-      }
-
-      // Step 1 to Step 2 transition (triggered by article 1 scrolling in)
-      const article1 = stepArticleRefs.current[1];
-      if (article1 && stepClippedRefs.current[1]) {
-        gsap.fromTo(
-          stepClippedRefs.current[1],
-          { clipPath: "inset(50% 50% 50% 50%)" },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            ease: "none",
-            scrollTrigger: {
-              trigger: article1,
-              start: "top bottom",
-              end: "top top",
-              scrub: true,
-            },
-          }
-        );
-      }
-
-      // Step 2 to Step 3 transition (triggered by article 2 scrolling in)
-      const article2 = stepArticleRefs.current[2];
-      if (article2 && stepClippedRefs.current[2]) {
-        gsap.fromTo(
-          stepClippedRefs.current[2],
-          { clipPath: "inset(50% 50% 50% 50%)" },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            ease: "none",
-            scrollTrigger: {
-              trigger: article2,
-              start: "top bottom",
-              end: "top top",
-              scrub: true,
-            },
-          }
-        );
-      }
-
-      const stepMotion = gsap.matchMedia();
-      stepMotion.add("(min-width: 1024px)", () => {
-        gsap.fromTo(".forge-steps-visual", { yPercent: -15 }, { yPercent: 15, ease: "none", scrollTrigger: { trigger: stepsRef.current, start: "top bottom", end: "bottom top", scrub: true } });
-        stepArticleRefs.current.forEach((article, index) => {
-          if (!article || index === STEPS_DATA.length - 1) return;
-          gsap.to(article.children, { opacity: 0, y: -30, ease: "none", scrollTrigger: { trigger: article, start: "bottom 65%", end: "bottom 10%", scrub: true } });
-        });
-      });
-
-      // Step articles active indicator tracking & background blur switcher
-      stepArticleRefs.current.forEach((el, idx) => {
-        if (!el) return;
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top 55%",
-          end: "bottom 45%",
-          onToggle: (self) => {
-            if (self.isActive) {
-              setActiveStepIndex(idx);
-            }
-          },
-          onEnter: () => setActiveStepIndex(idx),
-          onEnterBack: () => setActiveStepIndex(idx),
-        });
-      });
-
       if (!compact && statementQuoteRef.current) {
         gsap.fromTo(statementQuoteRef.current.querySelectorAll(".center-statement-word"), { opacity: .25 }, { opacity: 1, stagger: .08, ease: "none", scrollTrigger: { trigger: statementQuoteRef.current, start: "top 80%", end: "bottom 35%", scrub: true } });
       }
@@ -413,70 +396,6 @@ export default function Home2() {
           }
         );
       }
-
-      // 5. Service cards and sliding wipe image reveal (1:1 Forge Automotive)
-      const mmServices = gsap.matchMedia();
-      mmServices.add("(min-width: 1024px)", () => {
-        serviceImgRefs.current.forEach((imgEl, idx) => {
-          const contentEl = serviceRefs.current[idx];
-          if (!imgEl || !contentEl) return;
-
-          // Image 0 starts fully visible; images 1-5 wipe UP from bottom over the previous image
-          if (idx > 0) {
-            gsap.fromTo(
-              imgEl,
-              { clipPath: "inset(100% 0% 0% 0%)" },
-              {
-                clipPath: "inset(0% 0% 0% 0%)",
-                ease: "none",
-                scrollTrigger: {
-                  trigger: contentEl,
-                  start: "top bottom",
-                  end: "top top",
-                  scrub: true,
-                },
-              }
-            );
-          }
-
-          // Subtle parallax scale on the photo
-          const innerImg = imgEl.querySelector("img");
-          if (innerImg) {
-            gsap.fromTo(
-              innerImg,
-              { scale: 1.15 },
-              {
-                scale: 1,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: contentEl,
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub: true,
-                },
-              }
-            );
-          }
-        });
-
-        // Left text: as each card scrolls past center, it fades out and moves up
-        serviceRefs.current.forEach((contentEl, idx) => {
-          if (!contentEl) return;
-          if (idx < serviceRefs.current.length - 1) {
-            gsap.to(contentEl, {
-              autoAlpha: 0,
-              y: -50,
-              ease: "none",
-              scrollTrigger: {
-                trigger: contentEl,
-                start: "center 30%",
-                end: "bottom 0%",
-                scrub: true,
-              },
-            });
-          }
-        });
-      });
 
       // 6. Aerial Buses Driving Motion along Highway ("O Ônibus Volta pra Rua")
       if (carLeftRef.current && carMainRef.current && carRightRef.current) {
@@ -633,63 +552,27 @@ export default function Home2() {
           </div>
         </div>
 
-        {/* 5. Sticky 3-Step Narrative (Identity, Insight, Cohesion) */}
+        {/* 5. Compact horizontal 3-step carousel */}
         <section id="steps" ref={stepsRef} className="forge-steps-section">
-          {/* Fullscreen Blurred Atmospheric Background */}
-          <aside className="forge-steps-blur-bg" aria-hidden="true">
-            <div className="forge-steps-blur-panel">
-              {STEPS_DATA.map((step, idx) => (
-                <CenterPhoto
-                  key={step.title}
-                  src={step.image}
-                  alt=""
-                  loading="lazy"
-                  className={`forge-steps-blur-img ${activeStepIndex === idx ? "active" : ""}`}
-                />
-              ))}
-            </div>
-          </aside>
-
-          {/* Foreground 12-Column Grid */}
           <div className="forge-steps-foreground">
             <div className="forge-grid-12">
-              {/* Left: Sticky 1:1 image visual with expanding inner clip-path reveal (Desktop: Columns 2 to 7) */}
-              <aside className="forge-steps-sticky-col" aria-hidden="true">
-                <div className="forge-steps-sticky-inner">
-                  <div className="forge-steps-visual">
-                    {STEPS_DATA.map((step, idx) => (
-                      <div
-                        key={step.title}
-                        ref={(el) => {
-                          stepClippedRefs.current[idx] = el;
-                        }}
-                        className="forge-step-clipped-wrapper"
-                        style={{
-                          zIndex: idx + 1,
-                          clipPath: idx === 0 ? "inset(0% 0% 0% 0%)" : "inset(50% 50% 50% 50%)",
-                        }}
-                      >
-                        <CenterPhoto
-                          src={step.image}
-                          alt={step.alt}
-                          className="forge-steps-image"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </aside>
-
-              {/* Right: 3 Sequential Step Articles (Desktop: Columns 8 to 12) */}
-              <div className="forge-steps-articles-col">
+              <div
+                ref={mobileStepsTrackRef}
+                className="forge-steps-articles-col"
+                aria-label="Etapas do atendimento Center Ônibus"
+                onScroll={(event) => {
+                  const track = event.currentTarget;
+                  const slides = Array.from(track.children) as HTMLElement[];
+                  const nearest = slides.reduce((best, slide, index) =>
+                    Math.abs((slide.offsetLeft - track.offsetLeft) - track.scrollLeft) < Math.abs((slides[best].offsetLeft - track.offsetLeft) - track.scrollLeft) ? index : best, 0);
+                  setMobileStepIndex((current) => current === nearest ? current : nearest);
+                }}
+              >
                 {STEPS_DATA.map((step, idx) => (
                   <article
                     key={step.title}
                     data-step-index={idx}
-                    ref={(el) => {
-                      stepArticleRefs.current[idx] = el;
-                    }}
-                    className="forge-step-article"
+                    className={`forge-step-article ${mobileStepIndex === idx ? "is-active" : ""}`}
                   >
                     <div className="forge-step-indicator">
                       {step.num} <span>/ {step.total}</span>
@@ -698,7 +581,6 @@ export default function Home2() {
                     <p className="forge-step-desc">{step.desc}</p>
                     <ForgeButton text="Consultar Peça" href="/fale-conosco" />
 
-                    {/* Mobile inline image */}
                     <CenterPhoto
                       src={step.image}
                       alt={step.alt}
@@ -708,6 +590,26 @@ export default function Home2() {
                   </article>
                 ))}
               </div>
+              <nav className="forge-steps-carousel-nav" aria-label="Navegação das etapas">
+                <button type="button" onClick={() => goToMobileStep(mobileStepIndex - 1)} disabled={mobileStepIndex === 0} aria-label="Etapa anterior">
+                  <span aria-hidden="true">←</span>
+                </button>
+                <div className="forge-steps-carousel-dots" data-active-step={mobileStepIndex} aria-label={`Etapa ${mobileStepIndex + 1} de ${STEPS_DATA.length}`}>
+                  {STEPS_DATA.map((step, index) => (
+                    <button
+                      type="button"
+                      key={step.title}
+                      className={mobileStepIndex === index ? "is-active" : ""}
+                      onClick={() => goToMobileStep(index)}
+                      aria-label={`Ir para etapa ${index + 1}: ${step.title}`}
+                      aria-current={mobileStepIndex === index ? "step" : undefined}
+                    />
+                  ))}
+                </div>
+                <button type="button" onClick={() => goToMobileStep(mobileStepIndex + 1)} disabled={mobileStepIndex === STEPS_DATA.length - 1} aria-label="Próxima etapa">
+                  <span aria-hidden="true">→</span>
+                </button>
+              </nav>
             </div>
           </div>
         </section>
@@ -745,26 +647,32 @@ export default function Home2() {
 
         <CenterTeam />
 
-        {/* 7. Sticky Services Split (6 Services) - Confirmed as correct by user */}
+        {/* 7. Compact horizontal services carousel */}
         <section id="services" className="forge-services-section">
           <div className="forge-services-split">
-            {/* Left: Scrollable service cards */}
-            <div className="forge-services-list">
+            <div
+              ref={servicesTrackRef}
+              className="forge-services-list"
+              aria-label="Categorias de componentes para carrocerias"
+              onScroll={(event) => {
+                const track = event.currentTarget;
+                const slides = Array.from(track.children) as HTMLElement[];
+                const nearest = slides.reduce((best, slide, index) =>
+                  Math.abs((slide.offsetLeft - track.offsetLeft) - track.scrollLeft) < Math.abs((slides[best].offsetLeft - track.offsetLeft) - track.scrollLeft) ? index : best, 0);
+                setActiveServiceIndex((current) => current === nearest ? current : nearest);
+              }}
+            >
               {SERVICES_DATA.map((srv, idx) => (
                 <article
                   key={srv.id}
                   data-service-index={idx}
-                  ref={(el) => {
-                    serviceRefs.current[idx] = el;
-                  }}
-                  className="forge-service-card"
+                  className={`forge-service-card ${activeServiceIndex === idx ? "is-active" : ""}`}
                 >
                   <span className="forge-service-tag">{srv.tag}</span>
                   <h3 className="forge-service-title">{srv.title}</h3>
                   <p className="forge-service-desc">{srv.desc}</p>
                   <ForgeButton text="Consultar Disponibilidade" href="/fale-conosco" />
 
-                  {/* Mobile inline image */}
                   <CenterPhoto
                     src={srv.image}
                     alt={srv.alt}
@@ -774,29 +682,26 @@ export default function Home2() {
                 </article>
               ))}
             </div>
-
-            {/* Right: Sticky Image Showcase (Desktop) */}
-            <aside className="forge-services-sticky-panel" aria-hidden="true">
-              {SERVICES_DATA.map((srv, idx) => (
-                <div
-                  key={srv.id}
-                  ref={(el) => {
-                    serviceImgRefs.current[idx] = el;
-                  }}
-                  className="forge-service-image-item"
-                  style={{
-                    zIndex: idx + 1,
-                    clipPath: idx === 0 ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)",
-                  }}
-                >
-                  <CenterPhoto
-                    src={srv.image}
-                    alt={srv.alt}
-                    loading="lazy"
+            <nav className="forge-services-carousel-nav" aria-label="Navegação das categorias">
+              <button type="button" onClick={() => goToService(activeServiceIndex - 1)} disabled={activeServiceIndex === 0} aria-label="Categoria anterior">
+                <span aria-hidden="true">←</span>
+              </button>
+              <div className="forge-services-carousel-dots" data-active-service={activeServiceIndex} aria-label={`Categoria ${activeServiceIndex + 1} de ${SERVICES_DATA.length}`}>
+                {SERVICES_DATA.map((service, index) => (
+                  <button
+                    type="button"
+                    key={service.id}
+                    className={activeServiceIndex === index ? "is-active" : ""}
+                    onClick={() => goToService(index)}
+                    aria-label={`Ir para categoria ${index + 1}: ${service.title}`}
+                    aria-current={activeServiceIndex === index ? "step" : undefined}
                   />
-                </div>
-              ))}
-            </aside>
+                ))}
+              </div>
+              <button type="button" onClick={() => goToService(activeServiceIndex + 1)} disabled={activeServiceIndex === SERVICES_DATA.length - 1} aria-label="Próxima categoria">
+                <span aria-hidden="true">→</span>
+              </button>
+            </nav>
           </div>
         </section>
 
@@ -869,6 +774,8 @@ export default function Home2() {
             <nav className="center-catalog-links" aria-label="Informações da Center"><Link href="/sobre/a-center-onibus">A Center</Link><Link href="/vendedores">Atendimento</Link><Link href="/sobre/politica-de-privacidade">Privacidade</Link></nav>
           </div>
         </section>
+
+        <CenterLocations />
 
       </div>
       <InstitutionalFooter />

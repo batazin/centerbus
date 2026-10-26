@@ -1,29 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-
-const offices = [
-  {
-    title: "Matriz",
-    city: "São Paulo - SP",
-    address: "Rua Dias da Silva, 348",
-    cep: "CEP: 02114-000",
-    phone: "11 2967-3002",
-  },
-  {
-    title: "Filial: Bahia",
-    city: "Lauro de Freitas - BA",
-    address: "Rua Pelicano, 495",
-    cep: "CEP: 42701-340",
-    phone: "71 3377-0770 | 71 3252-5933",
-  },
-  {
-    title: "Filial: Rio de Janeiro",
-    city: "Vargem Grande - RJ",
-    address: "Est. Bandeirantes, 28.501",
-    cep: "CEP: 22785-276",
-    phone: "21 2391-1182 | 21 97201-2525",
-  },
-];
+import { centerOffices } from "../_data/offices";
 
 const footerLinks = [
   { href: "/sobre/a-center-onibus", label: "A Center Ônibus" },
@@ -74,13 +51,13 @@ export function InstitutionalFooter() {
         </section>
 
         <section className="footer-locations" aria-label="Unidades">
-          {offices.map((office) => (
+          {centerOffices.map((office) => (
             <address key={office.title} className="footer-office">
               <strong>{office.title}</strong>
               <span>{office.city}</span>
               <span>{office.address}</span>
               <span>{office.cep}</span>
-              {office.phone.split("|").map(phone=><a key={phone} href={`tel:+55${phone.replace(/\D/g,"")}`}>{phone.trim()}</a>)}
+              {office.phones.map(phone=><a key={phone} href={`tel:+55${phone.replace(/\D/g,"")}`}>{phone}</a>)}
             </address>
           ))}
         </section>
