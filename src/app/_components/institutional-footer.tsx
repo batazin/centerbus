@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { centerOffices } from "../_data/offices";
+import { BranchMap } from "./branch-map";
+
+import { branches, branchWhatsapp } from "../_content/branches";
 
 const footerLinks = [
   { href: "/sobre/a-center-onibus", label: "A Center Ônibus" },
@@ -41,8 +43,8 @@ export function InstitutionalFooter() {
         <section className="footer-service" aria-labelledby="footer-service-title">
           <h2 id="footer-service-title">Atendimento</h2>
           <p>Fale com nossa equipe para orçamento, identificação de peças e suporte comercial.</p>
-          <a className="footer-action" href="tel:+551129673002">
-            Ligar para SP
+          <a className="footer-action" href={branchWhatsapp(branches[0])} target="_blank" rel="noopener noreferrer">
+            WhatsApp · São Paulo
           </a>
           <div className="footer-privacy">
             <span>Data Protection Officer</span>
@@ -51,13 +53,15 @@ export function InstitutionalFooter() {
         </section>
 
         <section className="footer-locations" aria-label="Unidades">
-          {centerOffices.map((office) => (
+          {branches.map((office) => (
             <address key={office.title} className="footer-office">
               <strong>{office.title}</strong>
               <span>{office.city}</span>
               <span>{office.address}</span>
-              <span>{office.cep}</span>
-              {office.phones.map(phone=><a key={phone} href={`tel:+55${phone.replace(/\D/g,"")}`}>{phone}</a>)}
+              <span>CEP: {office.cep}</span>
+              <a className="office-whatsapp" href={branchWhatsapp(office)} target="_blank" rel="noopener noreferrer">WhatsApp · {office.phone} ↗</a>
+              <BranchMap branch={office} />
+              <a className="office-directions" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${office.address}, ${office.city}, ${office.cep}`)}`} target="_blank" rel="noopener noreferrer">Ver rota até a unidade ↗</a>
             </address>
           ))}
         </section>

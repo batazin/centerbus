@@ -10,6 +10,8 @@ export const productCategories = [
 export type ProductCategory = (typeof productCategories)[number]["id"];
 
 export type Product = {
+  marketplaceUrl?: string;
+  price?: number;
   slug: string;
   name: string;
   shortName: string;

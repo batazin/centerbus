@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { branches, branchWhatsapp } from "../_content/branches";
 import { useEffect, useRef, useState } from "react";
 import "./contact-form.css";
 
@@ -53,8 +54,8 @@ export function ContactForm() {
 
             <div className="contact-channels">
               <div className="contact-channel">
-                <span className="contact-channel-label">Telefone</span>
-                <a href="tel:+551129673002"><strong>(11) 2967-3002</strong></a>
+                <span className="contact-channel-label">WhatsApp por unidade</span>
+                {branches.map(branch => <a key={branch.state} href={branchWhatsapp(branch)} target="_blank" rel="noopener noreferrer"><strong>{branch.name} · {branch.phone} ↗</strong></a>)}
               </div>
               <div className="contact-channel">
                 <span className="contact-channel-label">E-mail comercial</span>

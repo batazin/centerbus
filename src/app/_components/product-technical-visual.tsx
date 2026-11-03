@@ -26,6 +26,7 @@ export function ProductTechnicalVisual({
           src={image}
           alt={imageAlt}
           fill
+          unoptimized={image.startsWith("https://")}
           priority={!compact}
           sizes={compact ? "(max-width: 700px) 100vw, 34vw" : "(max-width: 980px) 100vw, 52vw"}
         />

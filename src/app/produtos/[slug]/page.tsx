@@ -4,9 +4,11 @@ import { notFound } from "next/navigation";
 import { InstitutionalFooter } from "../../_components/institutional-footer";
 import { InstitutionalHeader } from "../../_components/institutional-header";
 import { ProductTechnicalVisual } from "../../_components/product-technical-visual";
-import { getProduct, getRelatedProducts, products } from "../../_content/products";
+import { products } from "../../_content/products";
+import { listProducts } from "../../_content/ecosystem";
 
-export const dynamicParams = false;
+export const dynamicParams = true;
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return products.map((product) => ({ slug: product.slug }));
@@ -14,7 +16,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/produtos/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = (await listProducts()).find(p => p.slug === slug);
 
   if (!product) {
     return {};
@@ -28,13 +30,14 @@ export async function generateMetadata({ params }: PageProps<"/produtos/[slug]">
 
 export default async function ProductDetailPage({ params }: PageProps<"/produtos/[slug]">) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const allProducts = await listProducts();
+  const product = allProducts.find(p => p.slug === slug);
 
   if (!product) {
     notFound();
   }
 
-  const relatedProducts = getRelatedProducts(product);
+  const relatedProducts = allProducts.filter(p => p.slug !== slug).slice(0, 3);
   const contactHref = `/fale-conosco?produto=${encodeURIComponent(product.name)}&codigo=${encodeURIComponent(product.code)}`;
 
   return (
@@ -66,7 +69,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/produtos
           <aside className="product-purchase-panel" aria-label="Comprar este produto">
             <div className="product-sales-badges">
               <span>{product.categoryLabel}</span>
-              <span>Venda sob consulta</span>
+              <span>{product.marketplaceUrl ? product.availability : "Venda sob consulta"}</span>
             </div>
             <p className="product-sales-code">Código {product.code}</p>
             <h1 id="product-sales-title">{product.name}</h1>
@@ -89,11 +92,12 @@ export default async function ProductDetailPage({ params }: PageProps<"/produtos
 
             <div className="product-sales-offer">
               <span>Condição comercial</span>
-              <strong>Preço sob consulta</strong>
-              <p>Quantidade, prazo e condição de pagamento confirmados no orçamento.</p>
+              <strong>{typeof product.price === "number" ? product.price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "Preço sob consulta"}</strong>
+              <p>{product.marketplaceUrl ? "Preço e disponibilidade finais confirmados no Mercado Livre." : "Quantidade, prazo e condição de pagamento confirmados no orçamento."}</p>
             </div>
 
             <div className="product-sales-actions">
+              {product.marketplaceUrl && <a href={product.marketplaceUrl} target="_blank" rel="noopener noreferrer">Comprar no Mercado Livre</a>}
               <Link href={contactHref}>Solicitar cotação deste item</Link>
               <Link href="/vendedores">Falar com um vendedor</Link>
             </div>

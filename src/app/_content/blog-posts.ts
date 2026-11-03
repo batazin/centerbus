@@ -6,6 +6,7 @@ export type BlogSection = {
 };
 
 export type BlogPost = {
+  sources?: readonly { title: string; url: string }[];
   slug: string;
   category: "Identificação" | "Manutenção" | "Operação";
   title: string;
