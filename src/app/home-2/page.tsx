@@ -36,7 +36,7 @@ const STEPS_DATA = [
   {
     num: "03",
     total: "03",
-    title: "O Ônibus Volta pra Rua",
+    title: "Da Conferência à Expedição",
     desc: "Da consulta à expedição, conferimos a aplicação e combinamos o prazo de entrega com você. A peça certa para o ônibus voltar à operação.",
     image: "/images/center-v3/step-dispatch.webp",
     alt: "Expedição real de peças na Center Ônibus",
@@ -120,7 +120,6 @@ export default function Home2() {
   const [isPreloaderLoaded, setIsPreloaderLoaded] = useState(false);
   const [progressBarActive, setProgressBarActive] = useState(false);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const [brandsPaused, setBrandsPaused] = useState(false);
 
   const heroCarRef = useRef<ForgeHeroCarHandle>(null);
   const heroPinWrapperRef = useRef<HTMLDivElement>(null);
@@ -138,12 +137,7 @@ export default function Home2() {
   const serviceRefs = useRef<(HTMLElement | null)[]>([]);
   const serviceImgRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const statementQuoteRef = useRef<HTMLHeadingElement>(null);
-  const craftsmanImgRef = useRef<HTMLImageElement>(null);
 
-  const carLeftRef = useRef<HTMLDivElement>(null);
-  const carMainRef = useRef<HTMLDivElement>(null);
-  const carRightRef = useRef<HTMLDivElement>(null);
 
   // Preloader animation
   useEffect(() => {
@@ -388,31 +382,13 @@ export default function Home2() {
         });
       });
 
-      if (!compact && statementQuoteRef.current) {
-        gsap.fromTo(statementQuoteRef.current.querySelectorAll(".center-statement-word"), { opacity: .25 }, { opacity: 1, stagger: .08, ease: "none", scrollTrigger: { trigger: statementQuoteRef.current, start: "top 80%", end: "bottom 35%", scrub: true } });
-      }
+
       gsap.utils.toArray<HTMLElement>(compact ? ".no-parallax-on-mobile" : ".forge-full-banner").forEach(section => {
         gsap.fromTo(section.querySelector("img"), { yPercent: -10, scale: 1.15 }, { yPercent: 10, scale: 1.15, ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true } });
       });
 
       // 4. Statement Craftsman Parallax
-      if (!compact && craftsmanImgRef.current) {
-        gsap.fromTo(
-          craftsmanImgRef.current,
-          { y: -30, scale: 1.08 },
-          {
-            y: 30,
-            scale: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: craftsmanImgRef.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
-        );
-      }
+
 
       // 5. Service cards and sliding wipe image reveal (1:1 Forge Automotive)
       const mmServices = gsap.matchMedia();
@@ -478,56 +454,6 @@ export default function Home2() {
         });
       });
 
-      // 6. Aerial Buses Driving Motion along Highway ("O Ônibus Volta pra Rua")
-      if (carLeftRef.current && carMainRef.current && carRightRef.current) {
-        // Center Coach Bus: Accelerates forward powerfully along its lane, overtaking side traffic
-        gsap.fromTo(
-          carMainRef.current,
-          { yPercent: 36 },
-          {
-            yPercent: -36,
-            ease: "none",
-            scrollTrigger: {
-              trigger: "#ordinary",
-              start: "top 95%",
-              end: "bottom 5%",
-              scrub: 0.2,
-            },
-          }
-        );
-
-        // Left Urban Bus: Cruising at steady speed along the left lane
-        gsap.fromTo(
-          carLeftRef.current,
-          { yPercent: 20 },
-          {
-            yPercent: -20,
-            ease: "none",
-            scrollTrigger: {
-              trigger: "#ordinary",
-              start: "top 95%",
-              end: "bottom 5%",
-              scrub: 0.2,
-            },
-          }
-        );
-
-        // Right Minibus: Cruising along the right lane
-        gsap.fromTo(
-          carRightRef.current,
-          { yPercent: 28 },
-          {
-            yPercent: -28,
-            ease: "none",
-            scrollTrigger: {
-              trigger: "#ordinary",
-              start: "top 95%",
-              end: "bottom 5%",
-              scrub: 0.2,
-            },
-          }
-        );
-      }
     });
 
     return () => { removePointerListeners(); ctx.revert(); };
@@ -540,7 +466,7 @@ export default function Home2() {
         {/* 1. Preloader */}
         <aside className={`forge-preloader ${isPreloaderLoaded ? "loaded" : ""}`} aria-hidden="true">
           <p className="forge-preloader-text">
-            CENTRO DE DISTRIBUIÇÃO E COMPONENTES TÉCNICOS • O ÔNIBUS VOLTA PRA RUA
+            COM A CENTER, O ÔNIBUS NUNCA PARA
           </p>
           <div className="forge-preloader-progress-wrap">
             <div className="forge-preloader-track">
@@ -565,7 +491,7 @@ export default function Home2() {
 
             {/* Top Text - Primeira coisa que o lead lê na tela */}
             <div ref={heroTopRef} className="forge-hero-top">
-              <h1 className="forge-hero-title">O Ônibus Volta pra Rua</h1>
+              <h1 className="forge-hero-title"><span>Com a Center,</span><br />o ônibus nunca para.</h1>
             </div>
 
             {/* Center Reveal Text (Hidden at start, reveals during scroll) */}
@@ -583,6 +509,13 @@ export default function Home2() {
                 Especialistas técnicos em componentes e carrocerias. Manter o Brasil em movimento.
               </p>
               <ForgeButton text="Falar com a Equipe" href="/fale-conosco" />
+              <div className="center-hero-brands">                    <p className="center-manufacturer-label">Peças para as principais carrocerias</p>
+                    <div className="forge-marquee-wrap center-manufacturer-wrap" tabIndex={0} aria-label="Busscar, Comil, Caio e Mascarello">
+                      <div className="forge-marquee-track" aria-hidden="true">
+                        {[0,1].map(group => <div className="center-manufacturer-group" key={group}>{MARQUEE_BRANDS.map(brand => <div className="forge-marquee-item" key={brand}><CenterPhoto src={`/brand/manufacturers/${brand.toLowerCase()}.png`} alt="" width="160" height="50" /></div>)}</div>)}
+                      </div>
+                    </div>
+                    </div>
             </div>
           </section>
         </div>
@@ -613,12 +546,12 @@ export default function Home2() {
                 <div className="forge-grid-12">
                   <div className="forge-approach-marquee-col">
                     <p className="center-manufacturer-label">Carrocerias que fazem parte da nossa operação</p>
-                    <div className={`forge-marquee-wrap center-manufacturer-wrap ${brandsPaused ? "is-paused" : ""}`}>
+                    <div className="forge-marquee-wrap center-manufacturer-wrap" tabIndex={0} aria-label="Busscar, Comil, Caio e Mascarello">
                       <div className="forge-marquee-track" aria-hidden="true">
                         {[0,1].map(group => <div className="center-manufacturer-group" key={group}>{MARQUEE_BRANDS.map(brand => <div className="forge-marquee-item" key={brand}><CenterPhoto src={`/brand/manufacturers/${brand.toLowerCase()}.png`} alt="" width="160" height="50" /></div>)}</div>)}
                       </div>
                     </div>
-                    <div className="center-manufacturer-access"><span className="sr-only">Busscar, Comil, Caio e Mascarello.</span><button aria-pressed={brandsPaused} onClick={() => setBrandsPaused(value => !value)}>{brandsPaused ? "Retomar marcas" : "Pausar marcas"}</button></div>
+
                   </div>
 
                   <div className="forge-approach-cta-col">
@@ -712,37 +645,6 @@ export default function Home2() {
           </div>
         </section>
 
-        {/* 6. Statement Section with Craftsman Portrait */}
-        <section className="forge-statement-section">
-          <div className="forge-grid-12">
-            {/* Left Content (Columns 2 to 8) */}
-            <div className="forge-statement-content-col">
-              <h2 ref={statementQuoteRef} className="forge-statement-quote">
-                {"Cada hora com o ônibus parado na garagem custa caro. Conhecimento técnico faz a diferença na hora de encontrar a peça certa.".split(" ").map((word, index) => <span className="center-statement-word" key={index}>{word}{" "}</span>)}
-              </h2>
-              <div className="forge-statement-copy-wrap">
-                <p className="forge-statement-copy">
-                  Conhecer a aplicação faz parte do atendimento. Código, medidas, modelo e foto ajudam nossa equipe a conferir o que sua operação precisa. Da identificação à expedição, trabalhamos para que o ônibus volte pra rua.
-                </p>
-                <ForgeButton text="Falar com a Equipe Técnica" href="/fale-conosco" />
-              </div>
-            </div>
-
-            {/* Right Side: Tall 2/3 Portrait of Craftsman (Columns 9 to 12) */}
-            <aside className="forge-statement-portrait-col" aria-hidden="true">
-              <div className="forge-statement-portrait-wrap">
-                <CenterPhoto
-                  ref={craftsmanImgRef}
-                  src="/images/center-v2/statement-craftsman.webp"
-                  alt="Conferência de peças pela equipe da Center Ônibus em São Paulo"
-                  className="forge-statement-portrait-img"
-                  loading="lazy"
-                />
-              </div>
-            </aside>
-          </div>
-        </section>
-
         <CenterTeam />
 
         {/* 7. Sticky Services Split (6 Services) - Confirmed as correct by user */}
@@ -798,55 +700,6 @@ export default function Home2() {
               ))}
             </aside>
           </div>
-        </section>
-
-        {/* 8. "O Ônibus Volta pra Rua" Aerial Vehicle Showcase */}
-        <section id="ordinary" className="forge-ordinary-section">
-          <h2 className="forge-ordinary-top-title">O Ônibus</h2>
-
-          <div className="forge-ordinary-cars-container">
-            {/* Highway Road Track Lines */}
-            <div className="forge-road-track-lines" aria-hidden="true">
-              <div className="forge-lane-divider" />
-              <div className="forge-lane-divider" />
-            </div>
-
-            {/* Left Bus: Transit Urban Bus */}
-            <div ref={carLeftRef} className="forge-car-eagle-eye forge-car-side left">
-              <div className="forge-headlight-beam" />
-              <CenterPhoto
-                src="/images/center-v4/bus-aerial-urban.webp"
-                alt="Ônibus Urbano e Metropolitano vista aérea superior"
-                loading="lazy"
-              />
-            </div>
-
-            {/* Center Main Bus: Luxury Coach Bus */}
-            <div ref={carMainRef} className="forge-car-eagle-eye forge-car-main">
-              <div className="forge-headlight-beam main-beam" />
-              <CenterPhoto
-                src="/images/center-v4/bus-aerial-coach.webp"
-                alt="Ônibus Rodoviário de Alta Categoria Center Ônibus vista aérea superior"
-                loading="lazy"
-              />
-            </div>
-
-            {/* Right Bus: Executive Minibus */}
-            <div ref={carRightRef} className="forge-car-eagle-eye forge-car-side right">
-              <div className="forge-headlight-beam" />
-              <CenterPhoto
-                src="/images/center-v4/bus-aerial-mini.webp"
-                alt="Micro-ônibus Executivo e Turismo vista aérea superior"
-                loading="lazy"
-              />
-            </div>
-          </div>
-
-          <h2 className="forge-ordinary-bottom-title">Volta pra Rua</h2>
-          <p className="forge-ordinary-copy">
-            Do rodoviário de alta categoria ao transporte urbano diário: consulta de disponibilidade,
-            conferência de aplicação e suporte técnico dedicado a cada quilômetro da sua frota.
-          </p>
         </section>
 
         {/* 9. Catálogo Técnico Especializado Full Monumental Card */}

@@ -18,7 +18,7 @@ try{for(const width of [1440,390,320]){
    return {headers:document.querySelectorAll('.forge-header').length,legacyHeaders:document.querySelectorAll('.institutional-header').length,footers:document.querySelectorAll('.institutional-footer').length,logoWidth:header.querySelector('img').getBoundingClientRect().width,background:getComputedStyle(header).backgroundColor,h1Font:getComputedStyle(h1).fontFamily,footerLogo:footer.querySelector('img').getAttribute('src'),footerText:footer.textContent.replace(/\s+/g,' ').trim(),offices:footer.querySelectorAll('.footer-office').length,overflow:document.documentElement.scrollWidth>innerWidth+1};
   });
   assert.equal(response.status(),200,route);assert.equal(data.headers,1,route);assert.equal(data.legacyHeaders,0,route);assert.equal(data.footers,1,route);assert.equal(data.offices,3,route);assert.equal(data.overflow,false,route);
-  assert.equal(data.background,'rgba(0, 0, 0, 0)',route);assert.equal(Math.round(data.logoWidth),width<1024?124:150,route);assert.ok(data.h1Font.toLowerCase().includes('archivo'),route);assert.ok(data.footerLogo.includes('partial-negative'),route);
+  assert.equal(data.background,'rgba(0, 0, 0, 0)',route);assert.equal(Math.round(data.logoWidth),width<=380?146:width<1024?164:210,route);assert.ok(data.h1Font.toLowerCase().includes('archivo'),route);assert.ok(data.footerLogo.includes('partial-negative'),route);
   footerText??=data.footerText;assert.equal(data.footerText,footerText,route);
   const key=route==='/'?'home':route.slice(1).replaceAll('/','-');
   await page.screenshot({caret:'initial',path:`review/consistency/${width}-${key}.png`});
@@ -49,8 +49,8 @@ try{for(const width of [1440,390,320]){
   await page.goto(base+'/produtos',{waitUntil:'networkidle'});await page.waitForFunction(()=>!document.querySelector('.forge-menu-trigger').disabled);
   await page.getByLabel('Buscar no catálogo').fill('11084');await page.waitForFunction(()=>document.querySelectorAll('.catalog-card-link').length===1);
   await page.getByLabel('Buscar no catálogo').fill('produto-inexistente-zz');await page.locator('.catalog-empty').waitFor();await page.getByRole('button',{name:'Limpar filtros',exact:true}).click();await page.waitForFunction(()=>document.querySelectorAll('.catalog-card-link').length===8);
-  await page.goto(base+'/vendedores',{waitUntil:'networkidle'});await page.waitForFunction(()=>!document.querySelector('.forge-menu-trigger').disabled);await page.getByRole('tab',{name:/Bahia/}).click();await page.waitForFunction(()=>document.querySelectorAll('.seller-card').length===2);
-  await page.getByRole('tab',{name:/Rio de Janeiro/}).click();await page.locator('.center-rj-team').waitFor();await page.getByRole('tab',{name:/São Paulo/}).click();await page.waitForFunction(()=>document.querySelectorAll('.seller-card').length===12);
+  await page.goto(base+'/vendedores',{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>!document.querySelector('.forge-menu-trigger').disabled);await page.getByRole('button',{name:/Center Bahia/}).click();await page.waitForFunction(()=>document.querySelectorAll('.seller-card').length===3);
+  await page.getByRole('button',{name:/Center RJ/}).click();await page.waitForFunction(()=>document.querySelectorAll('.seller-card').length===4);await page.getByRole('button',{name:/Center Ônibus SP/}).click();await page.waitForFunction(()=>document.querySelectorAll('.seller-card').length===14);
   await page.getByLabel('Buscar vendedor').fill('Ferreira');await page.waitForFunction(()=>document.querySelectorAll('.seller-card').length===1);
  }
  await page.close();
