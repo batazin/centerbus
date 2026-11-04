@@ -1,0 +1,358 @@
+/* =========================================================================
+   CENTER SLIDE CAROUSEL — Etapas e Componentes
+   Slide em tela cheia: foto de fundo, azul Center à esquerda com o texto,
+   barras indicando o slide (vermelho só no ativo) e setas.
+   A seção tem uma tela de altura por slide e o painel fica travado no topo
+   (sticky); o scroll troca os slides.
+   ========================================================================= */
+
+.center-slides-pin {
+  position: relative;
+  height: calc(var(--slides-count, 3) * 100svh);
+  background: #101418;
+}
+
+.center-slides {
+  --slides-gutter: clamp(1.5rem, 8.333vw, 10rem);
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 560px;
+  background: #101418;
+  color: #F4F4F4;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.center-slides-viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Slides empilhados; a troca é uma cortina lateral que segue o sentido do scroll */
+.center-slides-track {
+  --slide-ease: cubic-bezier(0.77, 0, 0.18, 1);
+  --slide-duration: 0.75s;
+  position: relative;
+  height: 100%;
+}
+
+.center-slide {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  visibility: hidden;
+  z-index: 0;
+}
+
+.center-slide.is-leaving {
+  visibility: visible;
+  z-index: 1;
+}
+
+.center-slide.is-active {
+  visibility: visible;
+  z-index: 2;
+}
+
+.center-slide-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.center-slide-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* Avançar: entra pela direita cobrindo o atual; o atual recua para a esquerda */
+.center-slides-track[data-dir="next"] .center-slide.is-active {
+  animation: center-slide-wipe-next var(--slide-duration) var(--slide-ease) both;
+}
+.center-slides-track[data-dir="next"] .center-slide.is-active .center-slide-img {
+  animation: center-slide-img-in-next calc(var(--slide-duration) + 0.35s) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.center-slides-track[data-dir="next"] .center-slide.is-leaving .center-slide-media {
+  animation: center-slide-out-next var(--slide-duration) var(--slide-ease) both;
+}
+
+/* Voltar: o mesmo movimento espelhado */
+.center-slides-track[data-dir="prev"] .center-slide.is-active {
+  animation: center-slide-wipe-prev var(--slide-duration) var(--slide-ease) both;
+}
+.center-slides-track[data-dir="prev"] .center-slide.is-active .center-slide-img {
+  animation: center-slide-img-in-prev calc(var(--slide-duration) + 0.35s) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.center-slides-track[data-dir="prev"] .center-slide.is-leaving .center-slide-media {
+  animation: center-slide-out-prev var(--slide-duration) var(--slide-ease) both;
+}
+
+@keyframes center-slide-wipe-next {
+  from { clip-path: inset(0 0 0 100%); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes center-slide-wipe-prev {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes center-slide-img-in-next {
+  from { transform: translate3d(22%, 0, 0) scale(1.12); }
+  to { transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes center-slide-img-in-prev {
+  from { transform: translate3d(-22%, 0, 0) scale(1.12); }
+  to { transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes center-slide-out-next {
+  from { transform: translate3d(0, 0, 0); filter: brightness(1); }
+  to { transform: translate3d(-18%, 0, 0); filter: brightness(0.45); }
+}
+@keyframes center-slide-out-prev {
+  from { transform: translate3d(0, 0, 0); filter: brightness(1); }
+  to { transform: translate3d(18%, 0, 0); filter: brightness(0.45); }
+}
+
+/* Azul Center à esquerda para leitura do texto; a borda inclinada é a diagonal da composição */
+.center-slide-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(104deg, rgba(18, 43, 74, 0.96) 0%, rgba(18, 43, 74, 0.9) 34%, rgba(18, 43, 74, 0.35) 56%, rgba(18, 43, 74, 0) 72%),
+    linear-gradient(to top, rgba(16, 20, 24, 0.55) 0%, rgba(16, 20, 24, 0) 28%);
+  pointer-events: none;
+}
+
+.center-slide-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.25rem;
+  height: 100%;
+  max-width: calc(var(--slides-gutter) + 36rem);
+  padding: 6rem 2rem 8rem var(--slides-gutter);
+}
+
+/* Texto: some no slide que sai e entra em sequência pelo lado do movimento */
+.center-slide.is-leaving .center-slide-copy {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.center-slides-track[data-dir] .center-slide.is-active .center-slide-copy > * {
+  animation: center-slide-text-next 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.center-slides-track[data-dir="prev"] .center-slide.is-active .center-slide-copy > * {
+  animation-name: center-slide-text-prev;
+}
+.center-slides-track[data-dir] .center-slide.is-active .center-slide-copy > :nth-child(1) { animation-delay: 0.3s; }
+.center-slides-track[data-dir] .center-slide.is-active .center-slide-copy > :nth-child(2) { animation-delay: 0.38s; }
+.center-slides-track[data-dir] .center-slide.is-active .center-slide-copy > :nth-child(3) { animation-delay: 0.46s; }
+.center-slides-track[data-dir] .center-slide.is-active .center-slide-copy > :nth-child(4) { animation-delay: 0.54s; }
+
+@keyframes center-slide-text-next {
+  from { opacity: 0; transform: translate3d(64px, 0, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes center-slide-text-prev {
+  from { opacity: 0; transform: translate3d(-64px, 0, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+.center-slide-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0;
+  color: #8DB6DD;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.center-slide-kicker span {
+  color: #F4F4F4;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+}
+
+.center-slide-title {
+  margin: 0;
+  color: #F4F4F4;
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 700;
+  line-height: 0.92;
+  overflow-wrap: anywhere;
+}
+
+.center-slide-desc {
+  max-width: 30rem;
+  margin: 0;
+  color: rgba(244, 244, 244, 0.8);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.center-slide-cta {
+  margin-top: 0.75rem;
+}
+
+/* Controles: barras de progresso + setas */
+.center-slides-controls {
+  position: absolute;
+  left: var(--slides-gutter);
+  right: var(--slides-gutter);
+  bottom: clamp(1.75rem, 4vw, 3rem);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.center-slides-progress {
+  display: flex;
+  flex: 1;
+  gap: 0.5rem;
+  min-width: 0;
+  max-width: 34rem;
+}
+
+.center-slides-bar {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.center-slides-bar:focus-visible,
+.center-slides-arrows button:focus-visible {
+  outline: 2px solid #F4F4F4;
+  outline-offset: 2px;
+}
+
+.center-slides-bar-track {
+  position: relative;
+  display: block;
+  height: 3px;
+  overflow: hidden;
+  background: rgba(244, 244, 244, 0.28);
+  transition: background-color 0.3s ease;
+}
+
+.center-slides-bar:hover .center-slides-bar-track {
+  background: rgba(244, 244, 244, 0.5);
+}
+
+.center-slides-bar.is-done .center-slides-bar-track {
+  background: rgba(244, 244, 244, 0.7);
+}
+
+.center-slides-bar-track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #C8102E;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.center-slides-bar.is-active .center-slides-bar-track::after {
+  transform: scaleX(1);
+}
+
+.center-slides-arrows {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.center-slides-arrows button {
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(244, 244, 244, 0.45);
+  background: rgba(16, 20, 24, 0.25);
+  color: #F4F4F4;
+  font: 600 1.25rem/1 var(--font-body);
+  cursor: pointer;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.center-slides-arrows button:hover {
+  background: #F4F4F4;
+  border-color: #F4F4F4;
+  color: #122B4A;
+}
+
+.center-slides-arrows button:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+.center-slides-arrows button:active {
+  transform: translateY(1px);
+}
+
+/* Mobile / tablet: texto embaixo sobre o azul que sobe da base */
+@media (max-width: 1023px) {
+  .center-slides {
+    --slides-gutter: 1rem;
+    min-height: 540px;
+  }
+
+  .center-slide-shade {
+    background:
+      linear-gradient(to top, rgba(18, 43, 74, 0.98) 0%, rgba(18, 43, 74, 0.92) 42%, rgba(18, 43, 74, 0.35) 66%, rgba(18, 43, 74, 0) 82%);
+  }
+
+  .center-slide-copy {
+    justify-content: flex-end;
+    gap: 0.9rem;
+    max-width: none;
+    padding: 5rem 1rem 6rem;
+  }
+
+  .center-slide-title {
+    font-size: clamp(2.4rem, 11vw, 3.25rem);
+  }
+
+  .center-slide-desc {
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+
+  .center-slides-controls {
+    bottom: 1rem;
+    /* espaço para o botão flutuante do WhatsApp no canto direito */
+    right: 5rem;
+    gap: 0.75rem;
+  }
+
+  .center-slides-progress {
+    gap: 0.35rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .center-slides-bar-track::after { transition: none; }
+  .center-slide,
+  .center-slide-img,
+  .center-slide-media,
+  .center-slide-copy,
+  .center-slide-copy > * { animation: none !important; transition: none !important; }
+}

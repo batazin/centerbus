@@ -68,6 +68,7 @@ export function ForgeHeader() {
         if(contains('.institutional-shell',x,y))return true;
         if(contains('#builds .forge-full-banner-bg',x,y))return true;
         if(contains('#builds,.forge-ordinary-cars-container',x,y))return false;
+        if(contains('.center-slides',x,y))return false;
         if(contains('#services',x,y))return !matchMedia('(max-width:1023px), (pointer:coarse)').matches && contains('.forge-services-sticky-panel',x,y);
         return contains('#steps,.forge-statement-section,#equipe,#ordinary',x,y);
       };

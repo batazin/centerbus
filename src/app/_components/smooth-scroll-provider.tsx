@@ -4,6 +4,11 @@ import Lenis from "lenis";
 import { useLayoutEffect } from "react";
 import { gsap, ScrollTrigger } from "../_lib/gsap";
 
+let activeLenis: Lenis | null = null;
+
+/** Instância ativa do Lenis (ou null fora da home), para navegação programática. */
+export const getLenis = () => activeLenis;
+
 type SmoothScrollProviderProps = {
   children: React.ReactNode;
   anchorOffset?: number;
@@ -39,6 +44,7 @@ export function SmoothScrollProvider({
       respectReducedMotion: false,
     });
 
+    activeLenis = lenis;
     const syncScrollTrigger = () => ScrollTrigger.update();
     lenis.on("scroll", syncScrollTrigger);
 
@@ -52,6 +58,7 @@ export function SmoothScrollProvider({
       gsap.ticker.remove(update);
       lenis.off("scroll", syncScrollTrigger);
       lenis.destroy();
+      if (activeLenis === lenis) activeLenis = null;
     };
   }, [anchorOffset, lerp, wheelMultiplier]);
 
