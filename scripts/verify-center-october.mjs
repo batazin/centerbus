@@ -17,7 +17,7 @@ try{
    if(route==='/')await page.locator('.forge-preloader.loaded').waitFor({state:'attached'});
    await page.evaluate(()=>document.fonts.ready);
    assert.equal(await page.locator('.branch-whatsapp-toggle').count(),1);
-   assert.equal(await page.locator('.office-map').count(),3);
+   assert.equal(await page.locator('.office-map').count(),0);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,`${route} ${width} overflow`);
    const logo=await page.locator('.forge-header img').evaluate(el=>el.getBoundingClientRect().width);
    assert.ok(logo>= (width<=380?146:width<1024?164:210)-1,`logo ${logo}`);
@@ -39,7 +39,7 @@ try{
     assert.equal(await page.locator('.center-team-card').count(),4);
     await page.screenshot({path:`review/october/${width}-team-rj.png`,caret:'initial'});
     await page.locator('.institutional-footer').scrollIntoViewIfNeeded();await page.waitForTimeout(300);
-    assert.equal(await page.locator('.google-branch-map iframe[src^="https://maps.google.com/maps?"]').count(),3);
+    assert.equal(await page.locator('.institutional-footer iframe').count(),0);
     await page.screenshot({path:`review/october/${width}-footer.png`,caret:'initial'});
    }
    if(route==='/vendedores'){

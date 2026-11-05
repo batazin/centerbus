@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BranchMap } from "./branch-map";
 
 import { branches, branchWhatsapp } from "../_content/branches";
 
@@ -60,7 +59,6 @@ export function InstitutionalFooter() {
               <span>{office.address}</span>
               <span>CEP: {office.cep}</span>
               <a className="office-whatsapp" href={branchWhatsapp(office)} target="_blank" rel="noopener noreferrer">WhatsApp · {office.phone} ↗</a>
-              <BranchMap branch={office} />
               <a className="office-directions" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${office.address}, ${office.city}, ${office.cep}`)}`} target="_blank" rel="noopener noreferrer">Ver rota até a unidade ↗</a>
             </address>
           ))}
