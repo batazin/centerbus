@@ -16,6 +16,7 @@ import { CenterTeam } from "./_components/center-team";
 import { CenterLocations } from "./_components/center-locations";
 import { CenterSlideCarousel } from "./_components/center-slide-carousel";
 import { InstitutionalFooter } from "../_components/institutional-footer";
+import { InstitutionalVideo } from "../_components/institutional-video";
 
 // Principais marcas e encarroçadoras atendidas pela Center Ônibus
 const MARQUEE_BRANDS = ["Busscar", "Comil", "Caio", "Mascarello"];
@@ -433,6 +434,7 @@ export default function Home2() {
           cta={<ForgeButton text="Consultar Peça" href="/fale-conosco" />}
         />
 
+        <InstitutionalVideo />
         <CenterTeam />
 
         {/* 7. Componentes para carroceria — carrossel em tela cheia com autoplay */}

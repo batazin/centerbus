@@ -1,5 +1,6 @@
 import { InstitutionalHeader } from "./institutional-header";
 import { InstitutionalFooter } from "./institutional-footer";
+import { InstitutionalVideo } from "./institutional-video";
 
 type InstitutionalPageProps = {
   eyebrow: string;
@@ -169,7 +170,7 @@ export function InstitutionalPage({ eyebrow, title, intro, layout = "sections", 
             <p>{intro}</p>
           </div>
         </section>
-        {layout === "company" ? renderCompany() : null}
+        {layout === "company" ? <><InstitutionalVideo />{renderCompany()}</> : null}
         {layout === "cause" ? renderCause() : null}
         {layout === "brands" ? renderBrands() : null}
         {layout === "marcopolo" ? renderMarcopolo() : null}
