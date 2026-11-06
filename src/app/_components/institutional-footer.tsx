@@ -51,19 +51,6 @@ export function InstitutionalFooter() {
           </div>
         </section>
 
-        <section className="footer-locations" aria-label="Unidades">
-          {branches.map((office) => (
-            <address key={office.title} className="footer-office">
-              <strong>{office.title}</strong>
-              <span>{office.city}</span>
-              <span>{office.address}</span>
-              <span>CEP: {office.cep}</span>
-              <a className="office-whatsapp" href={branchWhatsapp(office)} target="_blank" rel="noopener noreferrer">WhatsApp · {office.phone} ↗</a>
-              <a className="office-directions" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${office.address}, ${office.city}, ${office.cep}`)}`} target="_blank" rel="noopener noreferrer">Ver rota até a unidade ↗</a>
-            </address>
-          ))}
-        </section>
-
         <div className="footer-copy">
           <span>© 2026 Center Ônibus. Todos os direitos reservados.</span>
           <Link href="/sobre/politica-de-privacidade">Política de Privacidade</Link>
