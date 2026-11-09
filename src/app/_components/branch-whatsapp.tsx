@@ -18,6 +18,8 @@ export function BranchWhatsapp() {
     document.addEventListener("keydown", key);
     return () => { document.removeEventListener("pointerdown", close); document.removeEventListener("keydown", key); };
   }, [open]);
+  // A LP de para-brisa tem a própria barra de WhatsApp.
+  if (path?.startsWith("/troca-de-parabrisa")) return null;
   return <div className="branch-whatsapp" ref={root}>
     {open && <section id="branch-whatsapp-panel" className="branch-whatsapp-panel" aria-label="Escolha a unidade para conversar">
       <div className="branch-whatsapp-heading"><div><span>Atendimento Center</span><h2>Qual unidade você procura?</h2></div><button onClick={() => { setOpen(false); toggle.current?.focus(); }} aria-label="Fechar unidades">×</button></div>

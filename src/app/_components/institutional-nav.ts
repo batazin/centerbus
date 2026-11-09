@@ -11,5 +11,6 @@ export const mainLinks = [
   { href: "/produtos", label: "Produtos" },
   { href: "/blog", label: "Blog" },
   { href: "/vendedores", label: "Vendedores" },
+  { href: "/troca-de-parabrisa", label: "Troca de Para-brisa" },
   { href: "/fale-conosco", label: "Fale Conosco" },
 ];

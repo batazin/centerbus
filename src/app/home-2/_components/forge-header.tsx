@@ -39,6 +39,12 @@ const NAV_ITEMS = [
   },
   {
     num: "06",
+    label: "Troca de Para-brisa",
+    href: "/troca-de-parabrisa",
+    detail: "Na sua garagem ou na unidade Center",
+  },
+  {
+    num: "07",
     label: "Fale Conosco",
     href: "/fale-conosco",
     detail: "Cotações no tempo da sua operação e SAC",

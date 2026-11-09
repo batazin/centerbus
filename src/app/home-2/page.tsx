@@ -366,10 +366,10 @@ export default function Home2() {
             {/* Bottom Text & Initial Hero CTA */}
             <div ref={heroBottomRef} className="forge-hero-bottom">
               <p className="forge-hero-desc">
-                Especialistas técnicos em componentes e carrocerias. Manter o Brasil em movimento.
+                Peças para as principais carrocerias.
               </p>
               <ForgeButton text="Falar com a Equipe" href="/fale-conosco" />
-              <div className="center-hero-brands">                    <p className="center-manufacturer-label">Peças para as principais carrocerias</p>
+              <div className="center-hero-brands">
                     <div className="forge-marquee-wrap center-manufacturer-wrap" tabIndex={0} aria-label="Busscar, Comil, Caio e Mascarello">
                       <div className="forge-marquee-track" aria-hidden="true">
                         {[0,1].map(group => <div className="center-manufacturer-group" key={group}>{MARQUEE_BRANDS.map(brand => <div className="forge-marquee-item" key={brand}><CenterPhoto src={`/brand/manufacturers/${brand.toLowerCase()}.png`} alt="" width="160" height="50" /></div>)}</div>)}
@@ -426,16 +426,18 @@ export default function Home2() {
           </div>
         </div>
 
-        {/* 5. Etapas do atendimento — carrossel em tela cheia com autoplay */}
+        {/* 5. Etapas do atendimento — carrossel temporariamente desativado (pedido do cliente).
+            Para reativar, remova este comentário.
         <CenterSlideCarousel
           id="steps"
           ariaLabel="Etapas do atendimento Center Ônibus"
           items={STEPS_DATA.map((step) => ({ id: step.num, kicker: "Etapa", title: step.title, desc: step.desc, image: step.image, alt: step.alt }))}
           cta={<ForgeButton text="Consultar Peça" href="/fale-conosco" />}
         />
+        */}
 
         <InstitutionalVideo />
-        <CenterTeam />
+        <CenterLocations />
 
         {/* 7. Componentes para carroceria — carrossel em tela cheia com autoplay */}
         <CenterSlideCarousel
@@ -444,6 +446,9 @@ export default function Home2() {
           items={SERVICES_DATA.map((srv) => ({ id: srv.id, kicker: srv.tag, title: srv.title, desc: srv.desc, image: srv.image, alt: srv.alt }))}
           cta={<ForgeButton text="Consultar Disponibilidade" href="/fale-conosco" />}
         />
+
+        <CenterTeam />
+
 
         {/* 9. Catálogo Técnico Especializado Full Monumental Card */}
         <section id="builds" className="forge-full-banner">
@@ -466,7 +471,6 @@ export default function Home2() {
           </div>
         </section>
 
-        <CenterLocations />
 
       </div>
       <InstitutionalFooter />
