@@ -10,7 +10,7 @@ type Place = "garagem" | "unidade";
 
 /**
  * Formulário de orçamento. Hoje o envio abre o WhatsApp da unidade escolhida com
- * a mensagem preenchida e leva para a página de obrigado (conversão do Google Ads).
+ * a mensagem preenchida e leva à orientação de conclusão. Mede intenção, não lead recebido.
  * Quando houver CRM/e-mail, o envio para o servidor entra em `handleSubmit`.
  */
 export function LeadForm() {
@@ -39,7 +39,7 @@ export function LeadForm() {
 
     const optional = (label: string, key: string) => (value(key) ? [`${label}: ${value(key)}`] : []);
     const lines = [
-      "Olá! Quero um orçamento de troca de para-brisa.",
+      "Olá! Quero um orçamento de troca e instalação de vidros.",
       "",
       `Nome: ${value("nome")}`,
       ...optional("Empresa", "empresa"),
@@ -62,7 +62,7 @@ export function LeadForm() {
     <form className="pb-form" id="orcamento" noValidate onSubmit={handleSubmit} aria-labelledby="pb-form-title">
       <div className="pb-form-head">
         <span className="pb-kicker">Orçamento sem compromisso</span>
-        <h2 id="pb-form-title">Vamos conferir seu para-brisa?</h2>
+        <h2 id="pb-form-title">Precisa trocar algum vidro?</h2>
         <p>Prepare o pedido e envie à unidade escolhida pelo WhatsApp.</p>
       </div>
 

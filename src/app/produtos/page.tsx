@@ -4,14 +4,11 @@ import { ProductCatalog } from "../_components/product-catalog";
 import { InstitutionalFooter } from "../_components/institutional-footer";
 import { InstitutionalHeader } from "../_components/institutional-header";
 import { listProducts } from "../_content/ecosystem";
+import { pageMetadata } from "../_content/site";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Catálogo de peças | Center Ônibus",
-  description:
-    "Consulte peças para carrocerias de ônibus por código, aplicação e categoria. Atendimento técnico para identificar a peça certa.",
-};
+export const metadata: Metadata = pageMetadata("Catálogo de peças | Center Ônibus", "Consulte peças para carrocerias de ônibus por código, aplicação e categoria. Atendimento técnico para identificar a peça certa.", "/produtos");
 
 const catalogSteps = [
   ["01", "Identifique", "Informe carroceria, modelo e ano."],

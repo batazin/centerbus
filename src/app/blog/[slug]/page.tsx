@@ -6,6 +6,7 @@ import { InstitutionalFooter } from "../../_components/institutional-footer";
 import { InstitutionalHeader } from "../../_components/institutional-header";
 import { blogPosts } from "../../_content/blog-posts";
 import { listBlogPosts } from "../../_content/ecosystem";
+import { pageMetadata } from "../../_content/site";
 
 export const dynamicParams = true;
 export const dynamic = "force-dynamic";
@@ -22,10 +23,7 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
     return {};
   }
 
-  return {
-    title: `${post.title} | Center Ônibus`,
-    description: post.excerpt,
-  };
+  return { ...pageMetadata(`${post.title} | Center Ônibus`, post.excerpt, `/blog/${slug}`), openGraph: { title: post.title, description: post.excerpt, url: `/blog/${slug}`, type: "article" as const, publishedTime: post.publishedAt, images: [post.image] } };
 }
 
 export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">) {

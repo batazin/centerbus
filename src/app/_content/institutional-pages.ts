@@ -9,7 +9,7 @@ export const aboutPages = {
       {
         title: "Nossa atuação",
         copy:
-          "Atuamos há mais de 30 anos no segmento e somos fornecedores das principais empresas de transporte coletivo de passageiros do Brasil.",
+          "Atuamos há mais de 40 anos no segmento e somos fornecedores das principais empresas de transporte coletivo de passageiros do Brasil.",
       },
       {
         title: "Produtos comercializados",
@@ -122,7 +122,9 @@ export const aboutPages = {
         items: [
           "Os cookies permitem reconhecer o mesmo usuário navegando pelas páginas de um website.",
           "O usuário poderá desabilitar cookies e limpar cache nas configurações disponíveis em seu dispositivo. Ao optar por essa alternativa, é possível que o website não desempenhe todas as suas funcionalidades.",
-          "Para mais informações sobre cookies nos navegadores, consulte os canais oficiais de suporte do Internet Explorer, Mozilla Firefox, Google Chrome e Safari.",
+            "Quando a medição Google estiver configurada, você poderá permitir ou recusar cookies de análise e publicidade no aviso do site e alterar sua escolha em Preferências de cookies. A recusa permite continuar navegando e usando os contatos.",
+            "Não enviamos nome, telefone, empresa ou conteúdo do formulário aos eventos de medição. O pedido é preparado no navegador e deve ser enviado por você no WhatsApp, onde também são anexadas as fotos.",
+            "Para gerenciar cookies no navegador, consulte os canais oficiais de suporte do navegador utilizado.",
         ],
       },
       {

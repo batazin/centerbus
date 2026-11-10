@@ -43,13 +43,13 @@ export const SERVICE_CASES = [
   },
 ] as const;
 
-export const LP_PATH = "/troca-de-parabrisa";
-export const THANKS_PATH = "/troca-de-parabrisa/obrigado";
+export const LP_PATH = "/troca-e-instalacao-de-vidros";
+export const THANKS_PATH = "/troca-e-instalacao-de-vidros/obrigado";
 
 export type Branch = (typeof branches)[number];
 export { branches };
 
-export const DEFAULT_MESSAGE = "Olá! Quero consultar a troca de para-brisa de um ônibus. Vou enviar a cidade, o modelo da carroceria e uma foto do vidro.";
+export const DEFAULT_MESSAGE = "Olá! Quero consultar a troca e instalação de vidros de um ônibus. Vou enviar a cidade, o modelo da carroceria e uma foto do vidro.";
 
 export function whatsappLink(branch: Branch, text: string = DEFAULT_MESSAGE) {
   return `https://wa.me/${branch.whatsapp}?text=${encodeURIComponent(text)}`;
