@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CHECKS, FAQ, HERO_POINTS, LP_PATH, MANUFACTURERS, MODES, PHOTOS, STEPS, branches } from "./_content";
+import { CHECKS, FAQ, HERO_POINTS, LP_PATH, MANUFACTURERS, MODES, PHOTOS, SERVICE_CASES, STEPS, branches } from "./_content";
 import { LeadForm } from "./_components/lead-form";
 import { OriginCapture, PhoneLink, WhatsAppButton } from "./_components/lp-actions";
 import { RevealObserver } from "./_components/reveal";
@@ -177,6 +177,36 @@ export default function TrocaDeParabrisaPage() {
               </ul>
               <WhatsAppButton label="Enviar foto pelo WhatsApp" place="vidro" />
             </div>
+          </div>
+        </section>
+
+        <section className="pb-section pb-service-records" aria-labelledby="pb-records-title">
+          <div className="pb-shell">
+            <header className="pb-section-head">
+              <span className="pb-kicker">Serviços realizados</span>
+              <h2 id="pb-records-title">A troca, vista de perto.</h2>
+              <p>Para-brisas e vidros laterais: acompanhe os registros reais de preparação e resultado.</p>
+            </header>
+            <div className="pb-records-grid">
+              {SERVICE_CASES.map((record) => (
+                <article className="pb-record" key={record.title}>
+                  <div className="pb-record-pair">
+                    {[record.before, record.after].map((photo) => (
+                      <figure key={photo.src}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={photo.src} alt={photo.alt} width={960} height={1280} loading="lazy" />
+                        <figcaption>{photo.label}</figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                  <div className="pb-record-copy">
+                    <h3>{record.title}</h3>
+                    <p>{record.text}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <div className="pb-records-cta"><WhatsAppButton label="Consultar a troca do meu vidro" place="servicos-reais" /></div>
           </div>
         </section>
 

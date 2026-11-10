@@ -2,7 +2,7 @@
  * Conteúdo da LP de troca de para-brisa.
  *
  * Fotos reais do acervo Center: origem registrada em docs/landing-vidros-assets.json.
- * Cenas adicionais da instalação serão incorporadas após o envio por Rafa.
+ * Registros de serviço enviados por Rafa incorporados em 10/11/2026.
  *
  * A CONFIRMAR COM A CENTER (textos neutros por enquanto, sem prometer números):
  * - Cidades / raio do atendimento móvel e se há taxa de deslocamento.
@@ -15,12 +15,33 @@
 import { branches } from "../_content/branches";
 
 export const PHOTOS = {
-  hero: { src: "/images/parabrisa/vidros-center-bahia.webp", alt: "Para-brisas e vidros no estoque real da Center Ônibus na Bahia" },
-  mobile: { src: "/images/parabrisa/atendimento-movel.webp", alt: "Equipe Center com os veículos de atendimento" },
+  hero: { src: "/images/parabrisa/parabrisa-instalado.webp", alt: "Ônibus rodoviário vermelho com o para-brisa instalado" },
+  mobile: { src: "/images/parabrisa/preparacao-em-campo.webp", alt: "Profissional preparando um vidro ao lado de um ônibus em atendimento externo" },
   branch: { src: "/images/parabrisa/atendimento-filial.webp", alt: "Vidros de ônibus embalados no estoque da Center" },
   glass: { src: "/images/parabrisa/preparacao-vidro-sp.webp", alt: "Profissional da Center preparando a embalagem de um vidro no estoque de São Paulo" },
   fleet: { src: "/images/parabrisa/equipe-bahia.webp", alt: "Equipe da Center Ônibus no estoque da unidade Bahia" },
 } as const;
+
+export const SERVICE_CASES = [
+  {
+    title: "Para-brisa de ônibus rodoviário",
+    text: "Do vão aberto ao para-brisa instalado: registros do mesmo veículo durante o serviço e após a troca.",
+    before: { src: "/images/parabrisa/parabrisa-removido.webp", alt: "Ônibus vermelho com o para-brisa superior removido e plataforma de acesso à frente", label: "Durante a troca" },
+    after: { src: "/images/parabrisa/parabrisa-instalado.webp", alt: "Mesmo ônibus vermelho com o para-brisa superior instalado", label: "Vidro instalado" },
+  },
+  {
+    title: "Troca de vidro lateral",
+    text: "A Center também atende vidros laterais. Envie uma foto e o modelo da carroceria para consultar o serviço.",
+    before: { src: "/images/parabrisa/lateral-removido.webp", alt: "Ônibus azul com o vidro lateral removido e plataforma ao lado", label: "Vidro removido" },
+    after: { src: "/images/parabrisa/lateral-instalado.webp", alt: "Mesmo ônibus azul com o vidro lateral instalado", label: "Vidro instalado" },
+  },
+  {
+    title: "Reposição de vidro danificado",
+    text: "Outro registro de troca lateral, com o dano original e o vidro instalado no mesmo ônibus.",
+    before: { src: "/images/parabrisa/lateral-garagem-danificado.webp", alt: "Ônibus branco e vermelho na garagem com vidro lateral quebrado", label: "Antes da troca" },
+    after: { src: "/images/parabrisa/lateral-garagem-instalado.webp", alt: "Mesmo ônibus branco e vermelho com o vidro lateral reposto", label: "Após a troca" },
+  },
+] as const;
 
 export const LP_PATH = "/troca-de-parabrisa";
 export const THANKS_PATH = "/troca-de-parabrisa/obrigado";
