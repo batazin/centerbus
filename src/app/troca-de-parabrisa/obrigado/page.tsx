@@ -5,7 +5,7 @@ import "../parabrisa.css";
 
 // Página de conversão do Google Ads: fora da busca orgânica.
 export const metadata: Metadata = {
-  title: "Pedido enviado | Troca de para-brisa | Center Ônibus",
+  title: "Conclua no WhatsApp | Troca de para-brisa | Center Ônibus",
   robots: { index: false, follow: false },
 };
 
@@ -21,20 +21,20 @@ export default async function ObrigadoPage({ searchParams }: Props) {
         <div className="pb-shell pb-header-inner">
           <Link href="/" aria-label="Center Ônibus — site institucional">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/center-onibus-logo-negative.svg" alt="Center Ônibus" width={168} height={43} className="pb-logo" />
+            <img src="/brand/center-onibus-logo-partial-negative.png" alt="Center Ônibus" width={168} height={44} className="pb-logo" />
           </Link>
         </div>
       </header>
 
       <main className="pb-thanks-main">
         <div className="pb-shell pb-thanks-inner">
-          <span className="pb-kicker">Pedido enviado</span>
-          <h1>Recebemos seu pedido.</h1>
+          <span className="pb-kicker">Pedido preparado</span>
+          <h1>Falta só enviar no WhatsApp.</h1>
           <p>
-            A conversa com a <strong>{branch.title}</strong> abriu no WhatsApp com os dados do formulário. Se a janela não abriu, use o botão abaixo para enviar.
+            Conclua o envio da mensagem para a <strong>{branch.title}</strong> e anexe as fotos do vidro. A solicitação só chega à equipe depois que você envia na conversa. Se o WhatsApp não abriu, use o botão abaixo e informe os dados do serviço.
           </p>
           <div className="pb-hero-ctas">
-            <a className="pb-btn pb-btn-red" href={whatsappLink(branch)} target="_blank" rel="noopener noreferrer">
+            <a className="pb-btn pb-btn-whatsapp" href={whatsappLink(branch)} target="_blank" rel="noopener noreferrer">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/brand/whatsapp.svg" alt="" width={20} height={20} aria-hidden="true" />
               Abrir WhatsApp {branch.state}

@@ -19,10 +19,10 @@ type WhatsAppProps = {
   place?: string;
 };
 
-export function WhatsAppButton({ branch = branches[0], label = "Orçamento pelo WhatsApp", className = "pb-btn pb-btn-red", place = "geral" }: WhatsAppProps) {
+export function WhatsAppButton({ branch = branches[0], label = "Orçar troca pelo WhatsApp", className = "pb-btn", place = "geral" }: WhatsAppProps) {
   return (
     <a
-      className={className}
+      className={`${className} pb-btn-whatsapp`}
       href={whatsappLink(branch)}
       target="_blank"
       rel="noopener noreferrer"

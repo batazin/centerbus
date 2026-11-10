@@ -21,7 +21,7 @@
 .branch-whatsapp-panel strong,.branch-whatsapp-panel small{display:block;line-height:1.6;}
 .branch-whatsapp-panel strong{font-size:.88rem;}.branch-whatsapp-panel small{font-size:.8rem;color:#435E7A;}
 .branch-whatsapp-state{font:700 1.4rem var(--font-archivo-condensed),sans-serif;color:#2E6DA4;}
-.branch-whatsapp :is(button,a):focus-visible{outline:3px solid #C8102E;outline-offset:3px;}
+.branch-whatsapp :is(button,a):focus-visible{outline:3px solid #075E54;outline-offset:3px;}
 body:has(.forge-header.is-menu-open) .branch-whatsapp{visibility:hidden;}
 .sellers-branches-strip{grid-template-columns:repeat(3,minmax(0,1fr));}
 .sellers-result-count{font-size:.85rem;color:#536577;margin-bottom:20px;}

@@ -62,8 +62,8 @@ export function LeadForm() {
     <form className="pb-form" id="orcamento" noValidate onSubmit={handleSubmit} aria-labelledby="pb-form-title">
       <div className="pb-form-head">
         <span className="pb-kicker">Orçamento sem compromisso</span>
-        <h2 id="pb-form-title">Solicite a troca</h2>
-        <p>Resposta pelo WhatsApp da unidade escolhida.</p>
+        <h2 id="pb-form-title">Vamos conferir seu para-brisa?</h2>
+        <p>Prepare o pedido e envie à unidade escolhida pelo WhatsApp.</p>
       </div>
 
       <fieldset className="pb-form-place">
@@ -122,10 +122,11 @@ export function LeadForm() {
 
       {error && <p className="pb-form-error" role="alert">{error}</p>}
 
-      <button type="submit" className="pb-btn pb-btn-red pb-form-submit">
+      <button type="submit" className="pb-btn pb-btn-whatsapp pb-form-submit">
         <img src="/brand/whatsapp.svg" alt="" width={20} height={20} aria-hidden="true" />
         Enviar pelo WhatsApp
       </button>
+      <p className="pb-form-note">O botão abre uma mensagem pronta. Conclua o envio no WhatsApp e anexe as fotos do vidro.</p>
       <p className="pb-form-note">
         Usamos seus dados só para responder a este pedido. Veja a <Link href="/sobre/politica-de-privacidade">política de privacidade</Link>.
       </p>

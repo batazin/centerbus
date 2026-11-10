@@ -1,9 +1,8 @@
 /**
  * Conteúdo da LP de troca de para-brisa.
  *
- * FOTOS PROVISÓRIAS: os arquivos em /public/images/parabrisa/ vieram do acervo do site
- * só para montar a página. Para trocar, substitua o arquivo mantendo o mesmo nome
- * (ou altere o caminho aqui).
+ * Fotos reais do acervo Center: origem registrada em docs/landing-vidros-assets.json.
+ * Cenas adicionais da instalação serão incorporadas após o envio por Rafa.
  *
  * A CONFIRMAR COM A CENTER (textos neutros por enquanto, sem prometer números):
  * - Cidades / raio do atendimento móvel e se há taxa de deslocamento.
@@ -16,11 +15,11 @@
 import { branches } from "../_content/branches";
 
 export const PHOTOS = {
-  hero: { src: "/images/parabrisa/hero.webp", alt: "Técnico trabalhando na dianteira de um ônibus na oficina" },
+  hero: { src: "/images/parabrisa/vidros-center-bahia.webp", alt: "Para-brisas e vidros no estoque real da Center Ônibus na Bahia" },
   mobile: { src: "/images/parabrisa/atendimento-movel.webp", alt: "Equipe Center com os veículos de atendimento" },
   branch: { src: "/images/parabrisa/atendimento-filial.webp", alt: "Vidros de ônibus embalados no estoque da Center" },
-  glass: { src: "/images/parabrisa/parabrisa-peca.webp", alt: "Para-brisa de ônibus em cavalete no estoque" },
-  fleet: { src: "/images/parabrisa/frota.webp", alt: "Pátio com ônibus de uma frota" },
+  glass: { src: "/images/parabrisa/preparacao-vidro-sp.webp", alt: "Profissional da Center preparando a embalagem de um vidro no estoque de São Paulo" },
+  fleet: { src: "/images/parabrisa/equipe-bahia.webp", alt: "Equipe da Center Ônibus no estoque da unidade Bahia" },
 } as const;
 
 export const LP_PATH = "/troca-de-parabrisa";
@@ -29,38 +28,38 @@ export const THANKS_PATH = "/troca-de-parabrisa/obrigado";
 export type Branch = (typeof branches)[number];
 export { branches };
 
-export const DEFAULT_MESSAGE = "Olá! Vim pela página de troca de para-brisa e quero um orçamento.";
+export const DEFAULT_MESSAGE = "Olá! Quero consultar a troca de para-brisa de um ônibus. Vou enviar a cidade, o modelo da carroceria e uma foto do vidro.";
 
 export function whatsappLink(branch: Branch, text: string = DEFAULT_MESSAGE) {
   return `https://wa.me/${branch.whatsapp}?text=${encodeURIComponent(text)}`;
 }
 
-export const HERO_POINTS = ["Equipe própria de instalação", "Vidro conferido pela aplicação", "Unidades em SP, BA e RJ"];
+export const HERO_POINTS = ["Vidro e instalação no mesmo atendimento", "Conferência por modelo e foto", "Contato com SP, BA e RJ"];
 
 export const MODES = [
   {
     id: "garagem",
     kicker: "Atendimento móvel",
     title: "Na sua garagem",
-    text: "Nossa equipe leva o para-brisa e faz a troca no pátio da sua empresa. O ônibus não precisa rodar com o vidro danificado até a oficina.",
-    points: ["Agendamento no horário da sua operação", "Equipe e ferramentas da Center", "Ideal para frotas e trocas em mais de um ônibus"],
+    text: "Consulte o atendimento móvel para a sua cidade. A equipe avalia o serviço e combina o deslocamento e o agendamento com você.",
+    points: ["Informe a cidade e o local do ônibus", "Consulte a disponibilidade da equipe", "Combine o atendimento para um veículo ou frota"],
     photo: PHOTOS.mobile,
   },
   {
     id: "unidade",
     kicker: "Na unidade Center",
     title: "Na nossa unidade",
-    text: "Leve o ônibus até uma das unidades em São Paulo, Lauro de Freitas ou Rio de Janeiro. O vidro já fica separado para o dia combinado.",
-    points: ["Vidro separado antes da sua chegada", "Unidades em SP, BA e RJ", "Troca feita por quem conhece a carroceria"],
+    text: "Fale com a unidade antes de levar o ônibus. A equipe confere o vidro, a disponibilidade do serviço e a data de atendimento.",
+    points: ["Aplicação e disponibilidade conferidas antes", "Contato com as unidades em SP, BA e RJ", "Orçamento e agendamento com a equipe"],
     photo: PHOTOS.branch,
   },
 ] as const;
 
 export const STEPS = [
-  { title: "Envie modelo e foto", text: "Pelo formulário ou WhatsApp: modelo e ano da carroceria e uma foto do para-brisa." },
-  { title: "Conferimos o vidro", text: "A equipe confere a aplicação, a disponibilidade e passa o orçamento com prazo." },
-  { title: "Agendamos a troca", text: "Você escolhe: nossa equipe vai até a garagem ou o ônibus vem até a unidade." },
-  { title: "O ônibus volta pra rua", text: "Instalação, acabamento e conferência final. Ônibus liberado para a operação." },
+  { title: "Mostre o que precisa", text: "Envie cidade, modelo e ano da carroceria. No WhatsApp, anexe fotos do vidro e da dianteira do ônibus." },
+  { title: "Receba a avaliação", text: "Conferimos a aplicação, a disponibilidade do vidro e as condições para realizar o serviço." },
+  { title: "Combine o atendimento", text: "Com o orçamento aprovado, definimos local e data da troca conforme a disponibilidade da unidade." },
+  { title: "Conclua com orientação", text: "Após a instalação e a conferência, a equipe informa os cuidados e as condições de liberação do veículo." },
 ];
 
 export const CHECKS = [
@@ -75,11 +74,11 @@ export const MANUFACTURERS = ["Busscar", "Comil", "Caio", "Mascarello"];
 export const FAQ = [
   {
     q: "Vocês vão até a minha garagem?",
-    a: "Sim. Informe a cidade no formulário e a equipe confirma o atendimento móvel e o agendamento para a sua região.",
+    a: "Consulte a cobertura para a sua cidade. A equipe confirma a disponibilidade do atendimento móvel, as condições de deslocamento e o agendamento antes de fechar o serviço.",
   },
   {
     q: "Quanto tempo o ônibus fica parado?",
-    a: "Depende do modelo da carroceria e do tipo de para-brisa. O prazo é informado junto com o orçamento, antes de agendar.",
+    a: "O prazo depende da aplicação e das condições do serviço. A equipe informa a previsão de atendimento e as orientações de liberação do veículo antes do agendamento.",
   },
   {
     q: "Como sei se vocês têm o vidro do meu ônibus?",
@@ -87,7 +86,11 @@ export const FAQ = [
   },
   {
     q: "Atendem frotas com vários ônibus?",
-    a: "Sim. Informe a quantidade de ônibus no formulário para organizarmos a troca no horário que menos afeta a sua operação.",
+    a: "Informe a quantidade de veículos, a cidade e os modelos das carrocerias. A equipe avalia a disponibilidade dos vidros e organiza o atendimento com você.",
+  },
+  {
+    q: "Quais fotos devo enviar para o orçamento?",
+    a: "Envie uma foto da dianteira do ônibus e outra do vidro, mostrando a área danificada. Se tiver código ou medidas, encaminhe também. A equipe pode pedir mais detalhes para conferir a aplicação.",
   },
   {
     q: "A troca tem garantia e nota fiscal?",

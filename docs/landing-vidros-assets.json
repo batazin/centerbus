@@ -1,0 +1,25 @@
+{
+  "reviewedAt": "2026-11-10",
+  "page": "/troca-de-parabrisa",
+  "notes": "Fotos reais do acervo institucional. Mostram estoque, preparação e equipe; não são apresentadas como registros de instalação. Fotos de instalação enviadas pelo usuário ainda pendentes de recebimento. Vídeo principal preservado.",
+  "assets": [
+    {
+      "file": "public/images/parabrisa/vidros-center-bahia.webp",
+      "original": "CENTER ONIBUS LAURO DE FREITAS-115.jpg",
+      "source": "https://drive.google.com/file/d/18AmFbhMS8PyYfNvTlpdI4N6OBBy3nin6/view",
+      "subject": "Vidros em estoque na Bahia"
+    },
+    {
+      "file": "public/images/parabrisa/preparacao-vidro-sp.webp",
+      "original": "DSC02200.jpg",
+      "source": "https://drive.google.com/file/d/1F7JOoJ7vL8ZnvrFUAIVkX3TOGR9eESy6/view",
+      "subject": "Profissional da Center preparando embalagem de vidro em São Paulo"
+    },
+    {
+      "file": "public/images/parabrisa/equipe-bahia.webp",
+      "original": "CENTER ONIBUS LAURO DE FREITAS-100.jpg",
+      "source": "https://drive.google.com/file/d/1-Q1lwNSrhPj7yQNc2NIuFPhSqGu4VAAc/view",
+      "subject": "Equipe da unidade Bahia"
+    }
+  ]
+}
