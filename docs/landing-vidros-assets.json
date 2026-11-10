@@ -1,0 +1,67 @@
+{
+  "reviewedAt": "2026-11-10",
+  "page": "/troca-de-parabrisa",
+  "notes": "Fotos institucionais do Drive e sete registros de serviço recebidos de Rafa em 10/11/2026. Nove anexos recebidos; fotos 3 e 6 omitidas por repetirem os mesmos serviços. Os pares mostram o mesmo veículo, sem inventar local, prazo ou modelo. Vídeo principal preservado.",
+  "assets": [
+    {
+      "file": "public/images/parabrisa/vidros-center-bahia.webp",
+      "original": "CENTER ONIBUS LAURO DE FREITAS-115.jpg",
+      "source": "https://drive.google.com/file/d/18AmFbhMS8PyYfNvTlpdI4N6OBBy3nin6/view",
+      "subject": "Vidros em estoque na Bahia"
+    },
+    {
+      "file": "public/images/parabrisa/preparacao-vidro-sp.webp",
+      "original": "DSC02200.jpg",
+      "source": "https://drive.google.com/file/d/1F7JOoJ7vL8ZnvrFUAIVkX3TOGR9eESy6/view",
+      "subject": "Profissional da Center preparando embalagem de vidro em São Paulo"
+    },
+    {
+      "file": "public/images/parabrisa/equipe-bahia.webp",
+      "original": "CENTER ONIBUS LAURO DE FREITAS-100.jpg",
+      "source": "https://drive.google.com/file/d/1-Q1lwNSrhPj7yQNc2NIuFPhSqGu4VAAc/view",
+      "subject": "Equipe da unidade Bahia"
+    },
+    {
+      "source": "Anexo enviado por Rafa nesta conversa em 2026-11-10",
+      "subject": "Para-brisa instalado no ônibus vermelho",
+      "original": "Foto 1.jpg",
+      "file": "public/images/parabrisa/parabrisa-instalado.webp"
+    },
+    {
+      "source": "Anexo enviado por Rafa nesta conversa em 2026-11-10",
+      "subject": "Para-brisa superior removido no mesmo ônibus vermelho",
+      "original": "Foto 2.jpg",
+      "file": "public/images/parabrisa/parabrisa-removido.webp"
+    },
+    {
+      "source": "Anexo enviado por Rafa nesta conversa em 2026-11-10",
+      "subject": "Profissional preparando vidro ao lado do ônibus",
+      "original": "Foto 4.jpg",
+      "file": "public/images/parabrisa/preparacao-em-campo.webp"
+    },
+    {
+      "source": "Anexo enviado por Rafa nesta conversa em 2026-11-10",
+      "subject": "Vidro removido no ônibus azul",
+      "original": "Foto 5.jpg",
+      "file": "public/images/parabrisa/lateral-removido.webp"
+    },
+    {
+      "source": "Anexo enviado por Rafa nesta conversa em 2026-11-10",
+      "subject": "Vidro instalado no mesmo ônibus azul",
+      "original": "Foto 7.jpg",
+      "file": "public/images/parabrisa/lateral-instalado.webp"
+    },
+    {
+      "source": "Anexo enviado por Rafa nesta conversa em 2026-11-10",
+      "subject": "Vidro lateral instalado no ônibus branco e vermelho",
+      "original": "Foto 8.jpg",
+      "file": "public/images/parabrisa/lateral-garagem-instalado.webp"
+    },
+    {
+      "source": "Anexo enviado por Rafa nesta conversa em 2026-11-10",
+      "subject": "Vidro lateral quebrado no mesmo ônibus branco e vermelho",
+      "original": "Foto 9.jpg",
+      "file": "public/images/parabrisa/lateral-garagem-danificado.webp"
+    }
+  ]
+}

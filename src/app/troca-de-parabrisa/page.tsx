@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CHECKS, FAQ, HERO_POINTS, LP_PATH, MANUFACTURERS, MODES, PHOTOS, STEPS, branches } from "./_content";
+import { CHECKS, FAQ, HERO_POINTS, LP_PATH, MANUFACTURERS, MODES, PHOTOS, SERVICE_CASES, STEPS, branches } from "./_content";
 import { LeadForm } from "./_components/lead-form";
 import { OriginCapture, PhoneLink, WhatsAppButton } from "./_components/lp-actions";
 import { RevealObserver } from "./_components/reveal";
@@ -10,11 +10,11 @@ import "./parabrisa.css";
 export const metadata: Metadata = {
   title: "Troca de para-brisa de ônibus | Center Ônibus",
   description:
-    "Troca de para-brisa de ônibus na sua garagem ou nas unidades Center em São Paulo, Bahia e Rio de Janeiro. Envie modelo e foto e receba o orçamento pelo WhatsApp.",
+    "Consulte a troca de para-brisa de ônibus com a Center. Envie cidade, modelo da carroceria e foto do vidro para conferir aplicação, orçamento e atendimento pelo WhatsApp.",
   alternates: { canonical: LP_PATH },
   openGraph: {
     title: "Troca de para-brisa de ônibus | Center Ônibus",
-    description: "Na sua garagem ou na nossa unidade. Orçamento pelo WhatsApp.",
+    description: "Vidro e instalação no mesmo atendimento. Consulte a cobertura para sua cidade pelo WhatsApp.",
     images: [PHOTOS.hero.src],
     locale: "pt_BR",
     type: "website",
@@ -36,7 +36,6 @@ const serviceJsonLd = {
       address: { "@type": "PostalAddress", streetAddress: branch.address, addressLocality: branch.city, postalCode: branch.cep, addressCountry: "BR" },
     })),
   },
-  areaServed: ["São Paulo", "Bahia", "Rio de Janeiro"],
 };
 
 /** Atraso da revelação em sequência. */
@@ -44,7 +43,7 @@ const delay = (index: number, step = 110) => ({ "--d": `${index * step}ms` }) as
 
 function Logo() {
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src="/brand/center-onibus-logo-negative.svg" alt="Center Ônibus" width={168} height={43} className="pb-logo" />;
+  return <img src="/brand/center-onibus-logo-partial-negative.png" alt="Center Ônibus" width={168} height={44} className="pb-logo" />;
 }
 
 export default function TrocaDeParabrisaPage() {
@@ -63,7 +62,7 @@ export default function TrocaDeParabrisaPage() {
               <small>Matriz SP</small>
               <PhoneLink place="header" />
             </span>
-            <WhatsAppButton label="WhatsApp" className="pb-btn pb-btn-red pb-btn-sm" place="header" />
+            <WhatsAppButton label="WhatsApp" className="pb-btn pb-btn-sm" place="header" />
           </div>
         </div>
       </header>
@@ -79,11 +78,11 @@ export default function TrocaDeParabrisaPage() {
             <div className="pb-hero-copy">
               <span className="pb-kicker pb-kicker-light">Troca de para-brisa para ônibus</span>
               <h1 id="pb-title">
-                <span className="pb-line"><span>Para-brisa trincado?</span></span>{" "}
-                <span className="pb-line pb-line-accent"><span>O ônibus volta pra rua.</span></span>
+                <span className="pb-line"><span>Troca de para-brisa de ônibus.</span></span>{" "}
+                <span className="pb-line pb-line-accent"><span>Conte com a Center.</span></span>
               </h1>
               <p className="pb-lead">
-                Fazemos a troca na sua garagem ou na nossa unidade. Conferimos o modelo da carroceria, separamos o vidro certo e instalamos com equipe própria.
+                Mais que fornecer o vidro: a Center também cuida da troca. Envie o modelo da carroceria, a cidade e uma foto para consultar a aplicação, o orçamento e o local de atendimento.
               </p>
               <ul className="pb-hero-points">
                 {HERO_POINTS.map((point) => <li key={point}>{point}</li>)}
@@ -100,7 +99,7 @@ export default function TrocaDeParabrisaPage() {
         {/* 2. Carrocerias */}
         <section className="pb-brands" aria-label="Carrocerias atendidas">
           <div className="pb-shell pb-brands-inner">
-            <p>Para-brisas para as principais carrocerias</p>
+            <p>Informe a carroceria.<br />A equipe confere a aplicação.</p>
             <ul data-reveal="stagger">
               {MANUFACTURERS.map((brand, index) => (
                 <li key={brand} style={delay(index, 90)}>
@@ -116,8 +115,9 @@ export default function TrocaDeParabrisaPage() {
         <section className="pb-section pb-modes" aria-labelledby="pb-modes-title">
           <div className="pb-shell">
             <header className="pb-section-head" data-reveal="up">
-              <span className="pb-kicker">Você escolhe onde</span>
-              <h2 id="pb-modes-title">Duas formas de fazer a troca</h2>
+              <span className="pb-kicker">Atendimento para a sua operação</span>
+              <h2 id="pb-modes-title">Na sua garagem ou na unidade Center</h2>
+              <p>Consulte a cobertura e a disponibilidade com a unidade mais próxima antes de agendar.</p>
             </header>
             <div className="pb-modes-grid">
               {MODES.map((mode, index) => (
@@ -147,7 +147,7 @@ export default function TrocaDeParabrisaPage() {
           <div className="pb-shell">
             <header className="pb-section-head pb-section-head-light" data-reveal="up">
               <span className="pb-kicker pb-kicker-light">Como funciona</span>
-              <h2 id="pb-steps-title">Do pedido ao ônibus liberado</h2>
+              <h2 id="pb-steps-title">Da primeira foto ao agendamento da troca</h2>
             </header>
             <ol className="pb-steps-list" data-reveal="steps">
               {STEPS.map((step, index) => (
@@ -169,9 +169,9 @@ export default function TrocaDeParabrisaPage() {
               <img src={PHOTOS.glass.src} alt={PHOTOS.glass.alt} loading="lazy" />
             </div>
             <div className="pb-glass-copy" data-reveal="up">
-              <span className="pb-kicker">Conhecimento antes do catálogo</span>
-              <h2 id="pb-glass-title">A peça certa, na primeira vez.</h2>
-              <p>Antes de agendar, a equipe confere o vidro pela aplicação. Assim a troca acontece no dia combinado, sem ônibus parado esperando peça.</p>
+              <span className="pb-kicker">Vidro e serviço, juntos</span>
+              <h2 id="pb-glass-title">A troca começa pela aplicação certa.</h2>
+              <p>O nome do ônibus sozinho nem sempre identifica o para-brisa. Modelo, ano, medidas e fotos ajudam a equipe a conferir o vidro e preparar o orçamento do serviço.</p>
               <ul className="pb-checklist pb-checklist-grid">
                 {CHECKS.map((item) => <li key={item}>{item}</li>)}
               </ul>
@@ -180,12 +180,43 @@ export default function TrocaDeParabrisaPage() {
           </div>
         </section>
 
+        <section className="pb-section pb-service-records" aria-labelledby="pb-records-title">
+          <div className="pb-shell">
+            <header className="pb-section-head">
+              <span className="pb-kicker">Serviços realizados</span>
+              <h2 id="pb-records-title">A troca, vista de perto.</h2>
+              <p>Para-brisas e vidros laterais: acompanhe os registros reais de preparação e resultado.</p>
+            </header>
+            <div className="pb-records-grid">
+              {SERVICE_CASES.map((record) => (
+                <article className="pb-record" key={record.title}>
+                  <div className="pb-record-pair">
+                    {[record.before, record.after].map((photo) => (
+                      <figure key={photo.src}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={photo.src} alt={photo.alt} width={960} height={1280} loading="lazy" />
+                        <figcaption>{photo.label}</figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                  <div className="pb-record-copy">
+                    <h3>{record.title}</h3>
+                    <p>{record.text}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <div className="pb-records-cta"><WhatsAppButton label="Consultar a troca do meu vidro" place="servicos-reais" /></div>
+          </div>
+        </section>
+
         {/* 6. Unidades */}
         <section className="pb-section pb-units" aria-labelledby="pb-units-title">
           <div className="pb-shell">
             <header className="pb-section-head" data-reveal="up">
               <span className="pb-kicker">Unidades Center</span>
-              <h2 id="pb-units-title">Troca na unidade mais perto de você</h2>
+              <h2 id="pb-units-title">Fale com a unidade mais próxima</h2>
+              <p>Escolha SP, Bahia ou RJ e consulte as condições de atendimento para a sua cidade.</p>
             </header>
             <div className="pb-units-grid">
               {branches.map((branch, index) => (
@@ -227,7 +258,8 @@ export default function TrocaDeParabrisaPage() {
             <img src={PHOTOS.fleet.src} alt="" loading="lazy" />
           </div>
           <div className="pb-shell pb-final-inner" data-reveal="up">
-            <h2 id="pb-final-title">Ônibus parado custa caro.<br />Resposta no tempo da operação.</h2>
+            <h2 id="pb-final-title">Mostre o vidro.<br />A gente confere o próximo passo.</h2>
+            <p>Tenha em mãos a cidade, o modelo da carroceria e as fotos. A conversa começa pelo WhatsApp.</p>
             <div className="pb-hero-ctas">
               <WhatsAppButton place="final" />
               <a className="pb-btn pb-btn-ghost" href="#orcamento">Preencher orçamento</a>
@@ -250,7 +282,7 @@ export default function TrocaDeParabrisaPage() {
 
       {/* Barra fixa no celular */}
       <div className="pb-mobile-bar">
-        <WhatsAppButton label="WhatsApp" className="pb-btn pb-btn-red" place="barra-mobile" />
+        <WhatsAppButton label="WhatsApp" className="pb-btn" place="barra-mobile" />
         <a className="pb-btn pb-btn-light" href="#orcamento">Orçamento</a>
       </div>
     </div>
