@@ -45,7 +45,7 @@ export function InstitutionalPage({ eyebrow, title, intro, layout = "sections", 
         <p>{sections[0]?.copy}</p>
         <div className="company-stats" aria-label="Destaques da Center Ônibus">
           <span>
-            <strong>30+</strong>
+            <strong>40+</strong>
             anos de mercado
           </span>
           <span>

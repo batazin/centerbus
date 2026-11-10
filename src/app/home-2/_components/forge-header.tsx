@@ -23,7 +23,7 @@ const NAV_ITEMS = [
     num: "03",
     label: "Sobre a Center Ônibus",
     href: "/sobre/a-center-onibus",
-    detail: "Mais de 30 anos no transporte coletivo & ISO 9001",
+    detail: "Mais de 40 anos no transporte coletivo & ISO 9001",
   },
   {
     num: "04",
@@ -39,8 +39,8 @@ const NAV_ITEMS = [
   },
   {
     num: "06",
-    label: "Troca de Para-brisa",
-    href: "/troca-de-parabrisa",
+    label: "Troca e Instalação de Vidros",
+    href: "/troca-e-instalacao-de-vidros",
     detail: "Na sua garagem ou na unidade Center",
   },
   {

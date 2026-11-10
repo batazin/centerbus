@@ -4,14 +4,11 @@ import Link from "next/link";
 import { InstitutionalFooter } from "../_components/institutional-footer";
 import { InstitutionalHeader } from "../_components/institutional-header";
 import { listBlogPosts } from "../_content/ecosystem";
+import { pageMetadata } from "../_content/site";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Blog técnico | Center Ônibus",
-  description:
-    "Guias sobre identificação, aplicação e manutenção de peças para carrocerias de ônibus. Informação prática para manter a frota em operação.",
-};
+export const metadata: Metadata = pageMetadata("Blog técnico | Center Ônibus", "Guias sobre identificação, aplicação e manutenção de peças para carrocerias de ônibus. Informação prática para manter a frota em operação.", "/blog");
 
 export default async function BlogPage() {
   const [featuredPost, ...otherPosts] = await listBlogPosts();

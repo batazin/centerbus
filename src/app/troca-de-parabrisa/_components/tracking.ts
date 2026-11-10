@@ -1,4 +1,5 @@
 "use client";
+import { measure } from "../../_lib/measurement";
 
 /**
  * Rastreamento da LP.
@@ -41,10 +42,6 @@ export function originLabel(origin: Origin) {
   return "";
 }
 
-type DataLayerWindow = Window & { dataLayer?: Record<string, unknown>[] };
-
 export function track(event: "lp_whatsapp_click" | "lp_phone_click" | "lp_form_submit", data: Record<string, unknown> = {}) {
-  const w = window as DataLayerWindow;
-  w.dataLayer = w.dataLayer || [];
-  w.dataLayer.push({ event, page: "troca-de-parabrisa", ...data });
+  measure(event, { page: "troca-e-instalacao-de-vidros", ...data });
 }

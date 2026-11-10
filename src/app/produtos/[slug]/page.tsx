@@ -6,6 +6,7 @@ import { InstitutionalHeader } from "../../_components/institutional-header";
 import { ProductTechnicalVisual } from "../../_components/product-technical-visual";
 import { products } from "../../_content/products";
 import { listProducts } from "../../_content/ecosystem";
+import { pageMetadata } from "../../_content/site";
 
 export const dynamicParams = true;
 export const dynamic = "force-dynamic";
@@ -22,10 +23,7 @@ export async function generateMetadata({ params }: PageProps<"/produtos/[slug]">
     return {};
   }
 
-  return {
-    title: `${product.shortName} | Center Ônibus`,
-    description: `${product.description} Consulte aplicação e disponibilidade com a equipe Center Ônibus.`,
-  };
+  return pageMetadata(`${product.shortName} | Center Ônibus`, `${product.description} Consulte aplicação e disponibilidade com a equipe Center Ônibus.`, `/produtos/${slug}`);
 }
 
 export default async function ProductDetailPage({ params }: PageProps<"/produtos/[slug]">) {

@@ -5,7 +5,7 @@ import "../parabrisa.css";
 
 // Página de conversão do Google Ads: fora da busca orgânica.
 export const metadata: Metadata = {
-  title: "Conclua no WhatsApp | Troca de para-brisa | Center Ônibus",
+  title: "Conclua no WhatsApp | Troca e instalação de vidros | Center Ônibus",
   robots: { index: false, follow: false },
 };
 

@@ -366,7 +366,7 @@ export default function Home2() {
             {/* Bottom Text & Initial Hero CTA */}
             <div ref={heroBottomRef} className="forge-hero-bottom">
               <p className="forge-hero-desc">
-                Peças para as principais carrocerias.
+                Peças para carrocerias de ônibus
               </p>
               <ForgeButton text="Falar com a Equipe" href="/fale-conosco" />
               <div className="center-hero-brands">
@@ -379,6 +379,15 @@ export default function Home2() {
             </div>
           </section>
         </div>
+
+        {/* 7. Componentes para carroceria — carrossel em tela cheia com autoplay */}
+        <CenterSlideCarousel
+          id="services"
+          ariaLabel="Categorias de componentes para carrocerias"
+          items={SERVICES_DATA.map((srv) => ({ id: srv.id, kicker: srv.tag, title: srv.title, desc: srv.desc, image: srv.image, alt: srv.alt }))}
+          cta={<ForgeButton text="Consultar Disponibilidade" href="/fale-conosco" />}
+        />
+
 
         {/* 4. Approach Section with Aperture Reveal Transition (Hero -> Approach) */}
         <div ref={approachTrackRef} className="forge-approach-track">
@@ -438,14 +447,6 @@ export default function Home2() {
 
         <InstitutionalVideo />
         <CenterLocations />
-
-        {/* 7. Componentes para carroceria — carrossel em tela cheia com autoplay */}
-        <CenterSlideCarousel
-          id="services"
-          ariaLabel="Categorias de componentes para carrocerias"
-          items={SERVICES_DATA.map((srv) => ({ id: srv.id, kicker: srv.tag, title: srv.title, desc: srv.desc, image: srv.image, alt: srv.alt }))}
-          cta={<ForgeButton text="Consultar Disponibilidade" href="/fale-conosco" />}
-        />
 
         <CenterTeam />
 

@@ -6,26 +6,29 @@ import { LeadForm } from "./_components/lead-form";
 import { OriginCapture, PhoneLink, WhatsAppButton } from "./_components/lp-actions";
 import { RevealObserver } from "./_components/reveal";
 import "./parabrisa.css";
+import { pageMetadata } from "../_content/site";
 
 export const metadata: Metadata = {
-  title: "Troca de para-brisa de ônibus | Center Ônibus",
+  ...pageMetadata("Troca e instalação de vidros para ônibus | Center Ônibus", "Troca e instalação de para-brisas e vidros laterais de ônibus. Envie cidade, modelo da carroceria e foto do vidro para consultar aplicação e atendimento.", LP_PATH),
+  title: "Troca e instalação de vidros para ônibus | Center Ônibus",
   description:
-    "Consulte a troca de para-brisa de ônibus com a Center. Envie cidade, modelo da carroceria e foto do vidro para conferir aplicação, orçamento e atendimento pelo WhatsApp.",
+    "Consulte a troca e instalação de vidros para ônibus com a Center. Envie cidade, modelo da carroceria e foto do vidro para conferir aplicação, orçamento e atendimento pelo WhatsApp.",
   alternates: { canonical: LP_PATH },
   openGraph: {
-    title: "Troca de para-brisa de ônibus | Center Ônibus",
+    title: "Troca e instalação de vidros para ônibus | Center Ônibus",
     description: "Vidro e instalação no mesmo atendimento. Consulte a cobertura para sua cidade pelo WhatsApp.",
     images: [PHOTOS.hero.src],
     locale: "pt_BR",
     type: "website",
   },
+  twitter: { card: "summary_large_image", title: "Troca e instalação de vidros | Center Ônibus", images: [PHOTOS.hero.src] },
 };
 
 const serviceJsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
-  serviceType: "Troca de para-brisa de ônibus",
-  name: "Troca de para-brisa de ônibus",
+  serviceType: "Troca e instalação de vidros para ônibus",
+  name: "Troca e instalação de vidros para ônibus",
   provider: {
     "@type": "Organization",
     name: "Center Ônibus",
@@ -76,9 +79,9 @@ export default function TrocaDeParabrisaPage() {
           </div>
           <div className="pb-shell pb-hero-grid">
             <div className="pb-hero-copy">
-              <span className="pb-kicker pb-kicker-light">Troca de para-brisa para ônibus</span>
+              <span className="pb-kicker pb-kicker-light">Troca e instalação de vidros para ônibus</span>
               <h1 id="pb-title">
-                <span className="pb-line"><span>Troca de para-brisa de ônibus.</span></span>{" "}
+                <span className="pb-line"><span>Troca e instalação de vidros para ônibus.</span></span>{" "}
                 <span className="pb-line pb-line-accent"><span>Conte com a Center.</span></span>
               </h1>
               <p className="pb-lead">
@@ -171,7 +174,7 @@ export default function TrocaDeParabrisaPage() {
             <div className="pb-glass-copy" data-reveal="up">
               <span className="pb-kicker">Vidro e serviço, juntos</span>
               <h2 id="pb-glass-title">A troca começa pela aplicação certa.</h2>
-              <p>O nome do ônibus sozinho nem sempre identifica o para-brisa. Modelo, ano, medidas e fotos ajudam a equipe a conferir o vidro e preparar o orçamento do serviço.</p>
+              <p>O nome do ônibus sozinho nem sempre identifica o vidro. Modelo, ano, medidas e fotos ajudam a equipe a conferir o vidro e preparar o orçamento do serviço.</p>
               <ul className="pb-checklist pb-checklist-grid">
                 {CHECKS.map((item) => <li key={item}>{item}</li>)}
               </ul>

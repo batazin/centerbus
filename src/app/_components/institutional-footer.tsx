@@ -42,9 +42,12 @@ export function InstitutionalFooter() {
         <section className="footer-service" aria-labelledby="footer-service-title">
           <h2 id="footer-service-title">Atendimento</h2>
           <p>Fale com nossa equipe para orçamento, identificação de peças e suporte comercial.</p>
-          <a className="footer-action" href={branchWhatsapp(branches[0])} target="_blank" rel="noopener noreferrer">
-            WhatsApp · São Paulo
-          </a>
+          <div className="footer-whatsapp-links">
+            {branches.map(branch => <a key={branch.state} className="footer-action" href={branchWhatsapp(branch)} target="_blank" rel="noopener noreferrer">
+              <img src="/brand/whatsapp.svg" alt="" width={18} height={18} aria-hidden="true" />
+              WhatsApp · {branch.state === "SP" ? "São Paulo" : branch.state === "BA" ? "Bahia" : "Rio de Janeiro"}
+            </a>)}
+          </div>
           <div className="footer-privacy">
             <span>Data Protection Officer</span>
             <a href="mailto:dpo@centeronibus.com.br">dpo@centeronibus.com.br</a>
