@@ -59,7 +59,7 @@ export function InstitutionalPage({ eyebrow, title, intro, layout = "sections", 
         </div>
       </div>
       <div className="company-flow">
-        {sections.slice(1, 5).map((section) => (
+        {sections.slice(1, -3).map((section) => (
           <article key={section.title}>
             <span aria-hidden="true" />
             <div>
@@ -71,7 +71,7 @@ export function InstitutionalPage({ eyebrow, title, intro, layout = "sections", 
         ))}
       </div>
       <div className="company-principles">
-        {sections.slice(5).map((section) => (
+        {sections.slice(-3).map((section) => (
           <article key={section.title}>
             <h2>{section.title}</h2>
             <p>{section.copy}</p>

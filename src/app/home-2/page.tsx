@@ -326,7 +326,7 @@ export default function Home2() {
         {/* 1. Preloader */}
         <aside className={`forge-preloader ${isPreloaderLoaded ? "loaded" : ""}`} aria-hidden="true">
           <p className="forge-preloader-text">
-            COM A CENTER, O ÔNIBUS NUNCA PARA
+            COM A GENTE, SEU ÔNIBUS NUNCA FICA PARADO
           </p>
           <div className="forge-preloader-progress-wrap">
             <div className="forge-preloader-track">
@@ -351,7 +351,7 @@ export default function Home2() {
 
             {/* Top Text - Primeira coisa que o lead lê na tela */}
             <div ref={heroTopRef} className="forge-hero-top">
-              <h1 className="forge-hero-title"><span>Com a Center,</span><br />o ônibus nunca para.</h1>
+              <h1 className="forge-hero-title"><span>Com a gente,</span><br />{" "}seu ônibus nunca fica parado</h1>
             </div>
 
             {/* Center Reveal Text (Hidden at start, reveals during scroll) */}
