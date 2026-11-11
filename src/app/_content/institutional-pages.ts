@@ -27,11 +27,6 @@ export const aboutPages = {
           "Nossa equipe de vendas é composta por profissionais experientes. Possuímos frota própria para entrega direta ao cliente ou à transportadora indicada, enviando para todo o Brasil e exterior.",
       },
       {
-        title: "Marcas parceiras",
-        copy:
-          "Somos distribuidores dos maiores fabricantes de peças do ramo, incluindo IAM, Braslux, RGB, Granero, Tec Bor, Autotravi, Danval, Silvatrim, Grammer, CBA, Saraiva, Espumatec, FNA, BMP e Schumacher.",
-      },
-      {
         title: "Política de qualidade",
         copy:
           "Fornecer peças para carrocerias de ônibus, aprimorando constantemente a qualidade na prestação de serviços, com objetivo de satisfazer ou exceder as expectativas dos nossos clientes, atendendo aos requisitos regulamentares e aplicáveis.",
