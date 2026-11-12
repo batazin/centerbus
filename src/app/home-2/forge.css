@@ -454,9 +454,6 @@ html.lenis:has(.forge-body) body {
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  perspective: 1200px;
-  transform-style: preserve-3d;
-  will-change: transform;
 }
 
 .forge-hero-car-container {
@@ -494,7 +491,6 @@ html.lenis:has(.forge-body) body {
   height: 100%;
   object-fit: contain;
   object-position: center;
-  filter: brightness(0.96) contrast(1.06) saturate(1.02);
   transition: opacity 0.5s ease;
   pointer-events: none;
 }
