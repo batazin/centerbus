@@ -104,6 +104,15 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string;
         lastFrame = frame;
         lastImage = image;
 
+        // The Flow export has a dark outer pixel on some frames.
+        // Sample the studio backdrop from inside each frame before extending it.
+        const insetX = image === opening ? 0 : Math.ceil(sourceWidth * 0.005);
+        const insetY = image === opening ? 0 : Math.ceil(sourceHeight * 0.005);
+        sourceX += insetX;
+        sourceY += insetY;
+        sourceWidth -= insetX * 2;
+        sourceHeight -= insetY * 2;
+
         const scale = Math.min(width / sourceWidth, height / sourceHeight);
         const imageWidth = sourceWidth * scale;
         const imageHeight = sourceHeight * scale;
@@ -212,9 +221,9 @@ export const ForgeHeroCar = forwardRef<ForgeHeroCarHandle, { className?: string;
       <div ref={box} className={`forge-hero-car-container ${className}`}>
         <canvas ref={canvas} aria-hidden="true" className={`forge-hero-car-canvas ${painted ? "active" : ""}`} />
         <picture hidden={painted}>
-          <source media="(max-width: 1023px)" srcSet={MOBILE + "/frame_0001.webp"} />
+          <source media="(max-width: 1023px)" srcSet={MOBILE + "/frame_0001-clean.webp"} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img ref={poster} src={DESKTOP + "/frame_0001.webp"} fetchPriority="high" alt="Ônibus rodoviário brasileiro em estúdio, com desmontagem da carroceria durante a rolagem" className="forge-hero-car-poster" />
+          <img ref={poster} src={DESKTOP + "/frame_0001-clean.webp"} fetchPriority="high" alt="Ônibus rodoviário brasileiro em estúdio, com desmontagem da carroceria durante a rolagem" className="forge-hero-car-poster" />
         </picture>
       </div>
     );
