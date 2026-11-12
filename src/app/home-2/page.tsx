@@ -198,7 +198,7 @@ export default function Home2() {
       }
 
       if (reducedMotion) {
-        ScrollTrigger.create({ trigger: heroPinWrapperRef.current, start: "top top", end: "bottom bottom", onUpdate: self => heroCarRef.current?.setFrame(self.progress) });
+        ScrollTrigger.create({ trigger: heroPinWrapperRef.current, start: "top top", end: "bottom bottom", onUpdate: self => heroCarRef.current?.setFrame(self.progress / 0.88) });
         return;
       }
 
@@ -211,7 +211,7 @@ export default function Home2() {
             end: "bottom bottom",
             scrub: 0.3,
             onUpdate: (self) => {
-              heroCarRef.current?.setFrame(self.progress);
+              heroCarRef.current?.setFrame(self.progress / 0.88);
             },
           },
         });
@@ -338,13 +338,12 @@ export default function Home2() {
         {/* 2. Official Header */}
         <ForgeHeader />
 
-        {/* 3. Hero Section with Scroll-Driven Vehicle Drive-Through Sequence */}
+        {/* 3. Hero with scroll-driven coach body disassembly */}
         <div ref={heroPinWrapperRef} className="forge-hero-pin-wrapper">
           <section id="hero" ref={heroSectionRef} className="forge-hero-section">
             <div className="forge-hero-bg-texture" />
             <div className="forge-hero-vignette" />
 
-            {/* Vehicle Showcase Stage inside Hero (Scrubbed frame-by-frame on scroll, vehicle drives forward into cabin) */}
             <div ref={heroVehicleRef} className="forge-hero-vehicle-stage" aria-hidden="true">
               <ForgeHeroCar ref={heroCarRef} />
             </div>
