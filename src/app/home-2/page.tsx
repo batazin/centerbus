@@ -127,8 +127,6 @@ export default function Home2() {
 
   const heroCarRef = useRef<ForgeHeroCarHandle>(null);
   const heroPinWrapperRef = useRef<HTMLDivElement>(null);
-  const heroSectionRef = useRef<HTMLDivElement>(null);
-  const heroVehicleRef = useRef<HTMLDivElement>(null);
   const heroTopRef = useRef<HTMLDivElement>(null);
   const heroCenterRevealRef = useRef<HTMLDivElement>(null);
   const heroBottomRef = useRef<HTMLDivElement>(null);
@@ -158,52 +156,14 @@ export default function Home2() {
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const compact = window.matchMedia("(max-width: 1023px), (pointer: coarse)").matches;
-    let removePointerListeners = () => {};
     const ctx = gsap.context(() => {
-      // 1. Hero interactive mouse 3D tilt
-      const hero = heroSectionRef.current;
-      const vehicle = heroVehicleRef.current;
-
-      const handleHeroMouseMove = (e: MouseEvent) => {
-        if (!hero || !vehicle) return;
-        const rect = hero.getBoundingClientRect();
-        const xNorm = (e.clientX - rect.left) / rect.width - 0.5;
-        const yNorm = (e.clientY - rect.top) / rect.height - 0.5;
-
-        gsap.to(vehicle, {
-          rotateY: xNorm * 7,
-          rotateX: -yNorm * 5,
-          duration: 0.6,
-          ease: "power2.out",
-        });
-      };
-
-      const handleHeroMouseLeave = () => {
-        if (!vehicle) return;
-        gsap.to(vehicle, {
-          rotateY: 0,
-          rotateX: 0,
-          duration: 0.8,
-          ease: "power2.out",
-        });
-      };
-
-      if (hero && !reducedMotion && window.matchMedia("(hover: hover)").matches) {
-        hero.addEventListener("mousemove", handleHeroMouseMove, { passive: true });
-        hero.addEventListener("mouseleave", handleHeroMouseLeave);
-        removePointerListeners = () => {
-          hero.removeEventListener("mousemove", handleHeroMouseMove);
-          hero.removeEventListener("mouseleave", handleHeroMouseLeave);
-        };
-      }
-
       if (reducedMotion) {
         ScrollTrigger.create({ trigger: heroPinWrapperRef.current, start: "top top", end: "bottom bottom", onUpdate: self => heroCarRef.current?.setFrame(self.progress / 0.88) });
         return;
       }
 
       // 2. Hero Scroll-driven narrative (pinned over the heroPinWrapper)
-      if (heroPinWrapperRef.current && vehicle) {
+      if (heroPinWrapperRef.current) {
         const heroTl = gsap.timeline({
           scrollTrigger: {
             trigger: heroPinWrapperRef.current,
@@ -316,7 +276,7 @@ export default function Home2() {
       });
     });
 
-    return () => { removePointerListeners(); ctx.revert(); };
+    return () => ctx.revert();
   }, []);
 
 
@@ -340,11 +300,11 @@ export default function Home2() {
 
         {/* 3. Hero with scroll-driven coach body disassembly */}
         <div ref={heroPinWrapperRef} className="forge-hero-pin-wrapper">
-          <section id="hero" ref={heroSectionRef} className="forge-hero-section">
+          <section id="hero" className="forge-hero-section">
             <div className="forge-hero-bg-texture" />
             <div className="forge-hero-vignette" />
 
-            <div ref={heroVehicleRef} className="forge-hero-vehicle-stage" aria-hidden="true">
+            <div className="forge-hero-vehicle-stage" aria-hidden="true">
               <ForgeHeroCar ref={heroCarRef} />
             </div>
 
